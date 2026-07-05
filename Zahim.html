@@ -5,8 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zahim — فزاحِمْ هاتفك بما ينفعك</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800;900&family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
+/* خط احتياطي من النظام لو لم يتحمل Google Fonts */
+@font-face {
+  font-family: 'FallbackArabic';
+  src: local('Traditional Arabic'), local('Al Bayan'), local('Geeza Pro'), local('Arabic Typesetting');
+}
 :root{
   --green:#1A6B4A;
   --green-mid:#228A5E;
@@ -27,30 +32,13 @@
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;font-family:'Noto Naskh Arabic','Tajawal',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
+html,body{height:100%;font-family:'Samsung Arabic','SamsungOne Arabic','Noto Naskh Arabic','Scheherazade New','Amiri','Traditional Arabic','Tajawal',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
 body{max-width:480px;margin:0 auto;position:relative;}
 
 /* ===== SCREENS ===== */
 .screen{position:fixed;inset:0;overflow-y:auto;background:var(--cream);transition:transform .38s cubic-bezier(.4,0,.2,1),opacity .32s ease;will-change:transform,opacity;}
 
-/* إطار التطبيق */
-@media (min-width: 480px){
-  body{
-    background:#1A1A2E;
-    display:flex;align-items:center;justify-content:center;
-    min-height:100vh;
-  }
-  .screen{
-    position:relative;
-    width:420px;height:100vh;
-    max-width:420px;
-    margin:0 auto;
-    border-radius:0;
-    box-shadow:0 0 60px rgba(0,0,0,0.5);
-    left:auto;right:auto;top:auto;bottom:auto;
-    inset:auto;
-  }
-}
+body{max-width:480px;margin:0 auto;position:relative;}
 .screen.hidden{transform:translateX(-100%);opacity:0;pointer-events:none;}
 .screen.slide-in{transform:translateX(100%);opacity:0;}
 
@@ -84,7 +72,7 @@ body{max-width:480px;margin:0 auto;position:relative;}
 /* ===== HOME HERO ===== */
 .home-hero{
   background:linear-gradient(160deg,var(--green) 0%,var(--green-mid) 50%,#0F4D32 100%);
-  padding:32px 20px 40px;
+  padding:16px 20px 20px;
   position:relative;overflow:hidden;
   text-align:center;
 }
@@ -93,20 +81,20 @@ body{max-width:480px;margin:0 auto;position:relative;}
   background:radial-gradient(ellipse at 30% 20%,rgba(201,150,58,0.15) 0%,transparent 60%);
 }
 .hero-bismillah{
-  font-family:'Amiri',serif;font-size:15px;
+  font-family:'Amiri',serif;font-size:12px;
   color:rgba(232,192,112,0.9);margin-bottom:16px;
   position:relative;
 }
 .hero-title{
-  font-size:56px;font-weight:700;color:var(--white);
+  font-size:42px;font-weight:700;color:var(--white);
   letter-spacing:-1px;position:relative;
   text-shadow:0 4px 24px rgba(0,0,0,0.25);
   font-family:'Scheherazade New','Amiri',serif;
-  line-height:1.1;
+  line-height:1;
 }
 .hero-title span{color:var(--gold-light);}
 .hero-tagline{
-  font-family:'Amiri',serif;font-size:16px;
+  font-family:'Amiri',serif;font-size:13px;
   color:rgba(247,243,236,0.85);margin-top:8px;
   position:relative;
 }
@@ -121,9 +109,9 @@ body{max-width:480px;margin:0 auto;position:relative;}
 
 /* ===== آية اليوم ===== */
 .ayah-card{
-  margin:20px 16px 0;
+  margin:6px 16px 0;
   background:linear-gradient(135deg,var(--green),var(--green-mid));
-  border-radius:20px;padding:20px;
+  border-radius:14px;padding:10px 14px;
   position:relative;overflow:hidden;
 }
 .ayah-card::before{
@@ -137,9 +125,9 @@ body{max-width:480px;margin:0 auto;position:relative;}
   display:flex;align-items:center;gap:6px;
 }
 .ayah-text{
-  font-family:'Amiri',serif;font-size:20px;
-  color:var(--white);line-height:2;text-align:center;
-  margin-bottom:8px;
+  font-family:'Amiri',serif;font-size:14px;
+  color:var(--white);line-height:1.6;text-align:center;
+  margin-bottom:4px;
 }
 .ayah-source{font-size:11px;color:rgba(232,192,112,0.8);text-align:center;}
 
@@ -294,19 +282,16 @@ body{max-width:480px;margin:0 auto;position:relative;}
 .zf-copy{font-size:11px;color:var(--muted);margin-top:4px;}
 
 /* ===== دوائر أوراد المسلم ===== */
-.wird-header{
-  padding:16px 16px 8px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.wird-title{font-size:16px;font-weight:900;color:var(--text);}
+.wird-header{display:none;}
+.wird-title{font-size:14px;font-weight:900;color:var(--text);}
 .wird-total-pct{font-size:11px;font-weight:700;color:var(--green);}
 .wird-circles{
   display:flex;justify-content:center;align-items:flex-start;
-  gap:8px;padding:8px 8px 24px;
+  gap:8px;padding:4px 8px 8px;
   overflow:hidden;
 }
 .wird-circle-wrap{
-  display:flex;flex-direction:column;align-items:center;gap:8px;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
   cursor:pointer;transition:transform .2s;
   flex:0 0 calc(33.33% - 6px);
   max-width:calc(33.33% - 6px);
@@ -314,9 +299,92 @@ body{max-width:480px;margin:0 auto;position:relative;}
 .wird-circle-wrap:active{transform:scale(0.93);}
 .wird-circle{
   position:relative;width:100%;
-  padding-bottom:100%;
-  filter:drop-shadow(0 8px 20px rgba(0,0,0,0.25));
+  padding-bottom:95%;
+  filter:drop-shadow(0 6px 14px rgba(0,0,0,0.22));
+  border-radius:50%;
 }
+
+/* ===== دوائر فنية CSS ===== */
+
+/* دائرة القرآن — مصحف مفتوح */
+.quran-art{
+  width:100%;height:100%;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#F5E6C8,#D4A843,#8B6914);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.quran-art::before{
+  content:'';
+  position:absolute;
+  width:65%;height:50%;
+  background:linear-gradient(180deg,#FFF8F0,#F0E0C0);
+  border-radius:2px 8px 8px 2px;
+  top:25%;left:18%;
+  box-shadow:2px 2px 6px rgba(0,0,0,0.3),inset -2px 0 4px rgba(0,0,0,0.1);
+}
+.quran-art::after{
+  content:'';
+  position:absolute;
+  width:65%;height:50%;
+  background:linear-gradient(180deg,#FFF8F0,#F0E0C0);
+  border-radius:8px 2px 2px 8px;
+  top:25%;right:18%;
+  box-shadow:-2px 2px 6px rgba(0,0,0,0.3),inset 2px 0 4px rgba(0,0,0,0.1);
+}
+.quran-art-spine{
+  position:absolute;width:6%;height:52%;
+  background:linear-gradient(90deg,#8B6914,#C9963A,#8B6914);
+  border-radius:2px;top:24%;left:47%;z-index:2;
+  box-shadow:0 2px 4px rgba(0,0,0,0.3);
+}
+.quran-art-text{
+  position:absolute;font-family:'Amiri',serif;font-size:8px;
+  color:#8B6914;z-index:3;top:35%;width:100%;text-align:center;
+  letter-spacing:0.5px;
+}
+
+/* دائرة الأذكار — سبحة */
+.tasbih-art{
+  width:100%;height:100%;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#9B7EA6,#6B3F7A,#3D1F4A);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.tasbih-beads{
+  position:absolute;width:75%;height:75%;border-radius:50%;
+  border:none;
+}
+.tasbih-bead{
+  position:absolute;width:11px;height:11px;
+  background:radial-gradient(circle at 35% 30%,#E8D5B0,#C9963A,#8B6914);
+  border-radius:50%;
+  box-shadow:0 2px 4px rgba(0,0,0,0.4),inset 0 1px 2px rgba(255,255,255,0.3);
+}
+.tasbih-string{
+  position:absolute;width:70%;height:70%;border-radius:50%;
+  border:1.5px solid rgba(201,150,58,0.4);
+}
+
+/* دائرة الحديث — كتب */
+.hadith-art{
+  width:100%;height:100%;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#8B9E6A,#5B7340,#2D3D1F);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.book-stack{
+  position:absolute;bottom:22%;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.book-item{
+  height:8px;border-radius:1px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* لا حلقة خارجية */
 .wird-circle svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);}
 .wird-circle-ball{
   position:absolute;inset:12%;
@@ -340,18 +408,18 @@ body{max-width:480px;margin:0 auto;position:relative;}
 }
 .wcb-icon{font-size:34px;line-height:1;position:relative;z-index:2;}
 .wcb-pct{
-  font-size:15px;font-weight:900;color:white;
+  font-size:14px;font-weight:900;color:white;
   position:relative;z-index:2;
-  text-shadow:0 2px 6px rgba(0,0,0,0.4);
-  letter-spacing:-0.5px;
+  text-shadow:0 2px 8px rgba(0,0,0,0.5);
 }
 .wird-circle-name{
-  font-size:14px;font-weight:900;color:var(--text);
-  text-align:center;letter-spacing:-0.3px;
+  font-size:12px;font-weight:900;
+  color:rgba(255,255,255,0.9);
+  text-align:center;
 }
 .wird-circle-sub{
-  font-size:11px;color:var(--muted);
-  text-align:center;margin-top:-5px;
+  font-size:10px;color:rgba(255,255,255,0.5);
+  text-align:center;margin-top:-3px;
 }
 
 .wc-quran .wird-circle-ball{
@@ -392,7 +460,12 @@ body{max-width:480px;margin:0 auto;position:relative;}
 /* شبكة الأوراد */
 .adhkar-grid{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:14px;padding:8px 16px;
+  gap:20px;padding:12px 20px;
+}
+.adhkar-item-wrap{
+  position:relative;
+  padding:6px;
+  border-radius:50%;
 }
 .adhkar-item{
   border-radius:50%;
@@ -410,6 +483,14 @@ body{max-width:480px;margin:0 auto;position:relative;}
     inset 0 3px 6px rgba(255,255,255,0.15);
 }
 .adhkar-item:active{transform:scale(0.94);}
+/* حلقة خارجية للبطاقات */
+.adhkar-item-wrap::before{
+  content:'';
+  position:absolute;inset:0;
+  border-radius:50%;
+  border:3px solid rgba(255,255,255,0.2);
+  pointer-events:none;
+}
 /* بريق علوي ناعم */
 .adhkar-item::before{
   content:'';
@@ -609,15 +690,48 @@ body{max-width:480px;margin:0 auto;position:relative;}
 <!-- ==================== HOME SCREEN ==================== -->
 <div class="screen" id="screen-home">
 
-  <!-- شريط التاريخ الملون -->
-  <div class="date-bar" id="date-bar"></div>
+  <!-- الواجهة الرئيسية الخرافية -->
+  <div id="home-bg" style="
+    min-height:100vh;
+    background:linear-gradient(170deg,#0a1628 0%,#0f2d1a 40%,#1a0a0a 100%);
+    position:relative;overflow:hidden;
+    display:flex;flex-direction:column;
+  ">
 
-  <!-- الهيرو -->
-  <div class="home-hero">
-    <div class="hero-bismillah">بسم الله الرحمن الرحيم</div>
-    <div class="hero-title">زاحِ<span style="color:var(--gold-light);">م</span></div>
-    <div class="hero-tagline">فزاحِمْ هاتفك بما ينفعك</div>
-  </div>
+    <!-- نجوم خلفية -->
+    <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+      <div style="position:absolute;width:2px;height:2px;background:rgba(255,255,255,0.6);border-radius:50%;top:8%;left:15%;box-shadow:0 0 4px rgba(255,255,255,0.8);"></div>
+      <div style="position:absolute;width:1px;height:1px;background:rgba(255,255,255,0.4);border-radius:50%;top:15%;left:75%;"></div>
+      <div style="position:absolute;width:2px;height:2px;background:rgba(201,150,58,0.6);border-radius:50%;top:6%;left:85%;box-shadow:0 0 6px rgba(201,150,58,0.8);"></div>
+      <div style="position:absolute;width:1px;height:1px;background:rgba(255,255,255,0.5);border-radius:50%;top:22%;left:30%;"></div>
+      <div style="position:absolute;width:2px;height:2px;background:rgba(255,255,255,0.3);border-radius:50%;top:3%;left:55%;"></div>
+    </div>
+
+    <!-- شريط التاريخ والاسم -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px;position:relative;z-index:2;">
+      <div>
+        <div id="bar-day" style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;"></div>
+        <div id="bar-miladi" style="font-family:'Amiri',serif;font-size:15px;color:var(--gold-light);margin-top:1px;"></div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'Scheherazade New','Amiri',serif;font-size:38px;font-weight:700;color:white;line-height:1;text-shadow:0 0 30px rgba(201,150,58,0.4);">زاحِ<span style="color:var(--gold-light);">م</span></div>
+      </div>
+      <div>
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green-light));display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 16px rgba(26,107,74,0.5);">🌿</div>
+      </div>
+    </div>
+
+    <!-- شريط ذهبي رفيع -->
+    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(201,150,58,0.4),transparent);margin:0 20px;"></div>
+
+    <!-- البسملة -->
+    <div style="text-align:center;padding:10px 20px 6px;font-family:'Amiri',serif;font-size:14px;color:rgba(201,150,58,0.7);letter-spacing:1px;">بسم الله الرحمن الرحيم</div>
+
+    <!-- عنوان الأوراد -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 20px;margin-bottom:2px;">
+      <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.9);font-family:'Tajawal',sans-serif;">أوراد المسلم اليومية</div>
+      <div id="wird-total-pct" style="font-size:11px;font-weight:700;color:var(--gold-light);background:rgba(201,150,58,0.15);padding:3px 10px;border-radius:999px;border:1px solid rgba(201,150,58,0.25);">٠٪</div>
+    </div>
 
   <!-- دوائر أوراد المسلم -->
   <div id="wird-circles-wrap">
@@ -625,7 +739,9 @@ body{max-width:480px;margin:0 auto;position:relative;}
       <div class="wird-title">أوراد المسلم اليومية</div>
       <div class="wird-total-pct" id="wird-total-pct">٠٪ مكتمل</div>
     </div>
-    <div class="wird-circles">
+        <div class="wird-circles">
+
+      <!-- دائرة القرآن -->
       <div class="wird-circle-wrap wc-quran" onclick="openQuranScreen()">
         <div class="wird-circle">
           <svg viewBox="0 0 130 130" style="transform:rotate(-90deg);position:absolute;inset:0;width:100%;height:100%;">
@@ -633,17 +749,16 @@ body{max-width:480px;margin:0 auto;position:relative;}
             <circle cx="65" cy="65" r="56" fill="none" stroke="#2EAE78" stroke-width="7"
               stroke-dasharray="351.9" stroke-dashoffset="351.9" stroke-linecap="round" id="ring-quran"/>
           </svg>
-          <div class="wird-circle-ball">
-            <div class="wcb-shine"></div>
-            <div class="wcb-shine2"></div>
-            <div class="wcb-icon">📖</div>
-            <div class="wcb-pct" id="pct-quran">٠٪</div>
+          <div class="wird-circle-ball" style="background:none;box-shadow:none;padding:0;overflow:hidden;">
+            <img src="data:image/jpeg;base64,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" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt="القرآن"/>
+            <div style="position:absolute;bottom:12%;left:50%;transform:translateX(-50%);font-size:11px;font-weight:900;color:white;z-index:10;text-shadow:0 2px 6px rgba(0,0,0,0.8);background:rgba(0,0,0,0.5);padding:2px 8px;border-radius:999px;" id="pct-quran">٠٪</div>
           </div>
         </div>
         <div class="wird-circle-name">القرآن</div>
         <div class="wird-circle-sub" id="sub-quran">ورد اليوم</div>
       </div>
 
+      <!-- دائرة الأذكار -->
       <div class="wird-circle-wrap wc-adhkar" onclick="openAdhkarScreen()">
         <div class="wird-circle">
           <svg viewBox="0 0 130 130" style="transform:rotate(-90deg);position:absolute;inset:0;width:100%;height:100%;">
@@ -651,49 +766,79 @@ body{max-width:480px;margin:0 auto;position:relative;}
             <circle cx="65" cy="65" r="56" fill="none" stroke="#A855F7" stroke-width="7"
               stroke-dasharray="351.9" stroke-dashoffset="351.9" stroke-linecap="round" id="ring-adhkar"/>
           </svg>
-          <div class="wird-circle-ball">
+          <div class="wird-circle-ball" style="background:radial-gradient(circle at 32% 30%,#F5E6B0,#C9963A,#7A5C10);box-shadow:inset 0 -8px 20px rgba(0,0,0,0.4);">
             <div class="wcb-shine"></div>
-            <div class="wcb-shine2"></div>
-            <div class="wcb-icon">📿</div>
-            <div class="wcb-pct" id="pct-adhkar">٠٪</div>
+            <svg width="80" height="80" viewBox="0 0 80 80" style="position:relative;z-index:2;">
+              <circle cx="40" cy="40" r="28" fill="none" stroke="rgba(201,150,58,0.6)" stroke-width="1.5"/>
+              <defs>
+                <radialGradient id="bead" cx="35%" cy="30%">
+                  <stop offset="0%" stop-color="#FFF8E0"/>
+                  <stop offset="40%" stop-color="#E8C870"/>
+                  <stop offset="100%" stop-color="#8B6914"/>
+                </radialGradient>
+                <radialGradient id="beadS" cx="35%" cy="30%">
+                  <stop offset="0%" stop-color="#FFF0A0"/>
+                  <stop offset="60%" stop-color="#C9963A"/>
+                  <stop offset="100%" stop-color="#6B4F10"/>
+                </radialGradient>
+              </defs>
+              <circle cx="40" cy="12" r="7" fill="url(#bead)"/>
+              <circle cx="61" cy="19" r="7" fill="url(#bead)"/>
+              <circle cx="68" cy="40" r="7" fill="url(#bead)"/>
+              <circle cx="61" cy="61" r="7" fill="url(#bead)"/>
+              <circle cx="40" cy="68" r="7" fill="url(#bead)"/>
+              <circle cx="19" cy="61" r="7" fill="url(#bead)"/>
+              <circle cx="12" cy="40" r="7" fill="url(#bead)"/>
+              <circle cx="19" cy="19" r="7" fill="url(#bead)"/>
+              <circle cx="52" cy="13" r="3.5" fill="url(#beadS)"/>
+              <circle cx="67" cy="52" r="3.5" fill="url(#beadS)"/>
+              <circle cx="28" cy="67" r="3.5" fill="url(#beadS)"/>
+              <circle cx="13" cy="28" r="3.5" fill="url(#beadS)"/>
+              <ellipse cx="40" cy="5" rx="4" ry="5.5" fill="url(#beadS)"/>
+            </svg>
+            <div style="position:absolute;bottom:12%;left:50%;transform:translateX(-50%);font-size:11px;font-weight:900;color:white;z-index:10;text-shadow:0 2px 6px rgba(0,0,0,0.8);background:rgba(0,0,0,0.5);padding:2px 8px;border-radius:999px;" id="pct-adhkar">٠٪</div>
           </div>
         </div>
         <div class="wird-circle-name">الأذكار</div>
         <div class="wird-circle-sub" id="sub-adhkar">٠ من ٤ أوراد</div>
       </div>
 
-      <div class="wird-circle-wrap wc-hadith" onclick="markHadithDone()">
+      <!-- دائرة الحديث -->
+      <div class="wird-circle-wrap wc-hadith" onclick="showToast('قريباً — حديث اليوم قيد البناء')">
         <div class="wird-circle">
           <svg viewBox="0 0 130 130" style="transform:rotate(-90deg);position:absolute;inset:0;width:100%;height:100%;">
             <circle cx="65" cy="65" r="56" fill="none" stroke="rgba(201,150,58,0.2)" stroke-width="7"/>
             <circle cx="65" cy="65" r="56" fill="none" stroke="#C9963A" stroke-width="7"
               stroke-dasharray="351.9" stroke-dashoffset="351.9" stroke-linecap="round" id="ring-hadith"/>
           </svg>
-          <div class="wird-circle-ball">
+          <div class="wird-circle-ball" style="background:radial-gradient(circle at 32% 30%,#86EFAC,#15803D,#052e16);box-shadow:inset 0 -8px 20px rgba(0,0,0,0.35);">
             <div class="wcb-shine"></div>
-            <div class="wcb-shine2"></div>
-            <div class="wcb-icon" id="icon-hadith">📚</div>
-            <div class="wcb-pct" id="pct-hadith">٠٪</div>
+            <svg width="68" height="68" viewBox="0 0 68 68" style="position:relative;z-index:2;">
+              <rect x="12" y="20" width="40" height="7" rx="1" fill="#991B1B"/>
+              <rect x="13" y="18" width="3" height="10" rx="0.5" fill="#EF4444"/>
+              <rect x="14" y="29" width="38" height="6" rx="1" fill="#1E40AF"/>
+              <rect x="15" y="27" width="3" height="9" rx="0.5" fill="#3B82F6"/>
+              <rect x="16" y="38" width="36" height="5" rx="1" fill="#8B6914"/>
+              <rect x="17" y="36" width="3" height="7" rx="0.5" fill="#C9963A"/>
+              <text x="34" y="25" font-family="Amiri,serif" font-size="5" fill="rgba(255,255,255,0.9)" text-anchor="middle">صحيح البخاري</text>
+              <text x="34" y="34" font-family="Amiri,serif" font-size="5" fill="rgba(255,255,255,0.9)" text-anchor="middle">صحيح مسلم</text>
+            </svg>
+            <div style="position:absolute;bottom:12%;left:50%;transform:translateX(-50%);font-size:11px;font-weight:900;color:white;z-index:10;text-shadow:0 2px 6px rgba(0,0,0,0.8);background:rgba(0,0,0,0.5);padding:2px 8px;border-radius:999px;" id="pct-hadith">٠٪</div>
           </div>
         </div>
         <div class="wird-circle-name">الحديث</div>
-        <div class="wird-circle-sub" id="sub-hadith">اضغط للتسجيل</div>
+        <div class="wird-circle-sub" id="sub-hadith"></div>
       </div>
-    </div>
+
   </div>
 
-  <!-- آية اليوم -->
-  <div class="ayah-card" style="margin:0 16px 16px;">
-    <div class="ayah-label">📖 آية اليوم</div>
-    <div class="ayah-text" id="ayah-text"></div>
-    <div class="ayah-source" id="ayah-source"></div>
+  <div style="margin:8px 16px 0;background:rgba(255,255,255,0.06);border:1px solid rgba(201,150,58,0.3);border-radius:16px;padding:12px 16px;backdrop-filter:blur(10px);">
+    <div style="font-size:10px;font-weight:700;color:var(--gold-light);letter-spacing:2px;margin-bottom:8px;">📖 آية اليوم</div>
+    <div id="ayah-text" style="font-family:'Amiri',serif;font-size:15px;color:white;line-height:1.7;text-align:center;margin-bottom:6px;text-shadow:0 1px 8px rgba(0,0,0,0.3);"></div>
+    <div id="ayah-source" style="font-size:11px;color:var(--gold-light);text-align:center;opacity:0.8;"></div>
   </div>
-
-  <div class="zachim-footer">
-    <div class="zf-logo">✦ زاحِم ✦</div>
-    <div class="zf-copy">جميع الحقوق محفوظة © عرفات الراجحي ٢٠٢٦</div>
-  </div>
-</div>
+  <div style="height:20px;"></div>
+  </div><!-- end home-bg -->
 
 
 <!-- ==================== شاشة القرآن ==================== -->
@@ -715,8 +860,8 @@ body{max-width:480px;margin:0 auto;position:relative;}
 </div>
 
 <!-- ==================== شاشة الأذكار الجامعة ==================== -->
-<div class="screen hidden" id="screen-adhkar">
-  <div class="topbar">
+<div class="screen hidden" id="screen-adhkar" style="background:var(--cream);">
+  <div class="topbar" style="background:rgba(247,243,236,0.95);">
     <button class="back-btn" onclick="closeAdhkarScreen()">↩ الرئيسية</button>
     <div class="brand-wrap">
       <div class="brand-icon">🌿</div>
@@ -805,28 +950,22 @@ function getTodayKey(){
 }
 
 function buildDateBar(){
-  const bar = document.getElementById('date-bar');
-  if(!bar) return;
   const today = new Date();
   const dayIdx = today.getDay();
   const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
   const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-  const gradients = [
-    'linear-gradient(135deg,#7C3AED,#A855F7)',
-    'linear-gradient(135deg,#0369A1,#0EA5E9)',
-    'linear-gradient(135deg,#0F766E,#14B8A6)',
-    'linear-gradient(135deg,#1A6B4A,#2EAE78)',
-    'linear-gradient(135deg,#B45309,#F59E0B)',
-    'linear-gradient(135deg,#92400E,#D97706)',
-    'linear-gradient(135deg,#BE185D,#EC4899)',
-  ];
-  bar.style.background = gradients[dayIdx];
-  const miladi = today.getDate() + ' ' + months[today.getMonth()] + ' ' + today.getFullYear();
-  bar.innerHTML = '<div><div style="font-family:Amiri,serif;font-size:15px;color:rgba(255,255,255,0.95);font-weight:700;">'
-    + miladi + '</div><div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px;">'
-    + days[dayIdx] + '</div></div>'
-    + '<div style="font-size:22px;font-weight:900;color:rgba(255,255,255,0.15);font-family:Tajawal,sans-serif;">'
-    + days[dayIdx] + '</div>';
+  const dayColors = ['#7C3AED','#0369A1','#0F766E','#1A6B4A','#B45309','#92400E','#BE185D'];
+  const color = dayColors[dayIdx];
+  const miladi = today.getDate() + ' ' + months[today.getMonth()];
+
+  const bar = document.getElementById('unified-bar');
+  if(bar) bar.style.borderBottom = '2px solid ' + color + '22';
+
+  const hijriEl = document.getElementById('bar-hijri');
+  const miladiEl = document.getElementById('bar-miladi');
+  const dayEl = document.getElementById('bar-day');
+  if(miladiEl) miladiEl.textContent = miladi + ' ' + today.getFullYear();
+  if(dayEl) dayEl.textContent = days[dayIdx].toUpperCase();
 }
 
 function buildWirdCircles(){
@@ -1432,29 +1571,36 @@ function closeAdhkarScreen(){
 }
 
 function openAdhkarScreen(){
-  const home = document.getElementById('screen-home');
-  const screen = document.getElementById('screen-adhkar');
-  home.classList.add('hidden');
-  screen.classList.remove('hidden');
-  screen.scrollTop = 0;
-  renderAdhkarScreen();
+  try {
+    const home = document.getElementById('screen-home');
+    const screen = document.getElementById('screen-adhkar');
+    if(!home || !screen){ showToast('خطأ: الشاشة غير موجودة'); return; }
+    home.classList.add('hidden');
+    screen.classList.remove('hidden');
+    screen.scrollTop = 0;
+    renderAdhkarScreen();
+  } catch(e) {
+    showToast('خطأ: ' + e.message);
+  }
 }
 
 function renderAdhkarScreen(){
-  const todayKey = getTodayKey();
-  const todayData = getDayData(todayKey);
-  const doneCnt = DAILY_WIRD.filter(k => todayData[k]).length;
-  const pct = Math.round((doneCnt / DAILY_WIRD.length) * 100);
+  try {
+    const todayKey = getTodayKey();
+    const todayData = getDayData(todayKey);
+    const doneCnt = DAILY_WIRD.filter(k => todayData[k]).length;
+    const pct = Math.round((doneCnt / DAILY_WIRD.length) * 100);
 
-  // تحديث التقدم
-  const pctEl = document.getElementById('adhkar-total-pct');
-  const fillEl = document.getElementById('adhkar-prog-fill');
-  if(pctEl) pctEl.textContent = pct + '٪ مكتمل';
-  if(fillEl) fillEl.style.width = pct + '%';
+    const pctEl = document.getElementById('adhkar-total-pct');
+    const fillEl = document.getElementById('adhkar-prog-fill');
+    if(pctEl) pctEl.textContent = pct + '٪ مكتمل';
+    if(fillEl) fillEl.style.width = pct + '%';
 
-  // بناء شبكة الأوراد اليومية
-  buildAdhkarGrid('adhkar-daily-grid', DAILY_WIRD, todayData, todayKey);
-  buildAdhkarGrid('adhkar-ahwal-grid', AHWAL_WIRD, todayData, todayKey);
+    buildAdhkarGrid('adhkar-daily-grid', DAILY_WIRD, todayData, todayKey);
+    buildAdhkarGrid('adhkar-ahwal-grid', AHWAL_WIRD, todayData, todayKey);
+  } catch(e) {
+    showToast('خطأ في renderAdhkarScreen: ' + e.message);
+  }
 }
 
 function buildAdhkarGrid(gridId, keys, todayData, todayKey){
@@ -1465,6 +1611,8 @@ function buildAdhkarGrid(gridId, keys, todayData, todayKey){
     const data = DHIKR_DATA[key];
     if(!data) return;
     const isDone = todayData[key];
+    const wrap = document.createElement('div');
+    wrap.className = 'adhkar-item-wrap';
     const div = document.createElement('div');
     div.className = 'adhkar-item';
     div.style.background = WIRD_COLORS[key] || 'var(--green)';
@@ -1472,7 +1620,8 @@ function buildAdhkarGrid(gridId, keys, todayData, todayKey){
     div.innerHTML = (isDone ? '<div class="ai-done-overlay">✅</div>' : '')
       + '<div class="ai-title">' + data.title + '</div>'
       + '<div class="ai-count">' + data.items.length + ' أذكار</div>';
-    grid.appendChild(div);
+    wrap.appendChild(div);
+    grid.appendChild(wrap);
   });
 }
 
