@@ -1815,7 +1815,7 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
 #screen-mihrab .mih-exit{
   cursor:pointer;-webkit-tap-highlight-color:transparent;
   font-family:'Tajawal',sans-serif;font-size:11px;letter-spacing:.5px;
-  color:var(--ink-soft);opacity:.62;padding:5px 18px;transition:opacity .4s ease;
+  color:var(--ink);opacity:.70;padding:5px 18px;transition:opacity .4s ease;
 }
 #screen-mihrab .mih-exit:hover,#screen-mihrab .mih-exit:focus-visible{opacity:.9;}
 #screen-mihrab{position:relative;width:100%;height:100dvh;overflow:hidden;}
@@ -1882,7 +1882,7 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
 #screen-mihrab .layer{position:absolute;left:0;top:50%;width:100%;transform:translateY(-50%);
          transition:opacity .8s ease, visibility .8s;}
 #screen-mihrab .layer.hidden{opacity:0;visibility:hidden;}
-#screen-mihrab .lead{font-size:13.5px;color:var(--ink-soft);margin-bottom:13px;letter-spacing:.5px;opacity:.8;}
+#screen-mihrab .lead{font-size:13.5px;color:var(--ink-soft);margin-bottom:13px;letter-spacing:.5px;opacity:1;}
 #screen-mihrab .state{font-family:'Amiri','Noto Naskh Arabic','Times New Roman',serif;font-weight:400;font-size:clamp(34px,11vw,46px);
          line-height:1.3;color:var(--ink);}
 #screen-mihrab .space{font-size:14px;color:var(--ink-soft);margin-top:20px;line-height:1.9;}
@@ -1942,11 +1942,11 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
 #screen-mihrab .sill{position:absolute;left:0;right:0;bottom:0;height:118px;
         display:flex;align-items:center;justify-content:center;}
 #screen-mihrab .sill button{background:none;border:0;font-family:inherit;cursor:pointer;
-               color:var(--ink-soft);font-size:12px;letter-spacing:.6px;opacity:.58;
+               color:var(--ink);font-size:12px;letter-spacing:.6px;opacity:.72;
                transition:opacity .5s ease;padding:12px 20px;}
 #screen-mihrab .sill button:hover,#screen-mihrab .sill button:focus-visible{opacity:1;}
 #screen-mihrab .sill button:focus-visible{outline:1px solid var(--ink-soft);outline-offset:5px;border-radius:2px;}
-#screen-mihrab .sill span{display:block;margin:0 auto 7px;width:15px;height:1px;background:var(--ink-soft);opacity:.4;}
+#screen-mihrab .sill span{display:block;margin:0 auto 7px;width:15px;height:1px;background:var(--ink);opacity:.34;}
 @keyframes settle{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
 #screen-mihrab #layerState .lead{animation:settle 1.5s cubic-bezier(.22,1,.36,1) .3s both;}
 #screen-mihrab #layerState .state{animation:settle 1.7s cubic-bezier(.22,1,.36,1) .5s both;}
@@ -8954,6 +8954,11 @@ function showToast(msg){
         </g>
       </g>
 
+      <g clip-path="url(#clipNiche)" mask="url(#fadeBase)">
+        <rect id="nicheBase" x="-60" y="-40" width="560" height="1100"/>
+        <rect id="light" x="-60" y="-40" width="560" height="1100" fill="url(#lightGrad)"/>
+      </g>
+
       <g id="edges" fill="none" stroke="#C9963A" stroke-width="1.3" mask="url(#fadeBase)">
         <path d="M 355,660 A 568,568 0 0,0 195,115 A 568,568 0 0,0 35,660 L 35,835"/>
         <path d="M 355,835 L 355,660"/>
@@ -8961,10 +8966,6 @@ function showToast(msg){
         <path d="M 387.99,835 L 387.99,668.15"/>
       </g>
 
-      <g clip-path="url(#clipNiche)" mask="url(#fadeBase)">
-        <rect id="nicheBase" x="-60" y="-40" width="560" height="1100"/>
-        <rect id="light" x="-60" y="-40" width="560" height="1100" fill="url(#lightGrad)"/>
-      </g>
 
       <path id="dayLine" fill="none" stroke="none"
             d="M 371.48,835 L 371.48,664.10 A 585,585 0 0,0 195,91.76 A 585,585 0 0,0 18.52,664.10 L 18.52,835"/>
@@ -9479,33 +9480,33 @@ window.addEventListener('popstate', function(){
   function buildStates(){
     STATES = [
     { key:'fajr', dark:true, station:'fajr', from:T.fajr, to:T.sunrise, inWindow:true, next:'الظهر', title:'وقت الفجر',
-      wall:'#1A262E', niche:'#243440', ink:'#E9EFEC', soft:'rgba(233,239,236,.60)', hair:'rgba(233,239,236,.14)',
-      lightIn:'rgba(186,214,236,.70)', lightOut:'rgba(22,36,44,0)', lx:296, ly:626, lr:340,
-      wallOp:.20, dimOp:.10, litOp:.52, edgeOp:.62 },
+      wall:'#3A4E5C', niche:'#48606F', ink:'#FBFDFC', soft:'rgba(251,253,252,.86)', hair:'rgba(244,248,246,.20)',
+      lightIn:'rgba(222,238,252,.96)', lightOut:'rgba(58,78,92,0)', lx:296, ly:626, lr:440,
+      wallOp:.20, dimOp:.10, litOp:.52, edgeOp:.62, edgeCol:'#C9963A' },
     { key:'duha', station:'sunrise', from:T.sunrise, to:T.dhuhr, inWindow:false, next:'الظهر', title:'الضحى',
-      wall:'#E7E1D4', niche:'#F2EDE3', ink:'#153428', soft:'rgba(21,52,40,.62)', hair:'rgba(21,52,40,.13)',
+      wall:'#E7E1D4', niche:'#F2EDE3', ink:'#153428', soft:'rgba(21,52,40,.76)', hair:'rgba(21,52,40,.16)',
       lightIn:'rgba(255,250,232,.95)', lightOut:'rgba(242,237,227,0)', lx:292, ly:206, lr:430,
-      wallOp:.03, dimOp:.095, litOp:.31, edgeOp:.34 },
+      wallOp:.03, dimOp:.095, litOp:.31, edgeOp:.80, edgeCol:'#8A6522' },
     { key:'dhuhr', station:'dhuhr', from:T.dhuhr, to:T.asr, inWindow:true, next:'العصر', title:'وقت الظهر',
-      wall:'#ECE7DA', niche:'#F6F2E8', ink:'#14332A', soft:'rgba(20,51,42,.60)', hair:'rgba(20,51,42,.13)',
+      wall:'#ECE7DA', niche:'#F6F2E8', ink:'#14332A', soft:'rgba(20,51,42,.76)', hair:'rgba(20,51,42,.16)',
       lightIn:'rgba(255,253,246,1)', lightOut:'rgba(246,242,232,0)', lx:195, ly:88, lr:470,
-      wallOp:.028, dimOp:.095, litOp:.31, edgeOp:.34 },
+      wallOp:.028, dimOp:.095, litOp:.31, edgeOp:.80, edgeCol:'#8A6522' },
     { key:'asr', station:'asr', from:T.asr, to:T.maghrib, inWindow:true, next:'المغرب', title:'وقت العصر',
-      wall:'#DDD1B8', niche:'#E8DCC4', ink:'#1C3327', soft:'rgba(28,51,39,.64)', hair:'rgba(28,51,39,.14)',
+      wall:'#DDD1B8', niche:'#E8DCC4', ink:'#1C3327', soft:'rgba(28,51,39,.78)', hair:'rgba(28,51,39,.17)',
       lightIn:'rgba(255,240,203,.96)', lightOut:'rgba(232,220,196,0)', lx:100, ly:236, lr:382,
-      wallOp:.035, dimOp:.10, litOp:.31, edgeOp:.34 },
+      wallOp:.035, dimOp:.10, litOp:.31, edgeOp:.82, edgeCol:'#7A5A1E' },
     { key:'maghrib', dark:true, station:'maghrib', from:T.maghrib, to:T.isha, inWindow:true, next:'العشاء', title:'وقت المغرب',
-      wall:'#2C2019', niche:'#3A2B25', ink:'#F2E8DD', soft:'rgba(242,232,221,.62)', hair:'rgba(242,232,221,.14)',
-      lightIn:'rgba(244,174,108,.78)', lightOut:'rgba(43,32,29,0)', lx:88, ly:648, lr:440,
-      wallOp:.19, dimOp:.105, litOp:.52, edgeOp:.62 },
+      wall:'#43322A', niche:'#544036', ink:'#FBF3EA', soft:'rgba(251,243,234,.78)', hair:'rgba(251,243,234,.20)',
+      lightIn:'rgba(250,192,130,.92)', lightOut:'rgba(67,50,42,0)', lx:88, ly:648, lr:490,
+      wallOp:.19, dimOp:.105, litOp:.52, edgeOp:.62, edgeCol:'#C9963A' },
     { key:'isha', dark:true, station:'isha', from:T.isha, to:MIDNIGHT, inWindow:true, next:'الفجر', title:'وقت العشاء',
-      wall:'#16241D', niche:'#1E3128', ink:'#E3ECE6', soft:'rgba(227,236,230,.58)', hair:'rgba(227,236,230,.13)',
-      lightIn:'rgba(244,206,138,.70)', lightOut:'rgba(15,31,26,0)', lx:195, ly:556, lr:375,
-      wallOp:.21, dimOp:.11, litOp:.56, edgeOp:.60 },
+      wall:'#31493D', niche:'#3E5A4C', ink:'#FBFDFC', soft:'rgba(251,253,252,.88)', hair:'rgba(241,247,243,.19)',
+      lightIn:'rgba(252,228,180,.94)', lightOut:'rgba(49,73,61,0)', lx:195, ly:556, lr:470,
+      wallOp:.21, dimOp:.11, litOp:.56, edgeOp:.60, edgeCol:'#C9963A' },
     { key:'night', dark:true, station:null, from:MIDNIGHT, to:T.fajr+1440, inWindow:false, next:'الفجر', title:'جوف الليل',
-      wall:'#131E18', niche:'#1B2A22', ink:'#DDE7E1', soft:'rgba(221,231,225,.55)', hair:'rgba(221,231,225,.12)',
-      lightIn:'rgba(232,196,136,.62)', lightOut:'rgba(10,21,16,0)', lx:195, ly:580, lr:350,
-      wallOp:.23, dimOp:.11, litOp:.56, edgeOp:.60 },
+      wall:'#2B4139', niche:'#38524C', ink:'#FAFCFB', soft:'rgba(250,252,251,.86)', hair:'rgba(238,245,241,.18)',
+      lightIn:'rgba(244,220,178,.90)', lightOut:'rgba(43,65,57,0)', lx:195, ly:580, lr:450,
+      wallOp:.23, dimOp:.11, litOp:.56, edgeOp:.60, edgeCol:'#C9963A' },
     ];
   }
 
@@ -9536,7 +9537,7 @@ window.addEventListener('popstate', function(){
   }
   // الحبرُ (ink/soft/hair) لا يُمزج — مزجُه مع حبر التالي يُقاربه من خلفيته
   // فيبهت النصّ في منتصف الوقت. الخلفيةُ والضوءُ يتدرّجان، والحبرُ يثبت.
-  var _COLOR_KEYS = ['wall','niche','lightIn','lightOut'];
+  var _COLOR_KEYS = ['wall','niche','lightIn','lightOut','edgeCol'];
   var _NUM_KEYS   = ['lx','ly','lr','wallOp','dimOp','litOp','edgeOp'];
 
   function blendState(cur, nowMin){
@@ -9908,6 +9909,7 @@ window.addEventListener('popstate', function(){
       el.bandDim.setAttribute('opacity', s.dimOp);
       el.bandLit.setAttribute('opacity', s.litOp);
       el.edges.setAttribute('opacity', s.edgeOp);
+      if(s.edgeCol) el.edges.setAttribute('stroke', s.edgeCol);
       var g=toGeo(s.lx, s.ly);
       el.grad.setAttribute('cx', g.x.toFixed(1));
       el.grad.setAttribute('cy', g.y.toFixed(1));
