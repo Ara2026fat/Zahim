@@ -9534,7 +9534,9 @@ window.addEventListener('popstate', function(){
     if(al >= 0.999) return 'rgb(' + r + ',' + g + ',' + bl + ')';
     return 'rgba(' + r + ',' + g + ',' + bl + ',' + al.toFixed(3) + ')';
   }
-  var _COLOR_KEYS = ['wall','niche','ink','soft','hair','lightIn','lightOut'];
+  // الحبرُ (ink/soft/hair) لا يُمزج — مزجُه مع حبر التالي يُقاربه من خلفيته
+  // فيبهت النصّ في منتصف الوقت. الخلفيةُ والضوءُ يتدرّجان، والحبرُ يثبت.
+  var _COLOR_KEYS = ['wall','niche','lightIn','lightOut'];
   var _NUM_KEYS   = ['lx','ly','lr','wallOp','dimOp','litOp','edgeOp'];
 
   function blendState(cur, nowMin){
