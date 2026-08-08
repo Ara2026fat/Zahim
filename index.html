@@ -1158,7 +1158,26 @@ body.mode-night .zx-rights b{color:#B9D2C4;}
 body.mode-night .zx-seal-mono{filter:none;}
 
 /* منتقي الوضع في الإعدادات */
-.zx-modes{display:flex;gap:9px;padding:6px 2px 2px;}
+.zx-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 2px 2px;}
+.zx-mode{border:1.5px solid transparent;border-radius:15px;padding:7px;cursor:pointer;
+  background:none;font-family:inherit;display:block;width:100%;
+  -webkit-tap-highlight-color:transparent;
+  transition:border-color .28s ease,transform .18s cubic-bezier(.4,0,.2,1);}
+.zx-mode:active{transform:scale(.96);}
+.zx-mode.is-on{border-color:var(--gold);}
+/* العيّنة: تدرّجٌ من لونَي الوضع، ونقطةٌ ذهبية تُري لهجة الزخرفة */
+.zx-sw{display:block;height:52px;border-radius:11px;position:relative;overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);}
+.zx-sw i{position:absolute;inset-inline-end:9px;bottom:9px;
+  width:13px;height:13px;border-radius:999px;display:block;
+  box-shadow:0 0 0 2px rgba(255,255,255,.22);}
+.zx-mode-name{display:block;margin-top:7px;font-size:12.5px;font-weight:700;
+  color:var(--text);text-align:center;}
+.zx-mode.is-on .zx-mode-name{color:var(--gold);}
+@media (max-width:340px){
+  .zx-sw{height:44px}
+  .zx-mode-name{font-size:11.5px}
+}
 .zx-mode{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;
   padding:12px 4px 10px;border-radius:14px;cursor:pointer;position:relative;
   background:var(--card-bg);border:1px solid rgba(127,127,127,.18);
@@ -1194,6 +1213,57 @@ body.mode-night .compass-svg #station-face stop:nth-child(2){stop-color:#1B241F;
 body.mode-night .compass-station-label{fill:#DCE8E1 !important;stroke:#141A17 !important;}
 /* شعار المِشكاة يُقلب ليُرى على الداكن */
 body.mode-night .compass-svg image{filter:brightness(1.25) contrast(1.05);}
+
+/* ═══ سبلُ التواصل ═══
+   ثلاثةٌ مباشرة تعمل الآن، والنموذجُ تحتها لمن لا يريد كشف رقمه. */
+.zx-ways{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:6px;}
+.zx-way{padding:14px 10px;border-radius:13px;cursor:pointer;
+  font-family:inherit;font-size:13.5px;font-weight:700;
+  border:1px solid rgba(20,67,46,.16);background:var(--card-bg);color:var(--text);
+  -webkit-tap-highlight-color:transparent;transition:transform .16s ease;}
+.zx-way:active{transform:scale(.97);}
+.zx-way.wa{background:#E7F4EA;border-color:#B9DEC4;}
+.zx-way.tg{background:#E8F4FB;border-color:#B6DCF0;}
+.zx-way.em{grid-column:1 / -1;}
+/* الفاصل: خيطٌ ذهبيّ متلاشٍ وكلمةٌ في وسطه */
+.zx-or{display:flex;align-items:center;gap:11px;margin:18px 0 14px;}
+.zx-or::before,.zx-or::after{content:'';flex:1;height:1px;
+  background:linear-gradient(to left,transparent,var(--zg-faint),transparent);}
+.zx-or span{font-size:11.5px;color:var(--muted);white-space:nowrap;}
+
+
+/* ═══ بتروليّ ═══ أخضرُ مزرقّ بين الهادئ والبحريّ */
+body.mode-teal{
+  --green:#0E3D42; --green-mid:#155A61; --green-light:#2B8A93; --green-pale:#E0EFF0;
+  --gold:#C29A4A; --gold-light:#E2C285;
+  --cream:#F2F7F6; --cream-2:#E5EFEE;
+  --text:#0F3236; --muted:#587B7E;
+  --topbar-bg:rgba(242,247,246,0.92);
+  --card-bg:#FFFFFF; --done-bg:#E0EFF0;
+  --zg-line:rgba(194,154,74,.34); --zg-faint:rgba(194,154,74,.16);
+}
+/* ═══ أخضرُ عميق ═══ زيتونيٌّ داكن، أهدأ من الهادئ */
+body.mode-olive{
+  --green:#243D18; --green-mid:#365726; --green-light:#5C8A3C; --green-pale:#E9F0E1;
+  --gold:#C4A04A; --gold-light:#E3C888;
+  --cream:#F6F7F0; --cream-2:#EAEDE0;
+  --text:#22331A; --muted:#66795A;
+  --topbar-bg:rgba(246,247,240,0.92);
+  --card-bg:#FFFFFF; --done-bg:#E9F0E1;
+  --zg-line:rgba(196,160,74,.34); --zg-faint:rgba(196,160,74,.16);
+}
+/* ═══ أوبسيديان ═══ ليلٌ أعمق، لمن يقرأ في الظلمة الشديدة */
+body.mode-obsidian{
+  --green:#8C6A2E; --green-mid:#A67F38; --green-light:#D2A855; --green-pale:#1C1A15;
+  --gold:#E0BC72; --gold-light:#F0D8A4;
+  --cream:#0F0E0B; --cream-2:#17150F;
+  --text:#EFE7D5; --muted:#A79A80;
+  --topbar-bg:rgba(15,14,11,0.94);
+  --card-bg:#17150F; --done-bg:#221E15;
+  --zg-line:rgba(224,188,114,.32); --zg-faint:rgba(224,188,114,.15);
+  --page-bg:#0C0B09;
+}
+
 
 /* ═══ شريط المواقيت ═══
    مستثنًى من تكبير النصّ (انظر الاستثناء في buildTextScaleSheet) — لوحةُ قياسٍ لا متن.
@@ -2495,6 +2565,42 @@ body.theme-dark .compass-wrap svg circle[fill="#F7F3EC"],
 body.theme-dark .compass-wrap svg circle[fill="#FFFFFF"],
 body.theme-dark .compass-wrap svg circle[fill="#fff"]{fill:#1B2620;}
 body.theme-dark .compass-wrap svg path[fill="#F7F3EC"]{fill:#1B2620;}
+/* وجهُ القرص يُملأ بتدرّجٍ فاتح — يُستبدل في الداكن وإلا بهر العين في الظلمة */
+body.theme-dark .compass-wrap svg [fill="url(#face-grad)"]{fill:#18231E;}
+/* الأوبسيديان يتبع نمط الليليّ: تُبدَّل مواقفُ التدرّج لا الملءُ الصريح */
+
+/* وجهُ القرص يأخذ لمسةً من لون الوضع — خفيفةً تحفظ دفء الورق */
+body.mode-teal .compass-svg #face-grad stop:nth-child(1){stop-color:#FDFEFD;}
+body.mode-teal .compass-svg #face-grad stop:nth-child(2){stop-color:#EAF3F1;}
+body.mode-teal .compass-svg #station-face stop:nth-child(2){stop-color:#F1F7F5;}
+
+body.mode-olive .compass-svg #face-grad stop:nth-child(1){stop-color:#FEFEFA;}
+body.mode-olive .compass-svg #face-grad stop:nth-child(2){stop-color:#EFF3E6;}
+body.mode-olive .compass-svg #station-face stop:nth-child(2){stop-color:#F5F8EE;}
+
+body.mode-sea .compass-svg #face-grad stop:nth-child(1){stop-color:#FDFEFF;}
+body.mode-sea .compass-svg #face-grad stop:nth-child(2){stop-color:#E9F1F7;}
+body.mode-sea .compass-svg #station-face stop:nth-child(2){stop-color:#F1F6FA;}
+
+body.mode-obsidian .compass-svg #face-grad stop:nth-child(1){stop-color:#191610;}
+body.mode-obsidian .compass-svg #face-grad stop:nth-child(2){stop-color:#12100B;}
+body.mode-obsidian .compass-svg #medal-grad stop:nth-child(1){stop-color:#241F16;}
+body.mode-obsidian .compass-svg #medal-grad stop:nth-child(2){stop-color:#1D1912;}
+body.mode-obsidian .compass-svg #medal-grad stop:nth-child(3){stop-color:#17140E;}
+body.mode-obsidian .compass-svg #station-face stop:nth-child(1){stop-color:#282218;}
+body.mode-obsidian .compass-svg #station-face stop:nth-child(2){stop-color:#1C1811;}
+/* الظلال في الأوبسيديان بنّيّةٌ لا خضراء — وإلا صبغت القرصَ خضرةً */
+body.mode-obsidian .compass-svg feDropShadow{flood-color:#0A0806;}
+body.mode-obsidian .compass-wrap .compass-svg .cs-rim{stroke:rgba(224,188,114,.5);}
+body.mode-obsidian{--zg-faint:rgba(224,188,114,.18);}
+
+body.mode-obsidian .compass-wrap .compass-svg .cs-dial{fill:#12100C;}
+body.mode-obsidian .compass-wrap svg circle[fill="#F7F3EC"],
+body.mode-obsidian .compass-wrap svg circle[fill="#FFFFFF"],
+body.mode-obsidian .compass-wrap svg circle[fill="#fff"]{fill:#1A1712;}
+body.mode-obsidian .compass-wrap svg path[fill="#F7F3EC"]{fill:#1A1712;}
+body.mode-obsidian .compass-station-label{fill:#E6DCC6;}
+body.mode-obsidian .compass-caption{color:#E6DCC6;}
 </style>
 <script>
 var ZahimHadithEN = {
@@ -2849,7 +2955,14 @@ var ZahimHadithID = {
           <radialGradient id="station-badge" cx="36%" cy="30%" r="76%">
             <stop offset="0%" stop-color="#3AA97C"/><stop offset="100%" stop-color="#1C7A52"/>
           </radialGradient>
-          <radialGradient id="station-face" cx="38%" cy="30%" r="76%">
+          <!-- حلقةُ الجوهرة: فاتحٌ أعلى وداكنٌ أسفل — فتبدو ناتئة لا مسطّحة -->
+      <linearGradient id="cs-relief" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#F7E4B4"/>
+        <stop offset="26%" stop-color="#DDB265"/>
+        <stop offset="54%" stop-color="#C9963A"/>
+        <stop offset="100%" stop-color="#9A7739"/>
+      </linearGradient>
+      <radialGradient id="station-face" cx="38%" cy="30%" r="76%">
             <stop offset="0%" stop-color="#FDFAF2"/>
             <stop offset="100%" stop-color="#F2EADA"/>
           </radialGradient>
@@ -2886,8 +2999,10 @@ var ZahimHadithID = {
             <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#14432E" flood-opacity="0.12"/>
             <feDropShadow dx="0" dy="14" stdDeviation="20" flood-color="#14432E" flood-opacity="0.13"/>
           </filter>
-          <filter id="icon-shadow" x="-60%" y="-60%" width="220%" height="220%">
-            <feDropShadow dx="0" dy="1.2" stdDeviation="1.4" flood-color="#0B2A1E" flood-opacity="0.2"/>
+          <filter id="icon-shadow" x="-120%" y="-120%" width="340%" height="340%">
+        <!-- كمحطات المحراب: توهّجٌ ذهبيّ يحيطها، وظلٌّ يرفعها عن السطح -->
+        <feDropShadow dx="0" dy="0" stdDeviation="2.0" flood-color="#C9963A" flood-opacity="0.38"/>
+        <feDropShadow dx="0" dy="1.7" stdDeviation="1.9" flood-color="#0B2A1E" flood-opacity="0.30"/>
           </filter>
           <filter id="needle-shadow" x="-60%" y="-60%" width="220%" height="220%">
             <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#0B2A1E" flood-opacity="0.28"/>
@@ -3713,7 +3828,15 @@ ZahimI18n.load('en', {
   'ورد القرآن': 'Quran reading',
   'ورد الأذكار': 'Remembrance',
   'ورد الحديث': 'Hadith reading',
-  'تطوير': 'Developed by'
+  'تطوير': 'Developed by',
+
+  /* أسماء الأوضاع اللونية */
+  'هادئ': 'Calm',
+  'بترولي': 'Teal',
+  'أخضر عميق': 'Deep Green',
+  'بحري': 'Sea',
+  'ليلي': 'Night',
+  'أوبسيديان': 'Obsidian'
 });
 /* ═══ زاحِم — الإندونيسية والماليزية ═══
    الواجهة فقط. الأحاديث والأذكار تبقى عربيةً، ومعناها بالإنجليزية حتى تُراجَع.
@@ -3884,37 +4007,45 @@ ZahimI18n.load('id', {
   'ورد القرآن': 'Wirid Al-Quran',
   'ورد الأذكار': 'Wirid Zikir',
   'ورد الحديث': 'Wirid Hadis',
-  'تطوير': 'Pengembang'
+  'تطوير': 'Pengembang',
+
+  /* أسماء الأوضاع اللونية */
+  'هادئ': 'Tenang',
+  'بترولي': 'Petroleum',
+  'أخضر عميق': 'Hijau Tua',
+  'بحري': 'Laut',
+  'ليلي': 'Malam',
+  'أوبسيديان': 'Obsidian'
 });
 
 /* ─────────── Bahasa Melayu ─────────── */
 ZahimI18n.load('ms', {
   'زاحِم': 'Zahim',
-  'Zahim — فزاحِمْ هاتفك بما ينفعك': 'Zahim — Isi Masamu Dengan Yang Bermanfaat',
-  'فزاحِمْ هاتفك بما ينفعك.': 'Isi Masamu Dengan Yang Bermanfaat.',
+  'Zahim — فزاحِمْ هاتفك بما ينفعك': 'Zahim — Isi masa kita dengan yang bermanfaat',
+  'فزاحِمْ هاتفك بما ينفعك.': 'Isi masa kita dengan yang bermanfaat.',
   'اسمٌ من المزاحمة. رفيقٌ لا يأخذ وقتك، بل يردّه إليك.':
-      'Nama daripada muzāhamah — mendesak. Teman yang tidak mengambil masamu, tetapi mengembalikannya.',
-  'حيث يصحبك توفيق الله.': 'Tempat taufik Allah menyertaimu.',
+      'Nama daripada muzāhamah — mendesak. Teman yang tidak mengambil masa kita, tetapi mengembalikannya.',
+  'حيث يصحبك توفيق الله.': 'Tempat taufik Allah menyertai kita.',
   'منها ينطلق عملك، وفيها يجتمع خير يومك.':
-      'Dari sinilah amalmu bermula, dan padanya berhimpun kebaikan harimu.',
-  'الصلاة صلتُك بالله.': 'Solat ialah hubunganmu dengan Allah.',
+      'Dari sinilah amal kita bermula, dan padanya berhimpun kebaikan hari kita.',
+  'الصلاة صلتُك بالله.': 'Solat ialah hubungan kita dengan Allah.',
   'عمودُ الدين، وأوّل ما نُسأل عنه يوم القيامة.':
       'Tiang agama, dan perkara pertama kita ditanya mengenainya pada Hari Kiamat.',
   'نُعين بعضنا على تذكّرها والعناية بها.':
       'Kita saling membantu mengingatinya dan menjaganya.',
-  'زاحِمْ وقتك بالطاعات': 'Penuhi masamu dengan ketaatan',
+  'زاحِمْ وقتك بالطاعات': 'Penuhi masa kita dengan ketaatan',
   'بقيت خطوةٌ واحدة.': 'Tinggal satu langkah lagi.',
   'مدينتُك لتُحسب مواقيتك، ولغتُك لتقرأ بها.':
-      'Bandarmu agar waktu solatmu tepat — dan bahasamu.',
-  'اسمك (اختياري)': 'Namamu (pilihan)',
-  'دولتك (اختياري)': 'Negaramu (pilihan)',
+      'Bandar kita agar waktu solat tepat — dan bahasa kita.',
+  'اسمك (اختياري)': 'Nama anda (pilihan)',
+  'دولتك (اختياري)': 'Negara anda (pilihan)',
   'اسمُك ودولتُك وحدهما — لا بريدَ ولا كلمةَ سرّ. ولك أن تتركهما.':
-      'Hanya nama dan negaramu — tanpa e-mel, tanpa kata laluan. Boleh dibiarkan kosong.',
+      'Hanya nama dan negara anda — tanpa e-mel, tanpa kata laluan. Boleh dibiarkan kosong.',
   'جارٍ التحميل…': 'Memuatkan…',
 
   'الرئيسية': 'Utama', '↩ الرئيسية': '↩ Utama',
   'رجوع': 'Kembali', '↩ رجوع': '↩ Kembali', '‹ رجوع': '‹ Kembali',
-  '‹ رحلتك': '‹ Perjalananmu',
+  '‹ رحلتك': '‹ Perjalanan Kita',
   'متابعة': 'Teruskan', 'إغلاق': 'Tutup', '✕ إغلاق': '✕ Tutup',
   'التالي ›': 'Seterusnya ›', '‹ السابق': '‹ Sebelumnya',
   'التالي': 'Seterusnya', 'السابق': 'Sebelumnya',
@@ -3929,7 +4060,7 @@ ZahimI18n.load('ms', {
   'أذكار الصباح والمساء والنوم وبعد الصلاة': 'Zikir pagi, petang, sebelum tidur dan selepas solat',
   'رياض السنة': 'Taman Sunnah',
   'رفيقك اليومي لفهم السنّة وتطبيقها، حديثاً بعد حديث':
-      'Teman harianmu memahami dan mengamalkan Sunnah, satu hadis demi satu hadis',
+      'Teman harian kita untuk memahami dan mengamalkan Sunnah, satu hadis demi satu hadis',
   'رياض الحديث': 'Taman Hadis',
   'مواقيت الصلاة': 'Waktu Solat',
   'أنت الآن في': 'Kini Kita Berada Di',
@@ -3997,7 +4128,7 @@ ZahimI18n.load('ms', {
   'تحديد موقعي تلقائياً': 'Kesan Lokasi Saya Secara Automatik', 'جارٍ التحديد…': 'Mengesan…',
   'لا توجد مدينة بهذا الاسم': 'Bandar tidak dijumpai', 'الحالية': 'Semasa',
   'طرق الحساب تختلف اصطلاحاً — اتبع ما عليه مسجد بلدك.':
-      'Kaedah pengiraan berbeza mengikut istilah — ikutlah masjid di tempatmu.',
+      'Kaedah pengiraan berbeza mengikut istilah — ikutlah ketentuan masjid di tempat kita.',
   'تحديد الموقع يعمل داخل التطبيق، لا على ملفٍ محفوظ.':
       'Pengesanan lokasi hanya berfungsi dalam aplikasi dipasang, bukan dari fail tersimpan.',
   'تعذّر الوصول إلى الموقع.': 'Tidak dapat mengakses lokasi.',
@@ -4007,14 +4138,14 @@ ZahimI18n.load('ms', {
   'قطر': 'Qatar', 'الكويت': 'Kuwait', 'تركيا': 'Turki',
 
   'مشاركة': 'Kongsi', '↗ مشاركة': '↗ Kongsi', '⧉ نسخ': '⧉ Salin',
-  '✎ تأملاتي': '✎ Renungan Kita', 'ملاحظاتي': 'Catatan Kita', 'شخصي': 'Peribadi',
+  '✎ تأملاتي': '✎ Renungan Peribadi', 'ملاحظاتي': 'Catatan Peribadi', 'شخصي': 'Peribadi',
   'مشاركة المواقيت': 'Kongsi waktu solat',
   'تواصل مع مطوري زاحِم': 'Hubungi pasukan Zahim',
   'نحب أن نسمع منك، فاقتراحك قد يجعل زاحِم أفضل.':
-      'Kami ingin mendengar daripadamu — cadanganmu boleh menjadikan Zahim lebih baik.',
-  'اكتب رسالتك هنا…': 'Tulis mesejmu di sini…',
-  'اكتب ملاحظاتك هنا…': 'Tulis catatanmu di sini…',
-  'اكتب هنا تأمّلك في هذا الحديث…': 'Tulis renunganmu tentang hadis ini…',
+      'Kami ingin mendengar daripada anda — cadangan anda boleh menjadikan Zahim lebih baik.',
+  'اكتب رسالتك هنا…': 'Tulis mesej kita di sini…',
+  'اكتب ملاحظاتك هنا…': 'Tulis catatan kita di sini…',
+  'اكتب هنا تأمّلك في هذا الحديث…': 'Tulis renungan kita tentang hadis ini…',
   'إرسال': 'Hantar', 'حُفظت المسودة': 'Draf disimpan', 'حُفظت البطاقة': 'Kad disimpan',
   'تمّ الاستيراد': 'Berjaya diimport',
   'لا يُشارَك حديثٌ بلا تخريج': 'Hadis tidak dikongsi tanpa sumbernya',
@@ -4022,9 +4153,9 @@ ZahimI18n.load('ms', {
   'تقبّل الله': 'Semoga Allah menerimanya',
 
   'جولة تعريفية': 'Lawatan pengenalan', 'تخطٍّ': 'Langkau', 'ابدأ': 'Mula',
-  'المدينة': 'Bandar', 'اسمك ودولتك': 'Nama dan negaramu', 'لم يُحدَّد': 'Belum diisi',
+  'المدينة': 'Bandar', 'اسمك ودولتك': 'Nama dan negara anda', 'لم يُحدَّد': 'Belum diisi',
 
-  'ثبِّت زاحِم على جهازك': 'Pasang Zahim pada perantimu',
+  'ثبِّت زاحِم على جهازك': 'Pasang Zahim pada peranti kita',
   'ليفتح كتطبيقٍ مستقلّ': 'Untuk Dibuka Sebagai Aplikasi Tersendiri',
   'من زرّ المشاركة ⬆ اختر «إضافة إلى الشاشة الرئيسية»':
       'Tekan Kongsi ⬆ kemudian pilih "Tambah ke Skrin Utama"',
@@ -4032,13 +4163,21 @@ ZahimI18n.load('ms', {
 
   'جميع الحقوق محفوظة © زاحِم | ZAHIM': 'Hak cipta terpelihara © Zahim',
   'لوحة المالك': 'Panel Pemilik',
-  '٠٪': '0%', 'موقعك': 'Lokasimu',
+  '٠٪': '0%', 'موقعك': 'Lokasi anda',
 
   /* أسماءُ الأوراد تحت البوصلة */
   'ورد القرآن': 'Wirid Al-Quran',
   'ورد الأذكار': 'Wirid Zikir',
   'ورد الحديث': 'Wirid Hadis',
-  'تطوير': 'Pembangun'
+  'تطوير': 'Pembangun',
+
+  /* أسماء الأوضاع اللونية */
+  'هادئ': 'Tenang',
+  'بترولي': 'Petroleum',
+  'أخضر عميق': 'Hijau Tua',
+  'بحري': 'Laut',
+  'ليلي': 'Malam',
+  'أوبسيديان': 'Obsidian'
 });
 
 
@@ -4361,7 +4500,16 @@ async function submitDeveloperFeedback(){
 
   const client = getSupabaseClient();
   if(!client){
-    if(errEl){ errEl.textContent = 'الخدمة غير متاحة حالياً — لم يتم إعداد الاتصال بعد.'; errEl.style.display = 'block'; }
+    if(errEl){
+      var L2 = 'ar'; try{ L2 = ZahimI18n.lang(); }catch(e){}
+      errEl.textContent = {
+        ar:'هذا الطريق غير متاح بعد — استعمل واتساب أو تليجرام أو البريد أعلاه.',
+        en:'This route is not available yet — use WhatsApp, Telegram or email above.',
+        id:'Jalur ini belum tersedia — gunakan WhatsApp, Telegram, atau surel di atas.',
+        ms:'Laluan ini belum tersedia — gunakan WhatsApp, Telegram atau e-mel di atas.'
+      }[L2] || 'هذا الطريق غير متاح بعد — استعمل واتساب أو تليجرام أو البريد أعلاه.';
+      errEl.style.display = 'block';
+    }
     return;
   }
 
@@ -4388,10 +4536,49 @@ async function submitDeveloperFeedback(){
 
 // الشاشة نفسها (العنوان والنص التعريفي) موجودة مسبقاً في HTML كقالب ثابت؛
 // هنا فقط نُنشئ محتواها الفعلي (المربع النصي وزر الإرسال) — عنصر واحد فقط لكل منهما، كما طُلب بدقة.
+/* بيانات التواصل — موضعٌ واحد يُعدَّل منه */
+const ZAHIM_CONTACT = {
+  whatsapp: '966590355799',
+  telegram: 'ArafatAli_2006',
+  email:    'ara1979fat@gmail.com'
+};
+
+function zxContactSubject(){
+  try{ return ZahimI18n.t('تواصل مع مطوري زاحِم'); }catch(e){ return 'زاحِم'; }
+}
+function zxViaWhatsapp(){
+  window.open('https://wa.me/' + ZAHIM_CONTACT.whatsapp
+    + '?text=' + encodeURIComponent(zxContactSubject() + '\n\n'), '_blank');
+}
+function zxViaTelegram(){
+  window.open('https://t.me/' + ZAHIM_CONTACT.telegram, '_blank');
+}
+function zxViaEmail(){
+  window.location.href = 'mailto:' + ZAHIM_CONTACT.email
+    + '?subject=' + encodeURIComponent(zxContactSubject());
+}
+function zxContactWays(){
+  var L = 'ar';
+  try{ L = ZahimI18n.lang(); }catch(e){}
+  var T = {
+    ar: { wa:'واتساب', tg:'تليجرام', em:'بريد إلكتروني', or:'أو اكتب رسالتك هنا' },
+    en: { wa:'WhatsApp', tg:'Telegram', em:'Email', or:'Or write your message here' },
+    id: { wa:'WhatsApp', tg:'Telegram', em:'Surel', or:'Atau tulis pesan di sini' },
+    ms: { wa:'WhatsApp', tg:'Telegram', em:'E-mel', or:'Atau tulis mesej di sini' }
+  }[L];
+  if(!T) T = { wa:'واتساب', tg:'تليجرام', em:'بريد إلكتروني', or:'أو اكتب رسالتك هنا' };
+  return '<div class="zx-ways">'
+       + '<button class="zx-way wa" onclick="zxViaWhatsapp()">' + T.wa + '</button>'
+       + '<button class="zx-way tg" onclick="zxViaTelegram()">' + T.tg + '</button>'
+       + '<button class="zx-way em" onclick="zxViaEmail()">' + T.em + '</button>'
+       + '</div><div class="zx-or"><span>' + T.or + '</span></div>';
+}
+
 function renderContactDevScreen(){
   const wrap = document.getElementById('contact-dev-content');
   if(!wrap) return;
   wrap.innerHTML =
+    zxContactWays() +
     '<div id="fb-form-wrap">' +
       '<textarea id="fb-message" class="fb-textarea" placeholder="اكتب رسالتك هنا…"></textarea>' +
       '<div id="fb-error" class="fb-error" style="display:none;"></div>' +
@@ -6940,7 +7127,7 @@ const COMPASS_ICON_SETS = {
     "fajr": `<path d="M-9.6,5.4 h19.2 v1.8 h-19.2 z M-6.2,5.4 a6.2,6.2 0 0 1 12.4,0 z M-0.9,-10.4 h1.8 v3.4 h-1.8 z M-8.4,-7.4 l1.3,-1.3 l2.4,2.4 l-1.3,1.3 z M8.4,-7.4 l-1.3,-1.3 l-2.4,2.4 l1.3,1.3 z" fill="${COMPASS_ICON_GOLD}" stroke="none" />`,
     "shield_flower": `<path d="M0,-9.4 a4.7,4.7 0 0 1 0,9.4 a4.7,4.7 0 0 1 0,-9.4 z M-9.4,0 a4.7,4.7 0 0 1 9.4,0 a4.7,4.7 0 0 1 -9.4,0 z M-0.85,0 h1.7 v9.6 h-1.7 z" fill="${COMPASS_ICON_GOLD}" stroke="none" />`,
     "quran": `<path d="M-0.8,-7 h1.6 v14.6 h-1.6 z M-0.8,-7 c-3.4,-2.6 -7,-3 -10,-2.4 v13.4 c3,-0.6 6.6,-0.2 10,2.4 z M0.8,-7 c3.4,-2.6 7,-3 10,-2.4 v13.4 c-3,-0.6 -6.6,-0.2 -10,2.4 z" fill="${COMPASS_ICON_GOLD}" stroke="none" />`,
-    "hadith_scroll": `<path d="M-8,-8.6 h16 v17.2 h-16 z M-4.4,-4.2 h8.8 v1.6 h-8.8 z M-4.4,-0.8 h8.8 v1.6 h-8.8 z M-4.4,2.6 h5.4 v1.6 h-5.4 z" fill="${COMPASS_ICON_GOLD}" stroke="none" />`,
+    "hadith_scroll": `<path d="M-7.4,-9 h9.6 l5.2,5.2 v12.8 h-14.8 z M2.2,-9 v5.2 h5.2 M-4.2,-1.6 h8.4 v1.5 h-8.4 z M-4.2,2 h8.4 v1.5 h-8.4 z M-4.2,5.6 h5 v1.5 h-5 z" fill="${COMPASS_ICON_GOLD}" stroke="none" />`,
     "evening_crescent": `<path d="M4.4,-8.2 a8.6,8.6 0 1 0 3.6,13.4 a6.9,6.9 0 0 1 -3.6,-13.4 z" fill="${COMPASS_ICON_GOLD}" stroke="none" />`,
     "shield_sleep": `<path d="M3.8,-8.4 a8.4,8.4 0 1 0 4.6,14.5 a6.8,6.8 0 0 1 -4.6,-14.5 z" fill="${COMPASS_ICON_GOLD}" stroke="none" />`
   }
@@ -7050,8 +7237,15 @@ function buildCompassSkeleton(){
     // خلفية دائرية كريمية خلف محطتي القرآن والحديث — تُميّزهما معاً كمحطتي "المعرفة"
     // بمعاملة بصرية واحدة متطابقة، فتُقرآن بوضوح أكبر دون كسر توازن البوصلة
     // قرصٌ واحد لكل المحطات — لا استثناء لمحطتين دون غيرهما
-    const backdrop = `<circle cx="${ip.x}" cy="${ip.y}" r="17" fill="url(#station-face)"
-        stroke="${COMPASS_ICON_GOLD}" stroke-width="1.15"></circle>`;
+    // جوهرةٌ محدَّبة كمحطات المحراب: حلقةٌ بتدرّجٍ رأسيّ توهم النتوء،
+    // وقوسٌ مضيءٌ أعلاها يحاكي لمعةَ الضوء على سطحٍ مقبَّب.
+    const backdrop =
+      `<circle cx="${ip.x}" cy="${ip.y}" r="17" fill="url(#station-face)"></circle>`
+    + `<circle cx="${ip.x}" cy="${ip.y}" r="15.9" fill="none"
+        stroke="url(#cs-relief)" stroke-width="2.7"></circle>`
+    + `<path d="M ${ip.x - 11.2},${ip.y - 11.2} A 15.9,15.9 0 0,1 ${ip.x + 11.2},${ip.y - 11.2}"
+        fill="none" stroke="#FFF0CE" stroke-width="1.05"
+        stroke-linecap="round" opacity="0.5"></path>`;
 
     // موضع شارة الإنجاز يُحسب نسبةً لاتجاه كل محطة (عرضياً + نحو المركز قليلاً)
     // بدل إزاحة ثابتة، بحيث لا تتقاطع مع تسمية المحطة أبداً مهما كان موضعها حول القرص
@@ -9314,6 +9508,68 @@ window.addEventListener('popstate', function(){
       wallOp:.23, dimOp:.11, litOp:.56, edgeOp:.60 },
     ];
   }
+
+  // ═══ مزجُ الألوان بين حالتين ═══
+  // اللونُ لا يقفز عند دخول الوقت، بل يمضي إليه تدريجيًّا —
+  // فالعصرُ يبدأ بلونه ويميل إلى دفء المغرب كلّما قرُب.
+  function _hex(c){
+    c = String(c).trim();
+    if(c[0] === '#'){
+      var h = c.slice(1);
+      if(h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+      return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16), 1];
+    }
+    var m = c.match(/rgba?\(([^)]+)\)/);
+    if(!m) return null;
+    var p = m[1].split(',').map(function(x){ return parseFloat(x); });
+    return [p[0], p[1], p[2], (p.length > 3 ? p[3] : 1)];
+  }
+  function _mix(a, b, t){
+    var A = _hex(a), B = _hex(b);
+    if(!A || !B) return a;
+    var r = Math.round(A[0] + (B[0]-A[0])*t),
+        g = Math.round(A[1] + (B[1]-A[1])*t),
+        bl = Math.round(A[2] + (B[2]-A[2])*t),
+        al = (A[3] + (B[3]-A[3])*t);
+    if(al >= 0.999) return 'rgb(' + r + ',' + g + ',' + bl + ')';
+    return 'rgba(' + r + ',' + g + ',' + bl + ',' + al.toFixed(3) + ')';
+  }
+  var _COLOR_KEYS = ['wall','niche','ink','soft','hair','lightIn','lightOut'];
+  var _NUM_KEYS   = ['lx','ly','lr','wallOp','dimOp','litOp','edgeOp'];
+
+  function blendState(cur, nowMin){
+    // نسبةُ ما مضى من الوقت الحاليّ
+    var from = cur.from, to = cur.to;
+    if(to <= from) to += 1440;
+    var n = nowMin; if(n < from) n += 1440;
+    var t = (n - from) / Math.max(to - from, 1);
+    if(!(t > 0)) t = 0; if(t > 1) t = 1;
+
+    // المزجُ يبدأ من منتصف الوقت — فأوّلُه لونُه الخالص
+    var m = (t - 0.5) / 0.5;
+    if(m <= 0) return cur;
+    m = m * m * (3 - 2*m);            // تليينٌ: يبدأ بطيئًا ويشتدّ
+    m *= 0.72;                        // لا يبلغ لونَ التالي تمامًا، فيبقى لكلِّ وقتٍ هويّته
+
+    var idx = STATES.indexOf(cur);
+    var nxt = STATES[(idx + 1) % STATES.length];
+    if(!nxt || nxt === cur) return cur;
+
+    var out = {};
+    for(var k in cur) out[k] = cur[k];
+    _COLOR_KEYS.forEach(function(k){
+      if(cur[k] != null && nxt[k] != null) out[k] = _mix(cur[k], nxt[k], m);
+    });
+    _NUM_KEYS.forEach(function(k){
+      if(typeof cur[k] === 'number' && typeof nxt[k] === 'number')
+        out[k] = cur[k] + (nxt[k] - cur[k]) * m;
+    });
+    // المفاتيحُ والعناوين لا تُمزج — تبقى للوقت الحاليّ
+    out.key = cur.key; out.title = cur.title; out.station = cur.station;
+    out.dark = (m > 0.5) ? (nxt.dark || cur.dark) : cur.dark;
+    return out;
+  }
+
   buildStates();
 
   // ═══ أحاديث المحطات ═══
@@ -9624,7 +9880,7 @@ window.addEventListener('popstate', function(){
       refreshTimes(); buildStates(); buildAnchors(); paintTimes(lastStationKey);
       lastDay = dayStamp; lastKey = null;
     }
-    var s=currentState(nowMin);
+    var s=blendState(currentState(nowMin), nowMin);
 
     el.dayProgress.style.strokeDasharray = LEN;
     el.dayProgress.style.strokeDashoffset = LEN - lengthAtMinute(nowMin);
@@ -10549,7 +10805,13 @@ window.addEventListener('popstate', function(){
   margin:20px 0 0;max-width:330px;}
 .zt-sub{font-size:13px;line-height:2;color:var(--muted);margin:14px 0 0;max-width:320px;}
 .zt-foot{padding:0 26px calc(26px + env(safe-area-inset-bottom,0px));}
+/* النقاط تتبع اتجاه الصفحة: من اليمين في العربية، ومن اليسار في غيرها */
 .zt-dots{display:flex;justify-content:center;gap:7px;margin-bottom:18px;}
+/* الحاوي يرث rtl، و row-reverse فوقه يقلب الانقلاب فيعود إلى اليسار.
+   فنُثبّت اتجاه الحاوي ltr ونقلب الصفَّ صراحةً — النتيجة: تتقدّم من اليمين. */
+.zt-dots{direction:ltr;}
+html[dir="rtl"] .zt-dots{flex-direction:row-reverse;}
+html[dir="ltr"] .zt-dots{flex-direction:row;}
 .zt-dot{width:6px;height:6px;border-radius:999px;background:var(--muted);opacity:.28;
   transition:opacity .35s ease,transform .35s ease;}
 .zt-dot.on{opacity:1;background:var(--gold);transform:scale(1.35);}
@@ -10588,6 +10850,115 @@ window.addEventListener('popstate', function(){
   .zt-title{font-size:23px;} .zt-lead{font-size:17px;margin-top:14px;}
   .zt-sub{font-size:12px;margin-top:10px;}
 }
+
+
+/* توهّجُ رموز المحطات أقوى في الداكن — الخلفيةُ تبتلع الخفيف منه */
+body.theme-dark .compass-svg #icon-shadow feDropShadow:first-of-type{
+  flood-color:#E8C070; flood-opacity:0.5;
+}
+body.mode-obsidian .compass-svg #icon-shadow feDropShadow:first-of-type{
+  flood-color:#F0D8A4; flood-opacity:0.55;
+}
+
+/* حلقةُ الجوهرة أفتح في الداكن — الخلفيةُ تبتلع الذهبَ الغامق */
+body.theme-dark .compass-svg #cs-relief stop:nth-child(1){stop-color:#FBEFCE;}
+body.theme-dark .compass-svg #cs-relief stop:nth-child(2){stop-color:#E8C070;}
+body.theme-dark .compass-svg #cs-relief stop:nth-child(3){stop-color:#C9963A;}
+body.theme-dark .compass-svg #cs-relief stop:nth-child(4){stop-color:#7E6330;}
+body.mode-obsidian .compass-svg #cs-relief stop:nth-child(1){stop-color:#F6E3B8;}
+body.mode-obsidian .compass-svg #cs-relief stop:nth-child(2){stop-color:#E0BC72;}
+body.mode-obsidian .compass-svg #cs-relief stop:nth-child(3){stop-color:#B08D45;}
+body.mode-obsidian .compass-svg #cs-relief stop:nth-child(4){stop-color:#6B5426;}
+
+
+/* ═══ الزجاجية — للوضعين الداكنين وحدهما ═══ */
+
+/* الخلفية شرطُها: تدرّجٌ داكن لا لونٌ مسطّح، وإلا بدت الزجاجيةُ باهتة.
+   و`background` مكتوبٌ في سمة style على العنصر فيغلب كلَّ قاعدة —
+   فنضع التدرّجَ في طبقةٍ خلفه بدل مصارعة السمة. */
+body.theme-dark #home-bg::before{
+  content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse at 22% -6%, rgba(46,139,99,.15), transparent 58%),
+    radial-gradient(ellipse at 84% 8%, rgba(201,150,58,.10), transparent 52%);
+}
+body.mode-obsidian #home-bg::before{
+  background:
+    radial-gradient(ellipse at 22% -6%, rgba(224,188,114,.13), transparent 58%),
+    radial-gradient(ellipse at 84% 8%, rgba(140,106,46,.12), transparent 52%);
+}
+/* محتوى الغلاف يعلو الطبقة */
+body.theme-dark #home-bg > *{ position:relative; z-index:1; }
+
+body.theme-dark #home-bg--unused{
+  background:
+    radial-gradient(ellipse at 22% -6%, rgba(46,139,99,.13), transparent 58%),
+    radial-gradient(ellipse at 84% 8%, rgba(201,150,58,.09), transparent 52%),
+    var(--cream);
+}
+body.mode-obsidian #home-bg{
+  background:
+    radial-gradient(ellipse at 22% -6%, rgba(224,188,114,.11), transparent 58%),
+    radial-gradient(ellipse at 84% 8%, rgba(140,106,46,.10), transparent 52%),
+    var(--cream);
+}
+
+/* ═══ الطبقة الثانية: بوابةُ الميدان ═══
+   بطاقةٌ زجاجيةٌ أوضح من الحاوية، بحافّةٍ رفيعة تُمسك حدّها. */
+body.theme-dark .dash-progress-card{
+  background:linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.022));
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  box-shadow:0 8px 24px rgba(0,0,0,.26);
+}
+body.mode-obsidian .dash-progress-card{
+  background:linear-gradient(135deg, rgba(224,188,114,.085), rgba(224,188,114,.02));
+  border-color:rgba(224,188,114,.16);
+  box-shadow:0 8px 26px rgba(0,0,0,.44);
+}
+
+/* لوحُ الإعدادات: حاويةٌ زجاجيةٌ خفيفة */
+body.theme-dark .zx-sheet-panel{
+  background:linear-gradient(160deg, rgba(255,255,255,.055), rgba(255,255,255,.015));
+  -webkit-backdrop-filter:blur(20px);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.085);
+}
+body.mode-obsidian .zx-sheet-panel{
+  background:linear-gradient(160deg, rgba(224,188,114,.07), rgba(224,188,114,.015));
+  border-color:rgba(224,188,114,.14);
+}
+
+/* ═══ الطبقة الثالثة: المحطة النشطة — مصمتةٌ بلا ضبابية ═══
+   التدرّجُ من الشفاف إلى المصمت هو ما يعطي العمق. */
+body.theme-dark #compass-icons > g.is-now circle:first-of-type{
+  filter:url(#now-glow);
+}
+
+/* عيّناتُ الأوضاع في الداكن: حافّةٌ زجاجية تُبرزها */
+body.theme-dark .zx-sw{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),
+             0 4px 14px rgba(0,0,0,.30);
+}
+
+/* الأجهزةُ التي لا تدعم الضبابية: خلفيةٌ مصمتة بدلها، فلا يضيع الحدّ */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  body.theme-dark .dash-progress-card{background:rgba(255,255,255,.07);}
+  body.theme-dark .zx-sheet-panel{background:#141A17;}
+  body.mode-obsidian .zx-sheet-panel{background:#17150F;}
+}
+
+/* من طلب تقليل الحركة: تُرفع الضبابيةُ فهي عبءُ رسمٍ مستمرّ */
+@media (prefers-reduced-motion:reduce){
+  body.theme-dark .dash-progress-card,
+  body.theme-dark .zx-sheet-panel{
+    -webkit-backdrop-filter:none; backdrop-filter:none;
+  }
+}
+
+
 </style>
 
 <div class="zt-wrap" id="ztWrap" role="dialog" aria-modal="true" aria-label="جولة تعريفية">
@@ -10614,11 +10985,6 @@ window.addEventListener('popstate', function(){
 
   var PANELS = [
     { logo:true, langPick:true,
-      t:{ar:'زاحِم', en:'Zahim', id:'Zahim', ms:'Zahim'},
-      l:{ar:'', en:'', id:'', ms:''},
-      s:{ar:'', en:'', id:'', ms:''} },
-
-    { logo:true,
       t:{ar:'زاحِم', en:'Zahim'},
       l:{ar:'فزاحِمْ هاتفك بما ينفعك.',
          en:'Fill your hours with what benefits you.'},
@@ -10878,7 +11244,7 @@ window.addEventListener('popstate', function(){
 (function(){
   'use strict';
   var KEY = 'zahim_mode_v1';
-  var MODES = ['calm','sea','night'];
+  var MODES = ['calm','teal','olive','sea','night','obsidian'];
 
   function get(){
     try{
@@ -10894,9 +11260,12 @@ window.addEventListener('popstate', function(){
     if(MODES.indexOf(m) === -1) m = 'calm';
     MODES.forEach(function(x){ document.body.classList.toggle('mode-' + x, x === m); });
     // الليليّ يستدعي theme-dark، فما بُني عليه من قواعد يتبعه بلا تكرار
-    document.body.classList.toggle('theme-dark', m === 'night');
+    // الليليُّ والأوبسيديان داكنان، فيستدعيان theme-dark
+    var DARK = ['night','obsidian'];
+    document.body.classList.toggle('theme-dark', DARK.indexOf(m) !== -1);
     try{ localStorage.setItem(KEY, m); }catch(e){}
-    try{ localStorage.setItem('zahim-theme', m === 'night' ? 'dark' : 'light'); }catch(e){}
+    try{ localStorage.setItem('zahim-theme',
+      (['night','obsidian'].indexOf(m) !== -1) ? 'dark' : 'light'); }catch(e){}
     zxPaintModes();
     try{ if(typeof zgPaintBand === 'function') zgPaintBand(); }catch(e){}
     try{ if(typeof buildCompass === 'function') buildCompass(); }catch(e){}
@@ -10905,12 +11274,48 @@ window.addEventListener('popstate', function(){
       if(ins && !ins.classList.contains('hidden')) renderMaydan(); } }catch(e){}
   };
 
+  /* اللوحة تُبنى من الأوضاع نفسها: عيّنةٌ ملوّنة واسمٌ تحتها —
+     فيرى اللونَ قبل أن يختاره، ولا يحتاج تجريبَ كلٍّ ليعرف. */
+  var LABELS = {
+    calm:'هادئ', teal:'بترولي', olive:'أخضر عميق',
+    sea:'بحري', night:'ليلي', obsidian:'أوبسيديان'
+  };
+  var SWATCH = {
+    calm:['#1B5C3F','#14432E','#C9963A'],
+    teal:['#155A61','#0E3D42','#C29A4A'],
+    olive:['#365726','#243D18','#C4A04A'],
+    sea:['#1A5273','#123A52','#C08B3E'],
+    night:['#248257','#173229','#E8C070'],
+    obsidian:['#2A2620','#0C0B09','#E0BC72']
+  };
+
   window.zxPaintModes = function(){
     var cur = get();
     var box = document.getElementById('zxModes');
     if(!box) return;
-    [].forEach.call(box.children, function(el){
-      el.classList.toggle('is-on', el.className.indexOf('m-' + cur) !== -1);
+    if(!box.dataset.built){
+      box.innerHTML = MODES.map(function(m){
+        var c = SWATCH[m];
+        var nm = LABELS[m];
+        try{ nm = ZahimI18n.t(LABELS[m]); }catch(e){}
+        return '<button class="zx-mode m-' + m + '" onclick="zxSetMode(\'' + m + '\')"'
+             + ' aria-label="' + nm + '">'
+             + '<span class="zx-sw" style="background:linear-gradient(140deg,'
+             + c[0] + ' 0%,' + c[1] + ' 100%)">'
+             + '<i style="background:' + c[2] + '"></i></span>'
+             + '<span class="zx-mode-name">' + nm + '</span></button>';
+      }).join('');
+      box.dataset.built = '1';
+    }
+    // الأسماء تُحدَّث في كل نداء — وإلا بقيت بلغة أوّل بناء
+    [].forEach.call(box.children, function(el, n){
+      var m = MODES[n];
+      var nm = LABELS[m];
+      try{ nm = ZahimI18n.t(LABELS[m]); }catch(e){}
+      var lab = el.querySelector('.zx-mode-name');
+      if(lab) lab.textContent = nm;
+      el.setAttribute('aria-label', nm);
+      el.classList.toggle('is-on', el.className.indexOf('m-' + m) !== -1 && m === cur);
     });
   };
 
@@ -10929,5 +11334,10 @@ window.addEventListener('popstate', function(){
   })();
 })();
 </script>
+<!-- ═══ عدّاد الزوّار ═══
+     Cloudflare Web Analytics: عددٌ ودولٌ فقط — بلا كعكات، وبلا تتبّعِ أشخاص.
+     ضع الرمز مكان ZAHIM_TOKEN وارفع الملف. وقبل ذلك لا يفعل شيئًا. -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "ZAHIM_TOKEN"}'></script>
 </body>
 </html>
