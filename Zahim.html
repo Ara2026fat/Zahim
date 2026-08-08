@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zahim · زاحِم</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#14432E; --green-mid:#1B5C3F; --green-light:#2E8B63;
+  --gold:#C9963A; --gold-light:#E8C070;
+  --cream:#F7F3EC; --cream-2:#EFE9DE;
+  --ink:#1C1C1C; --muted:#3A3A3A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:'Tajawal',sans-serif;
+  overflow-x:hidden;line-height:1.75}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+
+/* ═══ الحركة: تظهر عند بلوغها ═══ */
+.rise{opacity:0;transform:translateY(26px);
+  transition:opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1)}
+.rise.in{opacity:1;transform:none}
+.d1{transition-delay:.10s}.d2{transition-delay:.20s}.d3{transition-delay:.30s}
+.d4{transition-delay:.40s}.d5{transition-delay:.50s}
+
+/* ═══ الغلاف ═══ */
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;position:relative;
+  background:linear-gradient(170deg,#1B5C3F 0%,var(--green) 55%,#0F3222 100%);
+  color:var(--cream);padding:60px 22px}
+.hero::after{content:'';position:absolute;inset:0;opacity:.07;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='46'%3E%3Cpath d='M6 44V16Q6 4 30 2Q54 4 54 16v28' fill='none' stroke='%23E8C070' stroke-width='1.4'/%3E%3C/svg%3E");
+  background-size:60px 46px}
+.seal{width:132px;height:auto;margin-bottom:30px;position:relative;z-index:1;
+  animation:sealIn 1.5s cubic-bezier(.22,1,.36,1) both}
+@keyframes sealIn{
+  from{opacity:0;transform:scale(.82) rotate(-9deg)}
+  to{opacity:1;transform:none}}
+.hero h1{font-family:'Amiri',serif;font-weight:400;font-size:clamp(46px,13vw,80px);
+  line-height:1.2;position:relative;z-index:1;
+  animation:fadeUp 1.1s cubic-bezier(.22,1,.36,1) .35s both}
+.hero .tag{font-family:'Amiri',serif;font-size:clamp(19px,5.4vw,27px);
+  margin-top:14px;color:var(--gold-light);position:relative;z-index:1;
+  animation:fadeUp 1.1s cubic-bezier(.22,1,.36,1) .6s both}
+.hero .sub{font-size:clamp(15px,4.1vw,17.5px);margin-top:22px;max-width:440px;
+  opacity:.86;position:relative;z-index:1;
+  animation:fadeUp 1.1s cubic-bezier(.22,1,.36,1) .85s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.scroll{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:1;
+  animation:bob 2.4s ease-in-out infinite;opacity:.6}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}
+  50%{transform:translateX(-50%) translateY(9px)}}
+
+/* ═══ الأقسام ═══ */
+section{padding:86px 0}
+section.alt{background:var(--cream-2)}
+h2{font-family:'Amiri',serif;font-weight:400;font-size:clamp(29px,7.4vw,42px);
+  text-align:center;color:var(--green);margin-bottom:14px}
+.lead{text-align:center;font-family:'Amiri',serif;font-size:clamp(18.5px,5vw,24px);
+  color:var(--ink);max-width:560px;margin:0 auto 42px;line-height:1.95}
+.rule{width:74px;height:1px;margin:0 auto 34px;
+  background:linear-gradient(to left,transparent,var(--gold),transparent)}
+
+/* ═══ الشعار الأول ═══ */
+.why{text-align:center}
+.why h2{color:var(--green)}
+.why .big{font-family:'Amiri',serif;font-size:clamp(23px,6.4vw,34px);
+  line-height:2;max-width:620px;margin:0 auto}
+.why .big b{color:var(--green);font-weight:700}
+
+/* ═══ البطاقات ═══ */
+.cards{display:grid;gap:17px;grid-template-columns:1fr}
+@media(min-width:640px){.cards{grid-template-columns:1fr 1fr}}
+.card{background:#fff;border-radius:20px;padding:28px 24px;
+  border:1px solid rgba(20,67,46,.09);
+  box-shadow:0 2px 18px rgba(20,67,46,.05);
+  transition:transform .45s cubic-bezier(.22,1,.36,1), box-shadow .45s ease}
+.card:hover{transform:translateY(-5px);box-shadow:0 10px 32px rgba(20,67,46,.11)}
+.card .ico{width:52px;height:52px;margin-bottom:17px}
+.card h3{font-family:'Amiri',serif;font-weight:400;font-size:25px;color:var(--green);margin-bottom:9px}
+.card p{font-size:16px;color:var(--muted);line-height:1.95}
+
+/* ═══ الأرقام ═══ */
+.nums{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;max-width:620px;margin:0 auto}
+@media(min-width:640px){.nums{grid-template-columns:repeat(4,1fr)}}
+.num{text-align:center;background:#fff;border-radius:18px;padding:26px 12px;
+  border:1px solid rgba(201,150,58,.24)}
+.num b{display:block;font-family:'Amiri',serif;font-size:clamp(34px,9vw,46px);
+  color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
+.num span{display:block;font-size:14px;color:var(--muted);margin-top:9px}
+
+/* ═══ المبادئ ═══ */
+.vows{max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:13px}
+.vow{background:#fff;border-radius:15px;padding:19px 21px;
+  border-inline-start:3px solid var(--gold);font-size:16.5px;line-height:1.95}
+.vow b{color:var(--green);display:block;margin-bottom:3px;font-size:17.5px}
+
+/* ═══ اللغات ═══ */
+.langs{display:flex;flex-wrap:wrap;gap:11px;justify-content:center}
+.lang{background:#fff;border:1px solid rgba(201,150,58,.32);border-radius:999px;
+  padding:12px 25px;font-size:15px;font-weight:700;color:var(--green)}
+
+/* ═══ الخاتمة ═══ */
+.end{background:linear-gradient(170deg,var(--green) 0%,#0F3222 100%);
+  color:var(--cream);text-align:center;padding:96px 22px}
+.end h2{color:var(--gold-light)}
+.end .verse{font-family:'Amiri',serif;font-size:clamp(21px,5.6vw,29px);
+  line-height:2.1;max-width:540px;margin:0 auto 40px}
+.cta{display:inline-block;background:var(--gold);color:#1A2E22;
+  padding:17px 46px;border-radius:999px;text-decoration:none;
+  font-size:16.5px;font-weight:800;
+  transition:transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s ease;
+  box-shadow:0 6px 22px rgba(201,150,58,.28)}
+.cta:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(201,150,58,.38)}
+.end .foot{margin-top:44px;font-size:12.5px;opacity:.62;line-height:2.1}
+/* الدعاء سطرٌ مستقلّ: span داخل p لا ينفصل وحده */
+.end .dua{display:block;font-family:'Amiri',serif;font-size:15px;
+  margin-top:15px;opacity:.82;line-height:2}
+
+/* ═══ التنقّل بالأزرار ═══ */
+html,body{height:100%;overflow:hidden}
+body{display:flex;flex-direction:column}
+#deck{flex:1;position:relative;overflow:hidden}
+/* اللوحةُ تُمرَّر عند الحاجة — القراءةُ أولى من أن تسع الشاشة */
+.pane{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  display:flex;flex-direction:column;justify-content:center;
+  -webkit-overflow-scrolling:touch;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateY(22px);
+  transition:opacity .5s cubic-bezier(.22,1,.36,1),
+             transform .5s cubic-bezier(.22,1,.36,1), visibility .5s}
+.pane.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.pane > section,.pane > header{padding:38px 0;min-height:0}
+.pane.p-hero{padding:0}
+.pane.p-hero > header{padding:40px 22px;min-height:100%}
+
+/* شريط التنقّل */
+#nav{flex:0 0 auto;background:#fff;border-top:1px solid rgba(20,67,46,.10);
+  padding:13px 18px calc(13px + env(safe-area-inset-bottom,0px));
+  display:flex;align-items:center;gap:13px;justify-content:center}
+#dots{display:flex;gap:7px;direction:ltr;flex-direction:row-reverse}
+html[dir="ltr"] #dots{flex-direction:row}
+.dot{width:7px;height:7px;border-radius:999px;background:var(--muted);opacity:.26;
+  transition:opacity .35s ease,transform .35s ease}
+.dot.on{opacity:1;background:var(--gold);transform:scale(1.4)}
+#nav button{border:0;border-radius:12px;cursor:pointer;font-family:inherit;font-weight:700;
+  -webkit-tap-highlight-color:transparent;transition:transform .16s ease,opacity .3s ease}
+#nav button:active{transform:scale(.95)}
+#next{flex:1;max-width:220px;padding:14px;font-size:14.5px;
+  background:var(--green);color:var(--cream)}
+#prev{padding:14px 17px;font-size:13.5px;background:var(--cream-2);color:var(--green)}
+#prev[disabled]{opacity:.3;cursor:default}
+@media (max-width:360px){
+  #nav{gap:9px;padding-inline:12px}
+  #next{padding:13px;font-size:13.5px}
+  #prev{padding:13px 13px;font-size:12.5px}
+}
+/* الحركة داخل اللوحة تُشغَّل عند عرضها */
+.pane.on .rise{opacity:1;transform:none}
+.pane .rise{opacity:0;transform:translateY(22px)}
+
+/* اللوحاتُ المزدحمة: تُضغط لتُقرأ في شاشةٍ واحدة بلا تمرير */
+.pane .cards{gap:11px}
+.pane .card{padding:17px 16px;border-radius:16px}
+.pane .card .ico{width:36px;height:36px;margin-bottom:9px}
+.pane .card h3{font-size:20px;margin-bottom:5px}
+.pane .card p{font-size:12.8px;line-height:1.8}
+.pane .vows{gap:9px}
+.pane .vow{padding:13px 15px;font-size:13px;line-height:1.8}
+.pane .vow b{font-size:14px;margin-bottom:2px}
+.pane section{padding:26px 0}
+.pane h2{font-size:clamp(25px,6.6vw,36px);margin-bottom:10px}
+.pane .rule{margin-bottom:20px}
+.pane .lead{font-size:clamp(15px,4.2vw,19px);margin-bottom:24px;line-height:1.85}
+@media (min-width:640px){
+  .pane .card{padding:22px 20px}
+  .pane .card h3{font-size:23px}
+  .pane .card p{font-size:13.8px}
+}
+/* الشاشات القصيرة: ضغطٌ أشدّ */
+/* الجوال كله — لا الشاشات القصيرة وحدها */
+@media (max-width:639px){
+  .pane .card{padding:12px 14px;border-radius:14px}
+  .pane .card .ico{width:28px;height:28px;margin-bottom:5px}
+  .pane .card h3{font-size:19.5px;margin-bottom:3px}
+  .pane .card p{font-size:14.6px;line-height:1.68}
+  .pane .cards{gap:9px}
+  .pane .vow{padding:11px 13px;font-size:15.2px;line-height:1.74}
+  .pane .vow b{font-size:15.6px}
+  .pane .vows{gap:8px}
+  .pane section{padding:18px 0}
+  .pane h2{font-size:26px;margin-bottom:8px}
+  .pane .rule{margin-bottom:15px}
+  .pane .lead{font-size:16.9px;margin-bottom:16px;line-height:1.8}
+}
+@media (max-height:720px){
+  .pane .card{padding:13px 14px}
+  .pane .card .ico{width:30px;height:30px;margin-bottom:6px}
+  .pane .card h3{font-size:19.5px}
+  .pane .card p{font-size:14.8px;line-height:1.7}
+  .pane .vow{padding:11px 13px;font-size:15.0px;line-height:1.72}
+  .pane .vow b{font-size:15.4px}
+  .pane .lead{margin-bottom:18px}
+  .pane .num{padding:18px 10px}
+}
+
+/* الشاشات القصيرة أو الضيّقة: آخرُ درجةٍ من الضغط */
+/* الشريط السفليّ يأخذ ارتفاعًا: نخفّفه في الشاشات القصيرة */
+@media (max-height:700px){
+  #nav{padding-top:9px;padding-bottom:calc(9px + env(safe-area-inset-bottom,0px))}
+  #next,#prev{padding-top:11px;padding-bottom:11px}
+}
+@media (max-height:800px), (max-width:340px){
+  .pane .card{padding:9px 12px;border-radius:12px}
+  .pane .card .ico{width:24px;height:24px;margin-bottom:4px}
+  .pane .card h3{font-size:18.0px;margin-bottom:2px}
+  .pane .card p{font-size:14.4px;line-height:1.62}
+  .pane .cards{gap:7px}
+  .pane .vow{padding:9px 12px;font-size:14.6px;line-height:1.66}
+  .pane .vow b{font-size:15.4px}
+  .pane .vows{gap:6px}
+  .pane section{padding:12px 0}
+  .pane h2{font-size:23px;margin-bottom:6px}
+  .pane .rule{margin-bottom:11px}
+  .pane .lead{font-size:15.6px;margin-bottom:12px;line-height:1.75}
+  .pane .num{padding:14px 8px}
+  .wrap{padding-inline:16px}
+}
+
+/* أقصرُ الشاشات (٦٤٠ فأقلّ): لا يبقى إلا الجوهر */
+@media (max-height:660px){
+  .pane .card{padding:8px 11px}
+  .pane .card .ico{width:21px;height:21px;margin-bottom:3px}
+  .pane .card h3{font-size:17.2px}
+  .pane .card p{font-size:13.8px;line-height:1.56}
+  .pane .cards{gap:6px}
+  .pane .vow{padding:8px 11px;font-size:14.4px;line-height:1.6}
+  .pane .vow b{font-size:14.8px}
+  .pane h2{font-size:21px;margin-bottom:5px}
+  .pane .rule{margin-bottom:9px}
+  .pane .lead{font-size:15.2px;margin-bottom:10px}
+  .pane section{padding:9px 0}
+}
+
+/* إن ضاقت الشاشةُ جدًّا فاللوحة تُمرَّر — وتدرّجٌ في القاع يدلّ على ذلك */
+.pane{scrollbar-width:thin}
+.pane::after{content:'';position:sticky;bottom:0;display:block;height:26px;flex:0 0 auto;
+  background:linear-gradient(to top,var(--cream),transparent);pointer-events:none;
+  margin-top:-26px}
+.pane.p-hero::after{background:linear-gradient(to top,#0F3222,transparent)}
+.pane .why::after{display:none}
+
+/* ═══ أبوابُ البوصلة ═══ */
+.doors{display:grid;gap:10px;grid-template-columns:1fr;max-width:560px;margin:0 auto}
+@media(min-width:640px){.doors{grid-template-columns:1fr 1fr}}
+.door{background:#fff;border-radius:15px;padding:15px 17px;
+  border-inline-start:3px solid var(--gold)}
+.door b{display:block;font-family:'Amiri',serif;font-weight:400;font-size:21px;
+  color:var(--green);margin-bottom:4px}
+.door span{display:block;font-size:15px;color:var(--muted);line-height:1.82}
+@media (max-width:639px){
+  .door{padding:11px 14px;border-radius:13px}
+  .door b{font-size:19.5px;margin-bottom:2px}
+  .door span{font-size:14.6px;line-height:1.7}
+  .doors{gap:8px}
+}
+@media (max-height:800px), (max-width:340px){
+  .door{padding:9px 12px}
+  .door b{font-size:18.5px}
+  .door span{font-size:14.4px;line-height:1.62}
+  .doors{gap:6px}
+}
+@media (max-height:660px){
+  .door{padding:8px 11px}
+  .door b{font-size:17.0px}
+  .door span{font-size:13.8px;line-height:1.56}
+}
+
+/* ═══ مبدّل اللغة ═══ */
+#lang{position:fixed;top:0;inset-inline:0;z-index:60;display:flex;gap:5px;
+  justify-content:center;padding:9px 10px calc(9px);
+  background:rgba(247,243,236,.94);backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(201,150,58,.22)}
+#lang button{border:1px solid rgba(20,67,46,.14);background:#fff;border-radius:999px;
+  padding:6px 12px;cursor:pointer;font-family:'Tajawal','Inter',system-ui,sans-serif;
+  font-size:11.5px;font-weight:700;color:var(--green);
+  -webkit-tap-highlight-color:transparent;transition:background .25s,border-color .25s}
+#lang button.on{background:var(--green);color:var(--cream);border-color:var(--green)}
+#deck{padding-top:44px}
+.pane.p-hero > header{padding-top:66px}
+@media (max-width:360px){
+  #lang button{padding:5px 9px;font-size:10.5px}
+}
+/* النصّ الشرعيّ يبقى عربيًّا مهما كانت لغة الصفحة */
+html[dir="ltr"] .verse{direction:rtl;unicode-bidi:isolate}
+html[dir="ltr"] .dua{direction:rtl;unicode-bidi:isolate}
+html[dir="ltr"] body{font-family:'Inter',system-ui,sans-serif}
+html[dir="ltr"] h1,html[dir="ltr"] h2,html[dir="ltr"] .lead,
+html[dir="ltr"] .big,html[dir="ltr"] .card h3,html[dir="ltr"] .door b,
+html[dir="ltr"] .num b,html[dir="ltr"] .tag{font-family:'Amiri',serif}
+html[dir="ltr"] .vow{border-inline-start:3px solid var(--gold)}
+
+/* النصوصُ اللاتينية أطول من العربية بنحو الخُمس — تُضغط أكثر */
+html[dir="ltr"] .pane .card p,
+html[dir="ltr"] .pane .door span{font-size:14.4px;line-height:1.68}
+html[dir="ltr"] .pane .vow{font-size:14.6px;line-height:1.7}
+html[dir="ltr"] .pane .lead{font-size:16.0px;line-height:1.76}
+html[dir="ltr"] .pane h2{font-size:24px}
+@media (max-width:639px){
+  html[dir="ltr"] .pane .card p,
+  html[dir="ltr"] .pane .door span{font-size:16.5px;line-height:1.6}
+  html[dir="ltr"] .pane .vow{font-size:16.7px;line-height:1.62}
+  html[dir="ltr"] .pane .vow b{font-size:17.2px}
+  html[dir="ltr"] .pane .card h3{font-size:19.7px}
+  html[dir="ltr"] .pane .door b{font-size:19.9px}
+  html[dir="ltr"] .pane .lead{font-size:17.6px;margin-bottom:13px}
+  html[dir="ltr"] .pane h2{font-size:22px}
+  html[dir="ltr"] .pane section{padding:13px 0}
+}
+@media (max-height:800px), (max-width:340px){
+  html[dir="ltr"] .pane .card p,
+  html[dir="ltr"] .pane .door span{font-size:15.8px;line-height:1.54}
+  html[dir="ltr"] .pane .vow{font-size:16.1px;line-height:1.56}
+  html[dir="ltr"] .pane .card h3{font-size:19.0px}
+  html[dir="ltr"] .pane .door b{font-size:19.2px}
+  html[dir="ltr"] .pane .lead{font-size:17.2px;margin-bottom:10px}
+  html[dir="ltr"] .pane h2{font-size:20px}
+  html[dir="ltr"] .pane section{padding:9px 0}
+  html[dir="ltr"] .pane .card{padding:8px 11px}
+  html[dir="ltr"] .pane .door{padding:8px 11px}
+  html[dir="ltr"] .pane .vow{padding:8px 11px}
+}
+
+/* ملاحظةٌ تحت أبواب البوصلة */
+.door-note{text-align:center;font-family:'Amiri',serif;font-size:16px;
+  color:var(--muted);margin-top:16px;line-height:1.9}
+/* خطواتُ التثبيت */
+.steps{display:flex;flex-direction:column;gap:11px;max-width:520px;margin:0 auto}
+.step{display:flex;align-items:flex-start;gap:13px;background:#fff;border-radius:15px;
+  padding:15px 17px;border:1px solid rgba(20,67,46,.09)}
+.step i{flex:0 0 auto;width:29px;height:29px;border-radius:999px;
+  background:var(--green);color:var(--cream);display:flex;align-items:center;
+  justify-content:center;font-family:'Amiri',serif;font-style:normal;font-size:15px}
+.step span{font-size:15.5px;line-height:1.85;color:var(--ink)}
+.step b{color:var(--green)}
+@media (max-width:639px){
+  .door-note{font-size:15.4px;margin-top:12px}
+  .steps{gap:8px}
+  .step{padding:11px 13px;border-radius:13px;gap:10px}
+  .step i{width:25px;height:25px;font-size:15.4px}
+  .step span{font-size:15.0px;line-height:1.72}
+}
+@media (max-height:800px), (max-width:340px){
+  .door-note{font-size:14.8px;margin-top:9px}
+  .step{padding:9px 11px}
+  .step i{width:22px;height:22px;font-size:14.8px}
+  .step span{font-size:14.6px;line-height:1.64}
+  .steps{gap:6px}
+}
+@media (max-height:660px){
+  .door-note{font-size:14.4px;margin-top:7px}
+  .step{padding:8px 10px}
+  .step i{width:20px;height:20px;font-size:14.2px}
+  .step span{font-size:14.0px;line-height:1.56}
+}
+
+/* سطرُ المصادر: إثباتٌ لما فُعل، لا نفيًا لما لم يُفعل */
+.src-note{text-align:center;font-family:'Amiri',serif;font-size:16px;
+  color:var(--muted);margin-top:24px;line-height:2}
+@media (max-width:639px){ .src-note{font-size:14.5px;margin-top:18px} }
+@media (max-height:800px), (max-width:340px){ .src-note{font-size:13.5px;margin-top:14px} }
+
+/* «أو تضع عدد الأيام الذي يناسبك أنت» — الموضعُ الذي يخصّه هو */
+/* جملةُ الخطّة نصٌّ واحد — التقسيمُ يفصل الأسطر ويُعلّق النقطة */
+.door .q-plan{color:var(--green);font-weight:700}
+.langs{margin-top:20px}
+@media (max-width:639px){ .langs{margin-top:14px;gap:8px} .lang{padding:9px 17px;font-size:13.5px} }
+
+/* إطارٌ أخضر رفيع يُمسك حدَّ كلِّ بطاقة */
+.door{border:1px solid rgba(20,67,46,.28)}
+.extras{display:grid;grid-template-columns:1fr 1fr;gap:9px;max-width:560px;margin:11px auto 0}
+.extra{background:#fff;border:1px solid rgba(20,67,46,.28);border-radius:14px;padding:12px 14px}
+.extra b{display:block;font-family:'Amiri',serif;font-weight:400;font-size:18px;
+  color:var(--green);margin-bottom:3px}
+.extra span{display:block;font-size:13px;color:var(--muted);line-height:1.75}
+@media (max-width:639px){
+  .extras{gap:7px;margin-top:8px}
+  .extra{padding:9px 11px;border-radius:12px}
+  .extra b{font-size:16px;margin-bottom:2px}
+  .extra span{font-size:11.8px;line-height:1.65}
+}
+@media (max-height:800px), (max-width:340px){
+  .extra{padding:8px 10px}
+  .extra b{font-size:15px}
+  .extra span{font-size:11.2px;line-height:1.58}
+}
+
+/* اللاتينية أطولُ سطرًا من العربية، فتُضغط على الشاشات الضيّقة */
+@media (max-width:400px){
+  html[dir="ltr"] .door span{font-size:13px;line-height:1.6}
+  html[dir="ltr"] .door b{font-size:16px}
+  html[dir="ltr"] .door{padding:8px 11px}
+  html[dir="ltr"] .extra span{font-size:10.8px;line-height:1.5}
+  html[dir="ltr"] .extra b{font-size:14.5px}
+  html[dir="ltr"] .extra{padding:7px 9px}
+  html[dir="ltr"] .doors{gap:6px}
+  html[dir="ltr"] .lead{font-size:14px;margin-bottom:12px}
+  html[dir="ltr"] h2{font-size:22px}
+}
+
+</style></head><body>
+
+<!-- ═══ الغلاف ═══ -->
+<div id="lang"><button onclick="setL('ar')" data-l="ar" dir="rtl">العربية</button><button onclick="setL('en')" data-l="en">English</button><button onclick="setL('id')" data-l="id">Indonesia</button><button onclick="setL('ms')" data-l="ms">Melayu</button></div>
+<div id="deck">
+<div class="pane p-hero on"><header class="hero">
+  <img class="seal" src="data:image/png;base64,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" alt="زاحِم">
+  <h1>زاحِم</h1>
+  <p class="tag">فزاحِمْ هاتفك بما ينفعك</p>
+  <p class="sub">لا يأخذ وقتك، بل يردّه إليك.</p>
+  </header></div>
+
+<div class="pane"><section class="why">
+  <div class="wrap">
+    <h2 class="rise">لماذا زاحِم</h2>
+    <div class="rule rise d1"></div>
+    <p class="big rise d2">
+      الهاتفُ يزاحمنا على أوقاتنا،<br>
+      <b>فليكن فيه ما يزاحمه.</b>
+    </p>
+  </div>
+</section></div>
+
+<div class="pane"><section class="compass-deep">
+  <div class="wrap">
+    <h2 class="rise">ما في زاحِم</h2>
+    <div class="rule rise d1"></div>
+    <p class="lead rise d1">البوصلةُ مدارُه — وفيها أربعةُ أبواب.</p>
+    <div class="doors">
+      <div class="door rise d1">
+        <b>الأذكار</b>
+        <span>الصباح والمساء والنوم وما بعد الصلوات — وأربعةٌ وعشرون بابًا لأحوال يومك.</span>
+      </div>
+      <div class="door rise d2">
+        <b>القرآن — وخطّتُك أنت</b>
+        <span class="q-plan">تختم في ثلاثة أيام أو سبعةٍ أو عشرةٍ أو ثلاثين — أو بعددٍ تضعه أنت. ويُحسب لك وردُ كلِّ يوم.</span>
+      </div>
+      <div class="door rise d3">
+        <b>الحديث</b>
+        <span>حديثُ اليوم بتخريجه ودرجته — من مئتين وسبعة أحاديث.</span>
+      </div>
+      <div class="door rise d4">
+        <b>الصلاة</b>
+        <span>تفتح على المحراب بمواقيت مدينتك.</span>
+      </div>
+    </div>
+    <p class="door-note rise d4">وفيه المحراب وميدان الطاعة.</p>
+  </div>
+</section></div>
+
+<div class="pane"><section class="alt">
+  <div class="wrap">
+    <h2 class="rise">في سطور</h2>
+    <div class="rule rise d1"></div>
+    <div class="nums">
+      <div class="num rise d1"><b>٢٠٧</b><span>حديثًا صحيحًا بتخريجه</span></div>
+      <div class="num rise d2"><b>١٦٠</b><span>مدينة لحساب المواقيت</span></div>
+      <div class="num rise d3"><b>٢٤</b><span>بابًا من الأذكار</span></div>
+      <div class="num rise d4"><b>٤</b><span>لغات</span></div>
+    </div>
+    <p class="src-note rise d4">كلُّ حديثٍ بتخريجه ودرجته.</p>
+    <div class="langs rise d4">
+      <span class="lang">العربية</span>
+      <span class="lang">English</span>
+      <span class="lang">Bahasa Indonesia</span>
+      <span class="lang">Bahasa Melayu</span>
+    </div>
+    <p class="src-note rise d5">تُفتح بلغة جهازك، وتعمل بلا إنترنت.</p>
+  </div>
+</section></div>
+
+<div class="pane"><footer class="end">
+  <div class="wrap">
+    <h2 class="rise">زاحِمْ وقتك بالطاعات</h2>
+    <p class="verse rise d1">﴿ وَمَا عِندَ اللَّهِ خَيْرٌ وَأَبْقَىٰ ﴾</p>
+    <a class="cta rise d2" href="https://ara2026fat.github.io/Zahim/" target="_blank">افتح زاحِم</a>
+    <p class="foot rise d3">
+      جميع الحقوق محفوظة © زاحِم · ٢٠٢٦م / ١٤٤٨هـ
+      <span class="dua">غفر اللهُ لمطوِّرها ولمستخدميها ولوالديهم وللمسلمين أجمعين</span>
+    </p>
+  </div>
+</footer></div>
+</div>
+
+<nav id="nav">
+  <button id="prev" onclick="pv()">السابق</button>
+  <div id="dots"></div>
+  <button id="next" onclick="nx()">التالي</button>
+</nav>
+
+<script>
+
+/* ═══ الترجمة ═══
+   المعجمُ مفتاحه النصُّ العربيّ، فما لم يُترجَم يظهر عربيًّا سليمًا.
+   والآيةُ والدعاء لا يُترجَمان — يبقيان عربيَّين من اليمين. */
+var DICT = {
+"زاحِم": {
+"en": "Zahim",
+"id": "Zahim",
+"ms": "Zahim"
+},
+"فزاحِمْ هاتفك بما ينفعك": {
+"en": "Fill your hours with what benefits you",
+"id": "Isi waktu kita dengan yang bermanfaat",
+"ms": "Isi masa kita dengan yang bermanfaat"
+},
+"رفيقٌ هادئ، نرجو أن يُعين على أوراد اليوم —": {
+"en": "A quiet companion — we hope it helps with the day's devotions.",
+"id": "Teman yang tenang — semoga membantu wirid harian kita.",
+"ms": "Teman yang tenang — semoga membantu wirid harian kita."
+},
+"لا يأخذ وقتك، بل يردّه إليك.": {
+"en": "It does not take your time; it gives it back.",
+"id": "Ia tidak mengambil waktumu, tetapi mengembalikannya.",
+"ms": "Ia tidak mengambil masamu, tetapi mengembalikannya."
+},
+"لماذا زاحِم": {
+"en": "Why Zahim",
+"id": "Mengapa Zahim",
+"ms": "Mengapa Zahim"
+},
+"الهاتفُ يزاحمنا على أوقاتنا،": {
+"en": "The phone crowds out our hours —",
+"id": "Ponsel mendesak waktu kita —",
+"ms": "Telefon mendesak masa kita —"
+},
+"فليكن فيه ما يزاحمه.": {
+"en": "so let it hold what crowds it back.",
+"id": "maka biarlah ada di dalamnya yang mendesaknya kembali.",
+"ms": "maka biarlah ada di dalamnya yang mendesaknya kembali."
+},
+"البوصلة": {
+"en": "The Compass",
+"id": "Kompas",
+"ms": "Kompas"
+},
+"عليها مدارُ زاحِم — تدور مع ساعاتك": {
+"en": "Zahim turns on it — moving with your hours",
+"id": "Zahim berputar padanya — mengikuti jam-jam kita",
+"ms": "Zahim berputar padanya — mengikut jam-jam kita"
+},
+"وتشير إلى ما حان وقته.": {
+"en": "and pointing to what has come due.",
+"id": "dan menunjuk pada apa yang telah tiba waktunya.",
+"ms": "dan menunjuk kepada apa yang telah tiba waktunya."
+},
+"الأذكار": {
+"en": "Remembrance",
+"id": "Zikir",
+"ms": "Zikir"
+},
+"الصباح والمساء والنوم وما بعد الصلوات — وأربعةٌ وعشرون بابًا لأحوال اليوم.": {
+"en": "Morning, evening, before sleep and after prayer — twenty-four chapters for the day.",
+"id": "Pagi, petang, sebelum tidur dan setelah salat — dua puluh empat bab.",
+"ms": "Pagi, petang, sebelum tidur dan selepas solat — dua puluh empat bab."
+},
+"القرآن": {
+"en": "The Quran",
+"id": "Al-Quran",
+"ms": "Al-Quran"
+},
+"ختمةٌ بخطّةٍ تختارها: ثلاثةُ أيام أو سبعةٌ أو عشرةٌ أو ثلاثون — أو تضع عددك أنت.": {
+"en": "A completion plan you choose: three days, seven, ten or thirty — or set your own.",
+"id": "Rencana khatam pilihan kita: tiga hari, tujuh, sepuluh atau tiga puluh — atau tentukan sendiri.",
+"ms": "Rancangan khatam pilihan kita: tiga hari, tujuh, sepuluh atau tiga puluh — atau tentukan sendiri."
+},
+"الحديث": {
+"en": "Hadith",
+"id": "Hadis",
+"ms": "Hadis"
+},
+"حديثُ اليوم من رياض السنّة، بتخريجه ودرجته.": {
+"en": "The hadith of the day from the Gardens of the Sunnah, with its source and grading.",
+"id": "Hadis hari ini dari Taman Sunnah, dengan sumber dan derajatnya.",
+"ms": "Hadis hari ini dari Taman Sunnah, dengan sumber dan darjatnya."
+},
+"الصلاة": {
+"en": "Prayer",
+"id": "Salat",
+"ms": "Solat"
+},
+"تُشير إلى ما حان وقتُه من الصلوات، وتفتح على المحراب.": {
+"en": "It points to the prayer whose time has come, and opens onto the Mihrab.",
+"id": "Menunjuk salat yang telah tiba waktunya, dan membuka Mihrab.",
+"ms": "Menunjuk solat yang telah tiba waktunya, dan membuka Mihrab."
+},
+"ما في زاحِم": {
+"en": "What Zahim holds",
+"id": "Apa yang ada di Zahim",
+"ms": "Apa yang ada dalam Zahim"
+},
+"أربعةُ أبواب، كلٌّ يفتح على عمل.": {
+"en": "Four doors, each opening onto a deed.",
+"id": "Empat pintu, masing-masing membuka pada amal.",
+"ms": "Empat pintu, setiap satunya membuka kepada amal."
+},
+"مدارُ زاحِم — أذكارٌ وقرآنٌ وحديثٌ وصلاة في موضعٍ واحد.": {
+"en": "The axis of Zahim — remembrance, Quran, hadith and prayer in one place.",
+"id": "Poros Zahim — zikir, Al-Quran, hadis dan salat dalam satu tempat.",
+"ms": "Paksi Zahim — zikir, Al-Quran, hadis dan solat dalam satu tempat."
+},
+"المحراب": {
+"en": "The Mihrab",
+"id": "Mihrab",
+"ms": "Mihrab"
+},
+"مواقيتُ الصلاة بحسابٍ دقيق لمدينتك، وضوءُ الشاشة يمضي مع ضوء نهارك.": {
+"en": "Prayer times computed for your city, and the screen's light moves with your day.",
+"id": "Waktu salat dihitung untuk kotamu, dan cahaya layar mengikuti cahaya harimu.",
+"ms": "Waktu solat dikira untuk bandarmu, dan cahaya skrin mengikut cahaya harimu."
+},
+"ميدان الطاعة": {
+"en": "Maydan Al-Taʿah",
+"id": "Maydan Al-Taʿah",
+"ms": "Maydan Al-Taʿah"
+},
+"أعمالٌ يسيرة وأجورٌ عظيمة، من أحاديث صحيحة بتخريجها.": {
+"en": "Small deeds and abundant reward, from authentic hadiths with their sources.",
+"id": "Amal ringan dan pahala besar, dari hadis sahih dengan sumbernya.",
+"ms": "Amalan ringan dan ganjaran besar, dari hadis sahih dengan sumbernya."
+},
+"أذكارُ اليوم والأحوال في أربعةٍ وعشرين بابًا،": {
+"en": "The day's remembrance in twenty-four chapters,",
+"id": "Zikir harian dalam dua puluh empat bab,",
+"ms": "Zikir harian dalam dua puluh empat bab,"
+},
+"ورحلةٌ في السنّة حديثًا بعد حديث.": {
+"en": "and a journey through the Sunnah, one hadith at a time.",
+"id": "dan perjalanan dalam Sunnah, satu hadis demi satu hadis.",
+"ms": "dan perjalanan dalam Sunnah, satu hadis demi satu hadis."
+},
+"في سطور": {
+"en": "In numbers",
+"id": "Dalam angka",
+"ms": "Dalam angka"
+},
+"حديثًا صحيحًا بتخريجه": {
+"en": "authentic hadiths with sources",
+"id": "hadis sahih dengan sumbernya",
+"ms": "hadis sahih dengan sumbernya"
+},
+"مدينة لحساب المواقيت": {
+"en": "cities for prayer times",
+"id": "kota untuk waktu salat",
+"ms": "bandar untuk waktu solat"
+},
+"بابًا من الأذكار": {
+"en": "chapters of remembrance",
+"id": "bab zikir",
+"ms": "bab zikir"
+},
+"لغات": {
+"en": "languages",
+"id": "bahasa",
+"ms": "bahasa"
+},
+"كيف تفتحها": {
+"en": "How to open it",
+"id": "Cara membukanya",
+"ms": "Cara membukanya"
+},
+"صفحةٌ تُفتح من المتصفّح —": {
+"en": "A page that opens in the browser —",
+"id": "Halaman yang terbuka di peramban —",
+"ms": "Halaman yang terbuka dalam pelayar —"
+},
+"بلا تنزيل ولا متجر": {
+"en": "no download, no store",
+"id": "tanpa unduhan, tanpa toko",
+"ms": "tanpa muat turun, tanpa gedung"
+},
+"وإن شئتَ ثبّتها على شاشتك فتعمل كتطبيق،": {
+"en": "Install it on your screen and it works as an app,",
+"id": "Pasang di layar utama dan ia bekerja sebagai aplikasi,",
+"ms": "Pasang pada skrin utama dan ia berfungsi sebagai aplikasi,"
+},
+"وتفتح بلا إنترنت.": {
+"en": "and opens without internet.",
+"id": "dan terbuka tanpa internet.",
+"ms": "dan terbuka tanpa internet."
+},
+"زاحِمْ وقتك بالطاعات": {
+"en": "Fill your time with worship",
+"id": "Penuhi waktu kita dengan ketaatan",
+"ms": "Penuhi masa kita dengan ketaatan"
+},
+"التالي": {
+"en": "Next",
+"id": "Berikutnya",
+"ms": "Seterusnya"
+},
+"السابق": {
+"en": "Back",
+"id": "Sebelumnya",
+"ms": "Sebelumnya"
+},
+"افتح زاحِم": {
+"en": "Open Zahim",
+"id": "Buka Zahim",
+"ms": "Buka Zahim"
+},
+"جميع الحقوق محفوظة © زاحِم · ٢٠٢٦م / ١٤٤٨هـ": {
+"en": "All rights reserved © Zahim · 2026 / 1448",
+"id": "Hak cipta dilindungi © Zahim · 2026 / 1448",
+"ms": "Hak cipta terpelihara © Zahim · 2026 / 1448"
+},
+"أذكارُ اليوم والأحوال في أربعةٍ وعشرين بابًا، ورحلةٌ في السنّة حديثًا بعد حديث.": {
+"en": "The day's remembrance in twenty-four chapters, and a journey through the Sunnah, one hadith at a time.",
+"id": "Zikir harian dalam dua puluh empat bab, dan perjalanan dalam Sunnah, satu hadis demi satu hadis.",
+"ms": "Zikir harian dalam dua puluh empat bab, dan perjalanan dalam Sunnah, satu hadis demi satu hadis."
+},
+"٢٠٧": {
+"en": "207",
+"id": "207",
+"ms": "207"
+},
+"١٦٠": {
+"en": "160",
+"id": "160",
+"ms": "160"
+},
+"٢٤": {
+"en": "24",
+"id": "24",
+"ms": "24"
+},
+"٤": {
+"en": "4",
+"id": "4",
+"ms": "4"
+},
+"الصباح والمساء والنوم وما بعد الصلوات — وأربعةٌ وعشرون بابًا لأحوال يومك: الطعام واللباس والسفر والمطر والمرض وغيرها.": {
+"en": "Morning, evening, before sleep and after prayer — and twenty-four chapters for the day: food, dress, travel, rain, illness and more.",
+"id": "Pagi, petang, sebelum tidur dan setelah salat — serta dua puluh empat bab untuk keseharian: makan, pakaian, safar, hujan, sakit dan lainnya.",
+"ms": "Pagi, petang, sebelum tidur dan selepas solat — serta dua puluh empat bab untuk seharian: makan, pakaian, safar, hujan, sakit dan lain-lain."
+},
+"تُشير إلى ما حان وقتُه، وتفتح على المحراب بمواقيت مدينتك.": {
+"en": "It points to what has come due, and opens onto the Mihrab with your city's times.",
+"id": "Menunjuk apa yang telah tiba waktunya, dan membuka Mihrab dengan waktu kotamu.",
+"ms": "Menunjuk apa yang telah tiba waktunya, dan membuka Mihrab dengan waktu bandarmu."
+},
+"كلُّ حديثٍ بتخريجه ودرجته،": {
+"en": "Every hadith with its source and grading,",
+"id": "Setiap hadis dengan sumber dan derajatnya,",
+"ms": "Setiap hadis dengan sumber dan darjatnya,"
+},
+"ومعاني الترجمة عرضناها على أهل كلِّ لغة.": {
+"en": "and the translated meanings were reviewed by speakers of each language.",
+"id": "dan terjemahan maknanya ditinjau oleh penutur setiap bahasa.",
+"ms": "dan terjemahan maknanya disemak oleh penutur setiap bahasa."
+},
+"القرآن — وخطّتُك أنت": {
+"en": "The Quran — and your own plan",
+"id": "Al-Quran — dan rencanamu sendiri",
+"ms": "Al-Quran — dan rancanganmu sendiri"
+},
+"تختار متى تختم: في ثلاثة أيام أو سبعةٍ أو عشرةٍ أو ثلاثين —": {
+"en": "You choose when to complete it: in three days, seven, ten or thirty —",
+"id": "Kita memilih kapan mengkhatamkannya: tiga hari, tujuh, sepuluh atau tiga puluh —",
+"ms": "Kita memilih bila mengkhatamkannya: tiga hari, tujuh, sepuluh atau tiga puluh —"
+},
+"أو تضع عدد الأيام الذي يناسبك أنت": {
+"en": "or set the number of days that suits you",
+"id": "atau tentukan jumlah hari yang sesuai untukmu",
+"ms": "atau tentukan bilangan hari yang sesuai untukmu"
+},
+"فيُحسب لك ما تقرؤه كلَّ يوم: كم جزءًا وكم صفحة، وتمضي على قدر طاقتك لا على قدر غيرك.": {
+"en": "Your daily reading is worked out for you — how many juz and pages — so you go at your own pace, not another's.",
+"id": "Bacaan harianmu dihitungkan untukmu — berapa juz dan halaman — agar kita melangkah sesuai kemampuan sendiri.",
+"ms": "Bacaan harianmu dikirakan untukmu — berapa juzuk dan halaman — agar kita melangkah mengikut kemampuan sendiri."
+},
+"حديثُ اليوم من رياض السنّة بتخريجه ودرجته — ورحلةٌ فيها مئتان وسبعة أحاديث، تمضي فيها حديثًا بعد حديث.": {
+"en": "The hadith of the day from the Gardens of the Sunnah with source and grading — a journey of two hundred and seven, one hadith at a time.",
+"id": "Hadis hari ini dari Taman Sunnah dengan sumber dan derajatnya — perjalanan dua ratus tujuh hadis, satu demi satu.",
+"ms": "Hadis hari ini dari Taman Sunnah dengan sumber dan darjatnya — perjalanan dua ratus tujuh hadis, satu demi satu."
+},
+"تُفتح بلغة جهازك من أول مرة — وتعمل بلا إنترنت بعد تثبيتها.": {
+"en": "It opens in your device's language from the first time — and works offline once installed.",
+"id": "Terbuka dalam bahasa perangkatmu sejak pertama kali — dan bekerja tanpa internet setelah dipasang.",
+"ms": "Terbuka dalam bahasa perantimu sejak kali pertama — dan berfungsi tanpa internet setelah dipasang."
+},
+"الصباح والمساء والنوم وما بعد الصلوات — وأربعةٌ وعشرون بابًا لأحوال يومك.": {
+"en": "Morning, evening, sleep, after prayer — 24 chapters.",
+"id": "Pagi, petang, tidur, setelah salat — 24 bab.",
+"ms": "Pagi, petang, tidur, selepas solat — 24 bab."
+},
+"حديثُ اليوم بتخريجه ودرجته — من مئتين وسبعة أحاديث.": {
+"en": "Today's hadith with source and grading — from 207.",
+"id": "Hadis hari ini dengan sumbernya — dari 207.",
+"ms": "Hadis hari ini dengan sumbernya — dari 207."
+},
+"تفتح على المحراب بمواقيت مدينتك.": {
+"en": "Opens the Mihrab with your city's times.",
+"id": "Membuka Mihrab dengan waktu kotamu.",
+"ms": "Membuka Mihrab dengan waktu bandarmu."
+},
+"أعمالٌ يسيرة وأجورٌ عظيمة.": {
+"en": "Small deeds, abundant reward.",
+"id": "Amal ringan, pahala besar.",
+"ms": "Amalan ringan, ganjaran besar."
+},
+"كلُّ حديثٍ بتخريجه ودرجته.": {
+"en": "Every hadith with its source and grading.",
+"id": "Setiap hadis dengan sumber dan derajatnya.",
+"ms": "Setiap hadis dengan sumber dan darjatnya."
+},
+"تُفتح بلغة جهازك، وتعمل بلا إنترنت.": {
+"en": "Opens in your device's language, works offline.",
+"id": "Terbuka dalam bahasa perangkatmu, bekerja tanpa internet.",
+"ms": "Terbuka dalam bahasa perantimu, berfungsi tanpa internet."
+},
+"تختم في ثلاثة أيام أو سبعةٍ أو عشرةٍ أو ثلاثين — أو بعددٍ تضعه أنت. ويُحسب لك وردُ كلِّ يوم.": {
+"en": "Finish in 3, 7, 10 or 30 days — or a number you set. Your daily portion is worked out.",
+"id": "Khatam dalam 3, 7, 10 atau 30 hari — atau jumlah pilihanmu. Bagian harian dihitungkan.",
+"ms": "Khatam dalam 3, 7, 10 atau 30 hari — atau bilangan pilihanmu. Bahagian harian dikira."
+},
+"البوصلةُ مدارُه — وفيها أربعةُ أبواب.": {
+"en": "The Compass is its axis — four doors.",
+"id": "Kompas porosnya — empat pintu.",
+"ms": "Kompas paksinya — empat pintu."
+},
+"وفيه المحراب وميدان الطاعة.": {
+"en": "It also holds the Mihrab and Maydan Al-Taʿah.",
+"id": "Di dalamnya juga Mihrab dan Maydan Al-Taʿah.",
+"ms": "Di dalamnya juga Mihrab dan Maydan Al-Taʿah."
+}
+};
+var TR = {};
+var SACRED = ['verse','dua'];
+var L = 'ar';
+function walk(root, fn){
+  var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode:function(n){
+      if(!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      var p = n.parentElement; if(!p) return NodeFilter.FILTER_REJECT;
+      if(p.tagName==='SCRIPT'||p.tagName==='STYLE') return NodeFilter.FILTER_REJECT;
+      if(p.closest('#lang')) return NodeFilter.FILTER_REJECT;
+      for(var i=0;i<SACRED.length;i++) if(p.closest('.'+SACRED[i])) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }});
+  var n, list=[]; while((n=w.nextNode())) list.push(n);
+  list.forEach(fn);
+}
+function setL(code){
+  L = code;
+  // عنوانُ التبويب يتبع اللغة — يظهر عند المشاركة أيضًا
+  var TT = { ar:'زاحِم — تعريف بالمنصة', en:'Zahim — About',
+             id:'Zahim — Tentang', ms:'Zahim — Tentang' };
+  try{ document.title = TT[code] || 'Zahim · زاحِم'; }catch(e){}
+  var rtl = (code === 'ar');
+  document.documentElement.setAttribute('lang', code);
+  document.documentElement.setAttribute('dir', rtl ? 'rtl' : 'ltr');
+  walk(document.body, function(n){
+    if(n.__ar == null) n.__ar = n.nodeValue;
+    var raw = n.__ar, key = raw.trim();
+    if(rtl){ n.nodeValue = raw; return; }
+    var o = DICT[key]; var v = o ? o[code] : null;
+    n.nodeValue = v ? raw.replace(key, v) : raw;
+  });
+  [].forEach.call(document.querySelectorAll('#lang button'), function(b){
+    b.classList.toggle('on', b.dataset.l === code);
+  });
+  try{ localStorage.setItem('zahim_prof_lang', code); }catch(e){}
+  try{ if(window.zpRelabel) window.zpRelabel(); }catch(e){}
+}
+(function(){
+  var c = 'ar';
+  try{ var st = localStorage.getItem('zahim_prof_lang'); if(st) c = st; }catch(e){}
+  if(c === 'ar'){
+    try{
+      var list = navigator.languages || [navigator.language || 'ar'];
+      for(var i=0;i<list.length;i++){
+        var x = String(list[i]||'').toLowerCase().split('-')[0];
+        if(x === 'in') x = 'id';
+        if(['ar','en','id','ms'].indexOf(x) !== -1){ c = x; break; }
+      }
+    }catch(e){}
+  }
+  setL(c);
+})();
+
+/* التنقّل بالأزرار: لوحةٌ واحدة في الشاشة، والانتقال بقصدٍ لا بالتمرير */
+(function(){
+  var panes = [].slice.call(document.querySelectorAll('.pane'));
+  var i = 0;
+  var dotsEl = document.getElementById('dots');
+  var nextEl = document.getElementById('next');
+  var prevEl = document.getElementById('prev');
+
+  dotsEl.innerHTML = panes.map(function(_, n){
+    return '<span class="dot' + (n===0 ? ' on' : '') + '"></span>';
+  }).join('');
+  var dots = [].slice.call(dotsEl.children);
+
+  function show(n){
+    if(n < 0 || n >= panes.length) return;
+    panes[i].classList.remove('on');
+    dots[i].classList.remove('on');
+    i = n;
+    panes[i].classList.add('on');
+    dots[i].classList.add('on');
+    panes[i].scrollTop = 0;
+    prevEl.disabled = (i === 0);
+    relabel();
+  }
+  // اللافتةُ تُشتقّ من القاموس لا تُكتب حرفيًّا — وإلا غلبت العربيةُ كلَّ واجهة
+  function tn(k){ var o = DICT[k]; return (L !== 'ar' && o && o[L]) ? o[L] : k; }
+  function relabel(){
+    nextEl.textContent = tn(i === panes.length - 1 ? 'افتح زاحِم' : 'التالي');
+  }
+  window.zpRelabel = relabel;
+  window.nx = function(){
+    if(i === panes.length - 1){
+      window.open('https://ara2026fat.github.io/Zahim/', '_blank');
+      return;
+    }
+    show(i + 1);
+  };
+  window.pv = function(){ show(i - 1); };
+
+  /* السحب بالإصبع يعمل أيضًا — من ألِف التمرير لا يُحرم */
+  var x0 = null;
+  document.getElementById('deck').addEventListener('touchstart', function(e){
+    x0 = e.touches[0].clientX;
+  }, {passive:true});
+  document.getElementById('deck').addEventListener('touchend', function(e){
+    if(x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    x0 = null;
+    if(Math.abs(dx) < 55) return;
+    if(dx < 0) show(i + 1); else show(i - 1);   /* في RTL: يسارًا = التالي */
+  }, {passive:true});
+
+  document.addEventListener('keydown', function(e){
+    var fwd = (document.documentElement.getAttribute('dir') === 'ltr') ? 'ArrowRight' : 'ArrowLeft';
+    if(e.key === fwd) show(i + 1);
+    else if(e.key === 'ArrowLeft' || e.key === 'ArrowRight') show(i - 1);
+  });
+
+  show(0);
+})();
+</script>
+</body></html>
