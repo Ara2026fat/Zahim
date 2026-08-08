@@ -1022,7 +1022,11 @@ body{max-width:480px;margin:0 auto;position:relative;}
 #zxSheetRights .zx-rights{padding:14px 6px 4px;}
 /* اسمُ المطوّر في الإعدادات: بلا سهم، فليس مدخلًا إلى شيء */
 .zx-row.zx-owner{cursor:default;}
-.zx-row.zx-owner .zx-row-value{font-size:12px;opacity:.9;}
+/* سطرُ التطوير: جملةٌ واحدة بلغتين — تُقرأ في كل واجهة، ولا تُترجَم */
+.zx-row.zx-owner{flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;}
+.zx-row.zx-owner .zx-owner-ar{font-family:'Tajawal','Noto Kufi Arabic',sans-serif;
+  font-size:12.5px;font-weight:600;color:var(--text,#1A2E22);opacity:.92;}
+.zx-row.zx-owner .zx-owner-en{font-size:11px;letter-spacing:.2px;color:var(--muted,#6B8C78);opacity:.9;}
 #zxSheetRights .zx-seal-mono{width:26px;margin-bottom:9px;}
 .zx-rights::before{content:none;display:none;}
 /* أميري جميلٌ في المتون، دقيقٌ في الحواشي — فالحاشية تأخذ تجوال الأوضح عند الصغر.
@@ -1178,24 +1182,6 @@ body.mode-night .zx-seal-mono{filter:none;}
   .zx-sw{height:44px}
   .zx-mode-name{font-size:11.5px}
 }
-.zx-mode{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;
-  padding:12px 4px 10px;border-radius:14px;cursor:pointer;position:relative;
-  background:var(--card-bg);border:1px solid rgba(127,127,127,.18);
-  -webkit-tap-highlight-color:transparent;
-  transition:border-color .3s ease,background-color .3s ease;}
-.zx-mode.is-on{border-color:var(--gold);background:rgba(201,150,58,.09);}
-.zx-mode i{width:30px;height:30px;border-radius:999px;flex:0 0 auto;display:block;
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.10);}
-.zx-mode span{font-size:10.5px;color:var(--text);opacity:.9;}
-.zx-mode.is-on span{font-weight:700;}
-.zx-mode b{position:absolute;top:5px;inset-inline-start:5px;width:15px;height:15px;
-  border-radius:999px;background:var(--gold);color:#fff;font-size:9px;font-weight:700;
-  display:none;align-items:center;justify-content:center;line-height:1;}
-.zx-mode.is-on b{display:flex;}
-/* أقراص العيّنة: لون كل وضعٍ الحقيقي لا وصفه */
-.zx-mode.m-calm  i{background:radial-gradient(circle at 34% 30%,#F7F3EC 0 42%,#14432E 44%);}
-.zx-mode.m-sea   i{background:radial-gradient(circle at 34% 30%,#F4F6F8 0 42%,#123A52 44%);}
-.zx-mode.m-night i{background:radial-gradient(circle at 34% 30%,#3FA97B 0 40%,#141A17 42%);}
 
 
 /* ═══ البوصلة في الوضع الليلي ═══
@@ -9021,9 +9007,6 @@ function showToast(msg){
       <div class="zx-size" data-lvl="3" onclick="setTextLevel(3)"><b class="s3" data-sacred>ع</b><span>كبير</span></div>
     </div>
     <div class="zx-modes" id="zxModes">
-      <div class="zx-mode m-calm"  onclick="zxSetMode('calm')"><b>✓</b><i></i><span>الهادئ</span></div>
-      <div class="zx-mode m-sea"   onclick="zxSetMode('sea')"><b>✓</b><i></i><span>البحري</span></div>
-      <div class="zx-mode m-night" onclick="zxSetMode('night')"><b>✓</b><i></i><span>الليلي</span></div>
     </div>
     <div class="zx-row" onclick="zxCycleLang()">
       <span class="zx-row-label">اللغة</span><span class="zx-row-value" id="zxLang">—</span>
@@ -9069,8 +9052,8 @@ function showToast(msg){
       <span class="zx-row-label">تواصل مع مطوري زاحِم</span><span class="zx-row-chev">←</span>
     </div>
     <div class="zx-row zx-owner">
-      <span class="zx-row-label">تطوير</span>
-      <span class="zx-row-value" data-sacred dir="auto">عرفات الراجحي · Arafat AlRajhi</span>
+      <span class="zx-owner-ar" data-sacred dir="rtl">طوّر هذا التطبيق عرفات الراجحي</span>
+      <span class="zx-owner-en" data-sacred dir="ltr">Developed by Arafat AlRajhi</span>
     </div>
   </div>
 
