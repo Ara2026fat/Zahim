@@ -9463,7 +9463,7 @@ window.addEventListener('popstate', function(){
   function buildStates(){
     STATES = [
     { key:'fajr', dark:true, station:'fajr', from:T.fajr, to:T.sunrise, inWindow:true, next:'الظهر', title:'وقت الفجر',
-      wall:'#3A4E5C', niche:'#48606F', ink:'#FBFDFC', soft:'rgba(251,253,252,.86)', hair:'rgba(244,248,246,.20)',
+      wall:'#3E3A33', niche:'#4B463D', ink:'#FBFAF7', soft:'rgba(251,250,247,.86)', hair:'rgba(246,244,239,.20)',
       lightIn:'rgba(222,238,252,.96)', lightOut:'rgba(58,78,92,0)', lx:296, ly:626, lr:440,
       wallOp:.20, dimOp:.10, litOp:.52, edgeOp:.62, edgeCol:'#C9963A' },
     { key:'duha', station:'sunrise', from:T.sunrise, to:T.dhuhr, inWindow:false, next:'الظهر', title:'الضحى',
@@ -9483,11 +9483,11 @@ window.addEventListener('popstate', function(){
       lightIn:'rgba(250,192,130,.92)', lightOut:'rgba(67,50,42,0)', lx:88, ly:648, lr:490,
       wallOp:.19, dimOp:.105, litOp:.52, edgeOp:.62, edgeCol:'#C9963A' },
     { key:'isha', dark:true, station:'isha', from:T.isha, to:MIDNIGHT, inWindow:true, next:'الفجر', title:'وقت العشاء',
-      wall:'#31493D', niche:'#3E5A4C', ink:'#FBFDFC', soft:'rgba(251,253,252,.88)', hair:'rgba(241,247,243,.19)',
+      wall:'#33261E', niche:'#42332A', ink:'#FBF6EF', soft:'rgba(251,246,239,.88)', hair:'rgba(247,241,232,.19)',
       lightIn:'rgba(252,228,180,.94)', lightOut:'rgba(49,73,61,0)', lx:195, ly:556, lr:470,
       wallOp:.21, dimOp:.11, litOp:.56, edgeOp:.60, edgeCol:'#C9963A' },
     { key:'night', dark:true, station:null, from:MIDNIGHT, to:T.fajr+1440, inWindow:false, next:'الفجر', title:'جوف الليل',
-      wall:'#2B4139', niche:'#38524C', ink:'#FAFCFB', soft:'rgba(250,252,251,.86)', hair:'rgba(238,245,241,.18)',
+      wall:'#14100B', niche:'#201913', ink:'#FAF6F0', soft:'rgba(250,246,240,.86)', hair:'rgba(245,239,231,.18)',
       lightIn:'rgba(244,220,178,.90)', lightOut:'rgba(43,65,57,0)', lx:195, ly:580, lr:450,
       wallOp:.23, dimOp:.11, litOp:.56, edgeOp:.60, edgeCol:'#C9963A' },
     ];
@@ -11313,7 +11313,8 @@ body.theme-dark .zx-sw{
     var m = get();
     function go(){
       MODES.forEach(function(x){ document.body.classList.toggle('mode-' + x, x === m); });
-      document.body.classList.toggle('theme-dark', m === 'night');
+      // الداكنان هما نفسهما في zxSetMode — وإلا فقد الأوبسيديان theme-dark عند الإقلاع
+      document.body.classList.toggle('theme-dark', ['night','obsidian'].indexOf(m) !== -1);
     }
     if(document.body) go();
     else document.addEventListener('DOMContentLoaded', go);
