@@ -805,6 +805,7 @@ body{max-width:480px;margin:0 auto;position:relative;}
 .quran-day-card::before{
   content:'';position:absolute;inset:0;
   background:radial-gradient(ellipse at 20% 20%,rgba(201,150,58,0.15),transparent 60%);
+  pointer-events:none;   /* زينةٌ لا تعترض اللمس */
 }
 .qdc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;position:relative;}
 .qdc-day-label{font-size:11px;font-weight:700;color:var(--gold-light);letter-spacing:1px;}
@@ -3068,6 +3069,88 @@ var ZahimHadithID = {
 
 
 <!-- ==================== شاشة القرآن ==================== -->
+<style>
+/* ═══ شاشة المصحف ═══
+   ورقُ المصحف وحبرُه مقيسان من مصحف المدينة — لا يتبعان وضعَ التطبيق،
+   لأنّ المصحف يُقرأ كما طُبع. أمّا الإطارُ حوله فيتبع الوضع. */
+#screen-mushaf{--mpage:#FFFEF9;--mink:#000000;--mband1:#2E9A45;--mband2:#1B6B2F;
+  --medge:#12551F;--mhair:#5FB06B;--mfs:23px;
+  display:flex;flex-direction:column;overflow:hidden;}
+#screen-mushaf .mus-head{flex:0 0 auto;padding:8px 16px 5px;display:flex;
+  align-items:baseline;justify-content:space-between;font-size:12px;color:var(--muted);}
+#screen-mushaf .mus-surah{font-family:'Amiri',serif;font-size:15px;color:var(--text);}
+#screen-mushaf .mus-sheet{flex:1 1 auto;overflow:auto;display:flex;
+  justify-content:center;align-items:flex-start;padding:4px 8px;}
+#screen-mushaf .mus-page{width:100%;max-width:540px;background:var(--mpage);
+  border:1px solid rgba(0,0,0,.14);border-radius:6px;padding:14px 12px;
+  box-shadow:0 1px 2px rgba(20,40,30,.05),0 8px 26px rgba(20,40,30,.09);}
+#screen-mushaf .ln{display:flex;justify-content:space-between;align-items:center;
+  direction:rtl;line-height:1.95;font-size:var(--mfs);white-space:nowrap;color:var(--mink);}
+#screen-mushaf .ln.mid{justify-content:center;gap:.3em;}
+#screen-mushaf .ln w{display:inline-block;}
+#screen-mushaf .band{position:relative;margin:2px 0;line-height:0;}
+#screen-mushaf .band svg{display:block;width:100%;height:auto;}
+#screen-mushaf .band .inner{position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;color:var(--mink);font-size:calc(var(--mfs)*.86);
+  line-height:1.6;white-space:nowrap;pointer-events:none;}
+#screen-mushaf .mus-foot{flex:0 0 auto;display:flex;align-items:center;
+  justify-content:center;gap:11px;padding:7px 12px calc(9px + env(safe-area-inset-bottom,0px));
+  border-top:1px solid rgba(127,127,127,.14);}
+#screen-mushaf .mus-foot button{background:none;border:1px solid rgba(127,127,127,.24);
+  border-radius:10px;font-family:inherit;font-size:13px;color:var(--text);
+  padding:8px 15px;cursor:pointer;}
+#screen-mushaf .mus-foot button:active{transform:scale(.96);}
+#screen-mushaf .mus-no{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;}
+#screen-mushaf .mus-no input{width:52px;text-align:center;font:inherit;font-size:14px;
+  color:var(--text);border:1px solid rgba(127,127,127,.24);border-radius:8px;
+  padding:5px 2px;background:var(--card-bg);}
+#screen-mushaf .mus-msg{padding:34px 24px;text-align:center;color:#4A5A50;
+  font-size:13.5px;line-height:2;}
+#screen-mushaf .mus-msg b{display:block;font-size:15px;color:#1A2E22;margin-bottom:8px;}
+/* ═══ الوضعان الداكنان: تُخفَّت الورقة ولا يُمسّ رسمُها ═══
+   ورقُ المصحف أبيضُ في المطبوع، لكنّ بياضًا كاملًا في الظلام يُتعب العين.
+   فيُخفَّت السطوع ويبقى التباينُ عاليًا — والحبرُ حبرٌ والخرطوشُ خرطوش. */
+body.theme-dark #screen-mushaf{--mpage:#DCD6C6;--mink:#0A0A08;
+  --mband1:#27823B;--mband2:#175A28;--medge:#0E441A;--mhair:#4E9257;}
+body.mode-obsidian #screen-mushaf{--mpage:#C4BCA8;--mink:#0A0A08;
+  --mband1:#216F33;--mband2:#134B22;--medge:#0C3915;--mhair:#417B49;}
+body.theme-dark #screen-mushaf .mus-page{
+  border-color:rgba(0,0,0,.34);
+  box-shadow:0 1px 2px rgba(0,0,0,.30),0 10px 30px rgba(0,0,0,.42);}
+body.theme-dark #screen-mushaf .mus-msg{color:#3A473F;}
+body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
+#screen-mushaf .mus-msg button{margin-top:14px;background:var(--gold);border:0;
+  border-radius:10px;color:#20180B;font-family:inherit;font-size:13px;font-weight:700;
+  padding:9px 20px;cursor:pointer;}
+/* شريطُ الوِرد: يظهر إن كان الفتحُ من الخطّة */
+#screen-mushaf .mus-wird{flex:0 0 auto;margin:0 10px 5px;padding:7px 12px;
+  border-radius:10px;background:rgba(201,150,58,.11);
+  border:1px solid rgba(201,150,58,.26);display:flex;align-items:center;
+  justify-content:space-between;gap:10px;font-size:12px;color:var(--text);}
+#screen-mushaf .mus-wird button{background:var(--gold);border:0;border-radius:9px;
+  color:#20180B;font-family:inherit;font-size:12px;font-weight:700;
+  padding:7px 14px;cursor:pointer;white-space:nowrap;}
+</style>
+
+<div class="screen hidden" id="screen-mushaf">
+  <div class="topbar">
+    <button class="back-btn" onclick="closeMushaf()">↩ رجوع</button>
+  </div>
+  <div class="mus-head">
+    <span class="mus-surah" id="musSurah">—</span>
+    <span id="musPageNo"></span>
+  </div>
+  <div class="mus-wird" id="musWird" style="display:none;"></div>
+  <div class="mus-sheet" id="musSheet">
+    <div class="mus-page" id="musPage"><div class="mus-msg">…يُحمَّل</div></div>
+  </div>
+  <div class="mus-foot">
+    <button type="button" onclick="mushafGo(-1)">السابق</button>
+    <span class="mus-no"><input id="musJump" inputmode="numeric" value="1"> / ٦٠٤</span>
+    <button type="button" onclick="mushafGo(1)">التالي</button>
+  </div>
+</div>
+
 <div class="screen hidden" id="screen-quran">
   <div class="topbar">
     <button class="back-btn" onclick="closeQuranScreen()">↩ الرئيسية</button>
@@ -8294,7 +8377,6 @@ function formatArabicDate(d){
   return d.getDate() + ' ' + ARABIC_MONTHS[d.getMonth()] + ' ' + d.getFullYear();
 }
 
-const JUZZ_FIRST_SURAH_MAP = {1: 1, 2: 2, 3: 2, 4: 3, 5: 4, 6: 4, 7: 5, 8: 6, 9: 7, 10: 8, 11: 9, 12: 11, 13: 12, 14: 15, 15: 17, 16: 18, 17: 21, 18: 23, 19: 25, 20: 27, 21: 29, 22: 33, 23: 36, 24: 39, 25: 41, 26: 46, 27: 51, 28: 58, 29: 67, 30: 78};
 const QURAN_PLANS = {
   3:  { label:'٣ أيام', juzzPerDay:10, pagesPerDay:200 },
   7:  { label:'٧ أيام', juzzPerDay:4,  pagesPerDay:86  },
@@ -8434,15 +8516,15 @@ function renderQuranProgress(wrap){
     <div class="quran-journey-card">
       <div class="qj-head">
         <div class="qj-title">رحلتك في القرآن</div>
-        <div class="qj-pct">${pctEarly}٪</div>
+        <div class="qj-pct">${arNum(pctEarly)}٪</div>
       </div>
       <div class="qj-bar-track"><div class="qj-bar-fill" style="width:${pctEarly}%"></div></div>
       <div class="qj-stats">
-        <div class="qj-stat"><div class="qj-stat-num">${currentPage}</div><div class="qj-stat-label">الصفحة الحالية</div></div>
+        <div class="qj-stat"><div class="qj-stat-num">${arNum(currentPage)}</div><div class="qj-stat-label">الصفحة الحالية</div></div>
         <div class="qj-stat-sep"></div>
-        <div class="qj-stat"><div class="qj-stat-num">${totalDoneEarly}<span class="qj-stat-of">/${days}</span></div><div class="qj-stat-label">أيام مكتملة</div></div>
+        <div class="qj-stat"><div class="qj-stat-num">${arNum(totalDoneEarly)}<span class="qj-stat-of">/${arNum(days)}</span></div><div class="qj-stat-label">أيام مكتملة</div></div>
         <div class="qj-stat-sep"></div>
-        <div class="qj-stat"><div class="qj-stat-num">${remainingDays}</div><div class="qj-stat-label">يوماً متبقياً</div></div>
+        <div class="qj-stat"><div class="qj-stat-num">${arNum(remainingDays)}</div><div class="qj-stat-label">يوماً متبقياً</div></div>
       </div>
     </div>`;
 
@@ -8455,7 +8537,7 @@ function renderQuranProgress(wrap){
     const sel = i === _selectedQuranDay ? ' selected' : '';
     pillsHTML += `<div class="qd-pill ${cls}${sel}" onclick="selectQuranDay(${i})">
       <div class="qd-day">يوم</div>
-      <div class="qd-num">${i+1}</div>
+      <div class="qd-num">${arNum(i+1)}</div>
       <div class="qd-check">${isDone?'✓':isToday?'●':''}</div>
     </div>`;
   }
@@ -8488,28 +8570,27 @@ function renderQuranProgress(wrap){
         </div>
       </div>
       <div class="qdc-main">
-        <div class="qdc-juzz">الجزء ${juzzStart} ${juzzEnd > juzzStart ? '← الجزء ' + juzzEnd : ''}</div>
-        <div class="qdc-surah">${fromSurah} ← ${toSurah}</div>
+        <div class="qdc-surah" id="qdcSpan" data-from="${pageStart}" data-to="${pageEnd}">&nbsp;</div>
         <div class="qdc-range">
-          <span class="qdc-range-text">صفحة ${pageStart} <span class="qdc-range-arrow">←</span> صفحة ${pageEnd}</span>
+          <span class="qdc-range-text">صفحة ${arNum(pageStart)} <span class="qdc-range-arrow">←</span> صفحة ${arNum(pageEnd)}</span>
         </div>
-        <div class="qdc-range-sub">${plan.pagesPerDay} صفحة يومياً</div>
+        <div class="qdc-range-sub">${arNum(plan.pagesPerDay)} صفحة يومياً</div>
       </div>
       <div class="qdc-progress">
         <div class="qdc-prog-label">
           <span>تقدم الختمة</span>
-          <span>${totalDone} / ${days} يوم · ${pct}٪</span>
+          <span>${arNum(totalDone)} / ${arNum(days)} يوم · ${arNum(pct)}٪</span>
         </div>
         <div class="qdc-prog-bar">
           <div class="qdc-prog-fill" style="width:${pct}%"></div>
         </div>
       </div>
-      <div onclick="openQuranCom(${juzzStart})"
-        style="display:block;width:100%;padding:11px;border-radius:12px;margin-bottom:6px;
+      <div onclick="openMushaf(${pageStart}, ${pageEnd})"
+        style="display:block;position:relative;z-index:1;width:100%;padding:11px;border-radius:12px;margin-bottom:6px;
         background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
         color:#FFF8F0;font-size:13px;font-weight:800;text-align:center;text-decoration:none;
         font-family:'Tajawal',sans-serif;cursor:pointer;box-sizing:border-box;">
-        🌐 اقرأ في Quran.com — مصحف المدينة
+        افتح المصحف — صفحة ${arNum(pageStart)}
       </div>
       ${isTodaySelected ? `<button class="qdc-btn ${isDoneToday?'completed':''}" onclick="markQuranDayDone()">
         ${isDoneToday ? '✓ أتممت ورد اليوم' : 'سجّل إتمام ورد اليوم'}
@@ -8518,6 +8599,7 @@ function renderQuranProgress(wrap){
     </div>`;
 
   wrap.innerHTML = journeyHTML + pillsHTML + cardHTML;
+  try{ fillDaySpan(); }catch(e){}
 
   // تمرير لليوم الحالي
   setTimeout(()=>{
@@ -8532,11 +8614,274 @@ function selectQuranDay(idx){
   renderQuranScreen();
 }
 
-function openQuranCom(juzzNum){
-  const surah = JUZZ_FIRST_SURAH_MAP[juzzNum] || 1;
-  const url = 'https://quran.com/' + surah;
-  window.location.href = url;
+/* ═══════════════════════════════════════════════════════════
+   المصحف — مصحف المدينة النبوية، الإصدار الرابع ١٤٤١هـ
+   البياناتُ من نسخةٍ عندنا (MIT)، والخطُّ يُستدعى من مصدره ولا يُستضاف.
+   ═══════════════════════════════════════════════════════════ */
+var MUS_DATA = 'https://raw.githubusercontent.com/Ara2026fat/quran-qcf4/main/pages';
+var MUS_CDN  = 'https://cdn.jsdelivr.net/gh/MohamadHajjRabee/quran-qcf4@main/fonts-woff2';
+var MUS_KEY  = 'zahim_mushaf_page';
+
+var MUS_CK = 'zahim_mushaf_pages';
+var _musPage = 1, _musFonts = {}, _musFrom = 0, _musTo = 0, _musCache = {};
+
+/* ما قُرئ يبقى محفوظًا، فلا يُطلب مرّةً أخرى.
+   نحفظ آخر ستّين صفحة — أكثرُ من ذلك يملأ مساحةَ التخزين. */
+var MUS_KEEP = 60;
+function musDisk(){
+  try{ return JSON.parse(localStorage.getItem(MUS_CK) || '{}'); }catch(e){ return {}; }
 }
+function musSave(n, j){
+  try{
+    var d = musDisk();
+    d[n] = j;
+    var keys = Object.keys(d);
+    if(keys.length > MUS_KEEP){
+      /* نُسقط الأبعدَ عن الصفحة الحاليّة */
+      keys.sort(function(a,b){ return Math.abs(b-n) - Math.abs(a-n); });
+      for(var i = 0; i < keys.length - MUS_KEEP; i++) delete d[keys[i]];
+    }
+    localStorage.setItem(MUS_CK, JSON.stringify(d));
+  }catch(e){
+    /* امتلأت المساحة — نُفرغ ونبدأ من جديد بلا إزعاج */
+    try{ localStorage.removeItem(MUS_CK); }catch(e2){}
+  }
+}
+
+function musPad(n){ return ('00' + n).slice(-3); }
+function musEsc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* اسمُ الخطّ في البيانات بلا لاحقة، وملفُّه قد يحملها — فنعطي الاحتمالين */
+function musFont(name){
+  if(!name || _musFonts[name]) return;
+  _musFonts[name] = 1;
+  var st = document.createElement('style');
+  st.textContent = "@font-face{font-family:'" + name + "';src:"
+    + "url('" + MUS_CDN + "/" + name + "_W.woff2') format('woff2'),"
+    + "url('" + MUS_CDN + "/" + name + ".woff2') format('woff2');font-display:block;}";
+  document.head.appendChild(st);
+}
+
+/* لافتةُ السورة: خرطوشٌ طرفاه محرابان — قوسُ زاحِم، لا زخرفةٌ منقولة */
+function musBand(inner){
+  return '<div class="band">'
+   + '<svg viewBox="0 0 966 112" preserveAspectRatio="none" aria-hidden="true">'
+   +   '<defs><linearGradient id="musbg" x1="0" y1="0" x2="0" y2="1">'
+   +     '<stop offset="0" stop-color="var(--mband1)"/><stop offset="1" stop-color="var(--mband2)"/>'
+   +   '</linearGradient></defs>'
+   +   '<rect x="1.5" y="1.5" width="963" height="109" fill="url(#musbg)" stroke="#000" stroke-width="3"/>'
+   +   '<path d="M363,17 H603 Q637,17 685,56 Q637,95 603,95 H363 Q329,95 281,56 Q329,17 363,17 Z"'
+   +        ' fill="var(--mpage)" stroke="var(--medge)" stroke-width="3"/>'
+   +   '<path d="M370,26 H596 Q625,26 666,56 Q625,86 596,86 H370 Q341,86 300,56 Q341,26 370,26 Z"'
+   +        ' fill="none" stroke="var(--mhair)" stroke-width="1.4"/>'
+   + '</svg><span class="inner">' + inner + '</span></div>';
+}
+
+function musRender(j){
+  var page = document.getElementById('musPage');
+  var lines = j.lines || [];
+  musFont(j.font);
+
+  var html = '';
+  lines.forEach(function(L){
+    var words = L.words || [];
+    if(!words.length){ html += '<div class="ln">&nbsp;</div>'; return; }
+    var kinds = words.map(function(w){ return String(w.type || 'word').toLowerCase(); });
+    var isText  = kinds.indexOf('word') !== -1;
+    var isSurah = kinds.some(function(k){ return k.indexOf('surah') !== -1 || k.indexOf('chapter') !== -1; });
+    var out = words.map(function(w){
+      musFont(w.font);
+      /* char محرفُ الخطّ، و text نصٌّ عاديّ — والرسمُ الصحيح بالأول */
+      var g = w.char || w.text || '';
+      var fam = w.font ? " style=\"font-family:'" + w.font + "','Amiri',serif\"" : '';
+      return '<w' + fam + '>' + musEsc(g) + '</w>';
+    }).join('');
+    if(isSurah){ html += musBand(out); return; }
+    html += '<div class="ln' + (isText ? '' : ' mid') + '">' + out + '</div>';
+  });
+
+  page.innerHTML = html;
+  var names = (j.surahs || []).map(function(x){ return x.name_arabic || x.name; }).filter(Boolean);
+  document.getElementById('musSurah').textContent = names.join(' · ') || '—';
+  document.getElementById('musPageNo').textContent = 'صفحة ' + arNum(j.page || _musPage);
+  musFit();
+}
+
+/* القياسُ يُحسب من عرض الورقة — فلا يفيض السطر ولا يقصر */
+function musFit(){
+  var page = document.getElementById('musPage');
+  var sheet = document.getElementById('musSheet');
+  var run = function(){
+    if(!page.getElementsByClassName('ln').length) return;
+    var lo = 11, hi = 34, best = 11, box = page.clientWidth - 24;
+    for(var i = 0; i < 9; i++){
+      var mid = (lo + hi) / 2;
+      page.style.setProperty('--mfs', mid + 'px');
+      var over = false, ln = page.getElementsByClassName('ln');
+      for(var k = 0; k < ln.length; k++){
+        if(ln[k].scrollWidth > box + 1){ over = true; break; }
+      }
+      if(over){ hi = mid; } else { best = mid; lo = mid; }
+    }
+    page.style.setProperty('--mfs', best.toFixed(2) + 'px');
+    var h = sheet.clientHeight - 12, got = page.scrollHeight;
+    if(got > h && got > 0) page.style.setProperty('--mfs', (best * (h / got)).toFixed(2) + 'px');
+  };
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(run).catch(run);
+  else setTimeout(run, 400);
+  setTimeout(run, 900);
+}
+
+function musOffline(n){
+  document.getElementById('musPage').innerHTML =
+    '<div class="mus-msg"><b>الصفحة تحتاج اتصالاً</b>'
+    + 'صفحاتُ المصحف وخطُّها تُنزَّل عند أول فتح.<br>'
+    + 'اتصل بالإنترنت مرّةً واحدة، وبعدها تُقرأ بلا اتصال بإذن الله.'
+    + '<br><button type="button" onclick="musLoad(' + n + ')">أعِد المحاولة</button></div>';
+}
+
+function musLoad(n){
+  n = Math.max(1, Math.min(604, n | 0));
+  _musPage = n;
+  document.getElementById('musJump').value = n;
+  try{ localStorage.setItem(MUS_KEY, String(n)); }catch(e){}
+  musWird();
+
+  if(_musCache[n]){ musRender(_musCache[n]); return; }
+  var saved = musDisk()[n];
+  if(saved){ _musCache[n] = saved; musRender(saved); return; }
+
+  document.getElementById('musPage').innerHTML = '<div class="mus-msg">…يُحمَّل</div>';
+  if(navigator.onLine === false){ musOffline(n); return; }
+
+  fetch(MUS_DATA + '/' + musPad(n) + '.json')
+    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(j){
+      _musCache[n] = j; musSave(n, j);
+      if(_musPage === n) musRender(j);
+      /* نجلب التاليةَ بهدوء، فلا ينتظر القارئ عند التقليب */
+      var nx = n + 1;
+      if(nx <= 604 && !_musCache[nx] && !musDisk()[nx]){
+        fetch(MUS_DATA + '/' + musPad(nx) + '.json')
+          .then(function(r){ return r.ok ? r.json() : null; })
+          .then(function(k){ if(k){ _musCache[nx] = k; musSave(nx, k); } })
+          .catch(function(){});
+      }
+    })
+    .catch(function(){ musOffline(n); });
+}
+
+function mushafGo(step){ musLoad(_musPage + step); }
+
+/* ═══ مدى الوِرد كما هو في المصحف ═══
+   يُقرأ من الصفحتين الطرفيّتين نفسِهما — لا من جدول أجزاء،
+   لأنّ الخطّة بالصفحات، والصفحةُ لا تنتهي حيث ينتهي الجزء. */
+function musPageJson(n){
+  if(_musCache[n]) return Promise.resolve(_musCache[n]);
+  var d = musDisk()[n];
+  if(d){ _musCache[n] = d; return Promise.resolve(d); }
+  if(navigator.onLine === false) return Promise.reject();
+  return fetch(MUS_DATA + '/' + musPad(n) + '.json')
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(j){ _musCache[n] = j; musSave(n, j); return j; });
+}
+
+function musEdgeVerse(j, last){
+  var key = null;
+  (j.lines || []).forEach(function(L){
+    (L.words || []).forEach(function(w){
+      if((w.type || 'word') !== 'word' || !w.verse_key) return;
+      if(!key || last) key = w.verse_key;
+    });
+  });
+  if(!key) return null;
+  var pr = key.split(':');
+  var sid = parseInt(pr[0], 10), aya = parseInt(pr[1], 10);
+  var nm = (j.surahs || []).filter(function(x){ return x.id === sid; })[0];
+  return { name: (nm && (nm.name_arabic || nm.name)) || ('سورة ' + sid), aya: aya };
+}
+
+function fillDaySpan(){
+  var el = document.getElementById('qdcSpan');
+  if(!el) return;
+  var from = parseInt(el.getAttribute('data-from'), 10);
+  var to   = parseInt(el.getAttribute('data-to'), 10);
+  if(!from || !to) return;
+  Promise.all([musPageJson(from), musPageJson(to)]).then(function(r){
+    var a = musEdgeVerse(r[0], false), b = musEdgeVerse(r[1], true);
+    if(!a || !b) return;
+    var cur = document.getElementById('qdcSpan');
+    if(!cur || parseInt(cur.getAttribute('data-from'),10) !== from) return;
+    var one = (a.name === b.name && a.aya === b.aya);
+    cur.textContent = one
+      ? (a.name + ' ' + arNum(a.aya))
+      : (a.name + ' ' + arNum(a.aya) + ' ← ' + b.name + ' ' + arNum(b.aya));
+  }).catch(function(){});
+}
+
+/* شريطُ الوِرد: يظهر إن فُتح المصحفُ من الخطّة */
+function musWird(){
+  var bar = document.getElementById('musWird');
+  if(!_musFrom || !_musTo){ bar.style.display = 'none'; return; }
+  var done = Math.min(Math.max(_musPage - _musFrom + 1, 0), _musTo - _musFrom + 1);
+  var all  = _musTo - _musFrom + 1;
+  var atEnd = _musPage >= _musTo;
+  bar.style.display = 'flex';
+  bar.innerHTML = '<span>وِرد اليوم · ' + arNum(done) + ' من ' + arNum(all) + ' صفحة</span>'
+    + (atEnd ? '<button type="button" onclick="musDone()">أتممت الوِرد</button>' : '');
+}
+
+function musDone(){
+  try{ if(typeof markQuranDayDone === 'function') markQuranDayDone(); }catch(e){}
+  _musFrom = _musTo = 0;
+  musWird();
+  closeMushaf();
+}
+
+function openMushaf(from, to){
+  var scr = document.getElementById('screen-mushaf');
+  if(!scr) return;
+  _musFrom = from || 0; _musTo = to || 0;
+
+  var start = from;
+  if(!start){
+    var saved = 0;
+    try{ saved = parseInt(localStorage.getItem(MUS_KEY), 10) || 0; }catch(e){}
+    start = saved || 1;
+  } else {
+    /* يعود إلى حيث وقف داخل وِرد اليوم، لا إلى أوّله */
+    var last = 0;
+    try{ last = parseInt(localStorage.getItem(MUS_KEY), 10) || 0; }catch(e){}
+    if(last >= from && last <= to) start = last;
+  }
+
+  document.querySelectorAll('.screen').forEach(function(x){
+    if(x.id !== 'screen-mushaf'){ x.classList.add('hidden'); }
+  });
+  scr.classList.remove('hidden');
+  scr.scrollTop = 0;
+  musLoad(start);
+}
+
+function closeMushaf(){
+  document.getElementById('screen-mushaf').classList.add('hidden');
+  var q = document.getElementById('screen-quran');
+  if(q){ q.classList.remove('hidden'); try{ renderQuranScreen(); }catch(e){} }
+  else { document.getElementById('screen-home').classList.remove('hidden'); }
+}
+
+addEventListener('resize', function(){
+  var s = document.getElementById('screen-mushaf');
+  if(s && !s.classList.contains('hidden')) musFit();
+});
+addEventListener('online', function(){
+  var s = document.getElementById('screen-mushaf');
+  if(s && !s.classList.contains('hidden') && !_musCache[_musPage]) musLoad(_musPage);
+});
+
+document.addEventListener('change', function(e){
+  if(e.target && e.target.id === 'musJump') musLoad(parseInt(e.target.value, 10) || 1);
+});
 
 function markQuranDayDone(){
   const idx = getCurrentQuranDay();
@@ -11325,7 +11670,6 @@ body.theme-dark .zx-sw{
 <!-- ═══ عدّاد الزوّار ═══
      Cloudflare Web Analytics: عددٌ ودولٌ فقط — بلا كعكات، وبلا تتبّعِ أشخاص.
      الرمزُ موضوعٌ ومربوطٌ بالمضيف ara2026fat.github.io -->
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js"
-        data-cf-beacon='{"token": "7f11bad37028446693a75bd93a666f0b"}'></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7f11bad37028446693a75bd93a666f0b"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
