@@ -3088,6 +3088,26 @@ var ZahimHadithID = {
   direction:rtl;line-height:1.95;font-size:var(--mfs);white-space:nowrap;color:var(--mink);}
 #screen-mushaf .ln.mid{justify-content:center;gap:.3em;}
 #screen-mushaf .ln w{display:inline-block;}
+/* الفاتحةُ وأولُ البقرة في المصحف داخل إطار، وسطورُهما موسَّطةٌ لا ممدودة */
+#screen-mushaf .mus-page.framed .ln{justify-content:center;gap:.34em;}
+#screen-mushaf .mus-page.framed{padding:20px 16px;}
+
+/* ═══ أدواتُ القراءة ═══ */
+#screen-mushaf .mus-tools{display:flex;align-items:center;gap:7px;}
+#screen-mushaf .mus-tool{background:none;border:1px solid rgba(127,127,127,.24);
+  border-radius:9px;padding:5px 9px;cursor:pointer;line-height:1;
+  color:var(--text);font-family:inherit;font-size:12px;}
+#screen-mushaf .mus-tool.on{background:rgba(201,150,58,.16);border-color:var(--gold);}
+#screen-mushaf .mus-tool svg{display:block;width:15px;height:15px;}
+#screen-mushaf .mus-marks{flex:0 0 auto;display:flex;gap:6px;overflow-x:auto;
+  padding:0 12px 6px;scrollbar-width:none;}
+#screen-mushaf .mus-marks::-webkit-scrollbar{display:none;}
+#screen-mushaf .mus-marks b{font-size:11px;color:var(--muted);font-weight:600;
+  align-self:center;white-space:nowrap;}
+#screen-mushaf .mus-mark{background:rgba(201,150,58,.12);border:1px solid rgba(201,150,58,.3);
+  border-radius:8px;padding:4px 10px;font-size:12px;color:var(--text);
+  font-family:inherit;cursor:pointer;white-space:nowrap;}
+#screen-mushaf .mus-mark.cur{background:var(--gold);color:#20180B;font-weight:700;}
 #screen-mushaf .band{position:relative;margin:2px 0;line-height:0;}
 #screen-mushaf .band svg{display:block;width:100%;height:auto;}
 #screen-mushaf .band .inner{position:absolute;inset:0;display:flex;align-items:center;
@@ -3138,8 +3158,20 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
   </div>
   <div class="mus-head">
     <span class="mus-surah" id="musSurah">—</span>
-    <span id="musPageNo"></span>
+    <span class="mus-tools">
+      <span id="musPageNo"></span>
+      <button class="mus-tool" id="musAwake" type="button" onclick="musToggleAwake()"
+              title="إبقاء الشاشة مضاءة">☀</button>
+      <button class="mus-tool" id="musMarkBtn" type="button" onclick="musToggleMark()"
+              title="علامة حفظ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+        </svg>
+      </button>
+    </span>
   </div>
+  <div class="mus-marks" id="musMarks" style="display:none;"></div>
   <div class="mus-wird" id="musWird" style="display:none;"></div>
   <div class="mus-sheet" id="musSheet">
     <div class="mus-page" id="musPage"><div class="mus-msg">…يُحمَّل</div></div>
@@ -8701,6 +8733,8 @@ function musRender(j){
   });
 
   page.innerHTML = html;
+  /* في المصحف المطبوع تقعان داخل إطار، فسطورُهما موسَّطةٌ لا ممدودة */
+  page.classList.toggle('framed', _musPage <= 2);
   var names = (j.surahs || []).map(function(x){ return x.name_arabic || x.name; }).filter(Boolean);
   document.getElementById('musSurah').textContent = names.join(' · ') || '—';
   document.getElementById('musPageNo').textContent = 'صفحة ' + arNum(j.page || _musPage);
@@ -8746,6 +8780,7 @@ function musLoad(n){
   document.getElementById('musJump').value = n;
   try{ localStorage.setItem(MUS_KEY, String(n)); }catch(e){}
   musWird();
+  try{ musDrawMarks(); }catch(e){}
 
   if(_musCache[n]){ musRender(_musCache[n]); return; }
   var saved = musDisk()[n];
@@ -8772,6 +8807,80 @@ function musLoad(n){
 }
 
 function mushafGo(step){ musLoad(_musPage + step); }
+
+/* ═══ علاماتُ الحفظ ═══
+   المصحفُ الورقيّ يُوضع فيه شريط، وهذا مثلُه: صفحاتٌ تُعلَّم ويُقفز إليها. */
+var MUS_BM = 'zahim_mushaf_marks';
+function musMarks(){
+  try{ var a = JSON.parse(localStorage.getItem(MUS_BM) || '[]');
+       return Array.isArray(a) ? a : []; }catch(e){ return []; }
+}
+function musSetMarks(a){
+  try{ localStorage.setItem(MUS_BM, JSON.stringify(a.slice(0, 30))); }catch(e){}
+}
+function musToggleMark(){
+  var a = musMarks(), i = a.indexOf(_musPage);
+  if(i === -1){ a.push(_musPage); a.sort(function(x,y){ return x - y; }); }
+  else a.splice(i, 1);
+  musSetMarks(a);
+  musDrawMarks();
+}
+function musDrawMarks(){
+  var a = musMarks(), bar = document.getElementById('musMarks');
+  var btn = document.getElementById('musMarkBtn');
+  if(btn) btn.classList.toggle('on', a.indexOf(_musPage) !== -1);
+  if(!bar) return;
+  if(!a.length){ bar.style.display = 'none'; bar.innerHTML = ''; return; }
+  bar.style.display = 'flex';
+  bar.innerHTML = '<b>علاماتك</b>' + a.map(function(n){
+    return '<button class="mus-mark' + (n === _musPage ? ' cur' : '')
+         + '" type="button" onclick="musLoad(' + n + ')">' + arNum(n) + '</button>';
+  }).join('');
+}
+
+/* الشاشةُ تبقى مضاءةً أثناء القراءة — كما لا يُطفأ المصباح على القارئ */
+var _musWake = null;
+function musToggleAwake(){
+  var btn = document.getElementById('musAwake');
+  if(_musWake){
+    try{ _musWake.release(); }catch(e){}
+    _musWake = null;
+    if(btn) btn.classList.remove('on');
+    return;
+  }
+  if(!navigator.wakeLock){ if(typeof showToast === 'function') showToast('جهازك لا يدعم هذه الميزة'); return; }
+  navigator.wakeLock.request('screen').then(function(w){
+    _musWake = w;
+    if(btn) btn.classList.add('on');
+    w.addEventListener('release', function(){
+      _musWake = null;
+      var bb = document.getElementById('musAwake');
+      if(bb) bb.classList.remove('on');
+    });
+  }).catch(function(){});
+}
+function musReleaseAwake(){
+  if(_musWake){ try{ _musWake.release(); }catch(e){} _musWake = null; }
+  var b = document.getElementById('musAwake');
+  if(b) b.classList.remove('on');
+}
+
+/* السحبُ يقلّب الورقة — كما تُقلَّب في المصحف: من اليسار إلى اليمين للتالية */
+(function(){
+  var x0 = 0, y0 = 0, on = false;
+  document.addEventListener('touchstart', function(e){
+    var s = document.getElementById('screen-mushaf');
+    if(!s || s.classList.contains('hidden') || e.touches.length !== 1){ on = false; return; }
+    on = true; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+  }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if(!on) return; on = false;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - x0, dy = t.clientY - y0;
+    if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+    mushafGo(dx > 0 ? 1 : -1);
+  }, {passive:true});
+})();
 
 /* ═══ مدى الوِرد كما هو في المصحف ═══
    يُقرأ من الصفحتين الطرفيّتين نفسِهما — لا من جدول أجزاء،
@@ -8864,6 +8973,7 @@ function openMushaf(from, to){
 }
 
 function closeMushaf(){
+  musReleaseAwake();
   document.getElementById('screen-mushaf').classList.add('hidden');
   var q = document.getElementById('screen-quran');
   if(q){ q.classList.remove('hidden'); try{ renderQuranScreen(); }catch(e){} }
