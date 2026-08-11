@@ -3088,9 +3088,17 @@ var ZahimHadithID = {
   direction:rtl;line-height:1.95;font-size:var(--mfs);white-space:nowrap;color:var(--mink);}
 #screen-mushaf .ln.mid{justify-content:center;gap:.3em;}
 #screen-mushaf .ln w{display:inline-block;}
-/* الفاتحةُ وأولُ البقرة في المصحف داخل إطار، وسطورُهما موسَّطةٌ لا ممدودة */
-#screen-mushaf .mus-page.framed .ln{justify-content:center;gap:.34em;}
-#screen-mushaf .mus-page.framed{padding:20px 16px;}
+/* الفاتحةُ وأولُ البقرة في المصحف داخل إطار:
+   سطورٌ موسَّطةٌ متقاربة، وعمودٌ أضيق، والكتلةُ في وسط الورقة لا في أعلاها. */
+#screen-mushaf .mus-sheet.framed-sheet{align-items:stretch;}
+#screen-mushaf .mus-page.framed{
+  padding:18px 14px;
+  display:flex;flex-direction:column;justify-content:center;}
+#screen-mushaf .mus-page.framed .ln{
+  justify-content:center;gap:.3em;
+  line-height:1.72;max-width:80%;margin-inline:auto;}
+#screen-mushaf .mus-page.framed .band{margin:0 0 6px;}
+#screen-mushaf .mus-page.framed .ln.mid{margin-bottom:4px;}
 
 /* ═══ أدواتُ القراءة ═══ */
 #screen-mushaf .mus-tools{display:flex;align-items:center;gap:7px;}
@@ -8735,6 +8743,8 @@ function musRender(j){
   page.innerHTML = html;
   /* في المصحف المطبوع تقعان داخل إطار، فسطورُهما موسَّطةٌ لا ممدودة */
   page.classList.toggle('framed', _musPage <= 2);
+  var sh = document.getElementById('musSheet');
+  if(sh) sh.classList.toggle('framed-sheet', _musPage <= 2);
   var names = (j.surahs || []).map(function(x){ return x.name_arabic || x.name; }).filter(Boolean);
   document.getElementById('musSurah').textContent = names.join(' · ') || '—';
   document.getElementById('musPageNo').textContent = 'صفحة ' + arNum(j.page || _musPage);
@@ -8760,6 +8770,11 @@ function musFit(){
     page.style.setProperty('--mfs', best.toFixed(2) + 'px');
     var h = sheet.clientHeight - 12, got = page.scrollHeight;
     if(got > h && got > 0) page.style.setProperty('--mfs', (best * (h / got)).toFixed(2) + 'px');
+    /* الصفحتان الأوليان لا تُمدّان لتملأ الورقة — الفراغُ حولهما من المصحف */
+    if(page.classList.contains('framed')){
+      var cap = Math.min(best, 27);
+      page.style.setProperty('--mfs', cap.toFixed(2) + 'px');
+    }
   };
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(run).catch(run);
   else setTimeout(run, 400);
