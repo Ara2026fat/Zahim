@@ -3082,7 +3082,7 @@ var ZahimHadithID = {
 #screen-mushaf .mus-sheet{flex:1 1 auto;overflow:auto;display:flex;
   justify-content:center;align-items:flex-start;padding:4px 8px;}
 #screen-mushaf .mus-page{width:100%;max-width:540px;background:var(--mpage);
-  border:1px solid rgba(0,0,0,.14);border-radius:6px;padding:26px 20px;
+  border:5px solid var(--mband2);border-radius:4px;padding:22px 18px;
   box-shadow:0 1px 2px rgba(20,40,30,.05),0 8px 26px rgba(20,40,30,.09);}
 #screen-mushaf .ln{display:flex;justify-content:space-between;align-items:center;
   direction:rtl;line-height:1.95;font-size:var(--mfs);white-space:nowrap;color:var(--mink);}
@@ -3092,7 +3092,7 @@ var ZahimHadithID = {
    سطورٌ موسَّطةٌ متقاربة، وعمودٌ أضيق، والكتلةُ في وسط الورقة لا في أعلاها. */
 #screen-mushaf .mus-sheet.framed-sheet{align-items:stretch;}
 #screen-mushaf .mus-page.framed{
-  padding:30px 24px;
+  padding:26px 22px;
   display:flex;flex-direction:column;justify-content:center;}
 #screen-mushaf .mus-page.framed .ln{
   justify-content:center;gap:.3em;
@@ -3117,11 +3117,12 @@ var ZahimHadithID = {
   margin-top:0;margin-bottom:0;overflow:hidden;pointer-events:none;border-top-width:0;}
 #screen-mushaf.bare .mus-sheet{padding-top:calc(6px + env(safe-area-inset-top,0px));
   padding-bottom:calc(6px + env(safe-area-inset-bottom,0px));}
-/* إطارُ الورقة — من رسم زاحِم: خطٌّ عريضٌ يحصر، ورفيعٌ يهدّئ،
-   وبينهما شريطُ محاريبَ مدبَّبة الرأس كقوس المحراب. */
+/* إطارُ الورقة: خطٌّ أخضرُ عريضٌ يحصر، ورفيعٌ يهدّئ.
+   حدودٌ حقيقية لا رسمٌ ممدود — فلا تدخل النصَّ مهما طالت الصفحة. */
 #screen-mushaf .mus-page{position:relative;}
-#screen-mushaf .mus-frame{position:absolute;inset:0;pointer-events:none;}
-#screen-mushaf .mus-frame svg{width:100%;height:100%;display:block;}
+#screen-mushaf .mus-frame{
+  position:absolute;inset:7px;pointer-events:none;
+  border:1.4px solid var(--mhair);border-radius:2px;}
 #screen-mushaf .mus-tools{display:flex;align-items:center;gap:7px;}
 #screen-mushaf .mus-tool{background:none;border:1px solid rgba(127,127,127,.24);
   border-radius:9px;padding:5px 9px;cursor:pointer;line-height:1;
@@ -3164,7 +3165,6 @@ body.theme-dark #screen-mushaf{--mpage:#DCD6C6;--mink:#0A0A08;
 body.mode-obsidian #screen-mushaf{--mpage:#C4BCA8;--mink:#0A0A08;
   --mband1:#216F33;--mband2:#134B22;--medge:#0C3915;--mhair:#417B49;}
 body.theme-dark #screen-mushaf .mus-page{
-  border-color:rgba(0,0,0,.34);
   box-shadow:0 1px 2px rgba(0,0,0,.30),0 10px 30px rgba(0,0,0,.42);}
 body.theme-dark #screen-mushaf .mus-msg{color:#3A473F;}
 body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
@@ -8772,23 +8772,8 @@ function musRender(j){
   musFit();
 }
 
-/* إطارُ الورقة: يُرسم متجهًا فلا يبهت على أيّ شاشة */
-function musFrame(){
-  return '<div class="mus-frame" aria-hidden="true">'
-   + '<svg viewBox="0 0 300 200" preserveAspectRatio="none">'
-   +   '<defs><pattern id="musArch" width="13" height="9" patternUnits="userSpaceOnUse">'
-   +     '<path d="M1.6,9 V3.8 Q1.6,2 6.5,1 Q11.4,2 11.4,3.8 V9"'
-   +          ' fill="none" stroke="var(--mhair)" stroke-width="0.9"/>'
-   +   '</pattern></defs>'
-   +   '<rect x="3" y="3" width="294" height="194" fill="none"'
-   +        ' stroke="var(--mband2)" stroke-width="5" vector-effect="non-scaling-stroke"/>'
-   +   '<rect x="8" y="17" width="284" height="166" fill="none"'
-   +        ' stroke="var(--mhair)" stroke-width="1.3" vector-effect="non-scaling-stroke"/>'
-   +   '<rect x="8" y="7" width="284" height="9" fill="url(#musArch)"/>'
-   +   '<g transform="translate(0,200) scale(1,-1)">'
-   +     '<rect x="8" y="7" width="284" height="9" fill="url(#musArch)"/></g>'
-   + '</svg></div>';
-}
+/* الإطار: طبقةٌ فارغة، وحدُّها في CSS — فلا تُمدّ ولا تُشوَّه */
+function musFrame(){ return '<div class="mus-frame" aria-hidden="true"></div>'; }
 
 /* القياسُ يُحسب من عرض الورقة — فلا يفيض السطر ولا يقصر */
 function musFit(){
