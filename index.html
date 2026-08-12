@@ -3164,6 +3164,15 @@ body.theme-dark #screen-mushaf{--mpage:#DCD6C6;--mink:#0A0A08;
   --mband1:#27823B;--mband2:#175A28;--medge:#0E441A;--mhair:#4E9257;}
 body.mode-obsidian #screen-mushaf{--mpage:#C4BCA8;--mink:#0A0A08;
   --mband1:#216F33;--mband2:#134B22;--medge:#0C3915;--mhair:#417B49;}
+
+/* نغمةُ الورق: تُختار من المصحف نفسه ولا يُذهب لأجلها إلى الإعدادات.
+   وهي تغلب وضعَ التطبيق، لأنّ القراءة لها ضوؤها. */
+#screen-mushaf.tone-light{--mpage:#FFFEF9;--mink:#000;
+  --mband1:#2E9A45;--mband2:#1B6B2F;--medge:#12551F;--mhair:#5FB06B;}
+#screen-mushaf.tone-warm{--mpage:#F3E9D2;--mink:#1A1206;
+  --mband1:#2A8E40;--mband2:#18632B;--medge:#104C1C;--mhair:#57A660;}
+#screen-mushaf.tone-dark{--mpage:#C4BCA8;--mink:#0A0A08;
+  --mband1:#216F33;--mband2:#134B22;--medge:#0C3915;--mhair:#417B49;}
 body.theme-dark #screen-mushaf .mus-page{
   box-shadow:0 1px 2px rgba(0,0,0,.30),0 10px 30px rgba(0,0,0,.42);}
 body.theme-dark #screen-mushaf .mus-msg{color:#3A473F;}
@@ -3175,7 +3184,7 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
 #screen-mushaf .mus-wird{flex:0 0 auto;margin:0 10px 5px;padding:7px 12px;
   border-radius:10px;background:rgba(201,150,58,.11);
   border:1px solid rgba(201,150,58,.26);display:flex;align-items:center;
-  justify-content:space-between;gap:10px;font-size:12px;color:var(--text);}
+  justify-content:center;gap:12px;font-size:12px;color:var(--text);text-align:center;}
 #screen-mushaf .mus-wird button{background:var(--gold);border:0;border-radius:9px;
   color:#20180B;font-family:inherit;font-size:12px;font-weight:700;
   padding:7px 14px;cursor:pointer;white-space:nowrap;}
@@ -3189,6 +3198,8 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
     <span class="mus-surah" id="musSurah">—</span>
     <span class="mus-tools">
       <span id="musPageNo"></span>
+      <button class="mus-tool" id="musTone" type="button" onclick="musNextTone()"
+              title="نغمةُ الورق">◐</button>
       <button class="mus-tool" id="musAwake" type="button" onclick="musToggleAwake()"
               title="إبقاء الشاشة مضاءة">☀</button>
       <button class="mus-tool" id="musMarkBtn" type="button" onclick="musToggleMark()"
@@ -8786,9 +8797,10 @@ function musFit(){
       var mid = (lo + hi) / 2;
       page.style.setProperty('--mfs', mid + 'px');
       var over = false, ln = page.getElementsByClassName('ln');
-      /* .mus-frame ليس سطرًا فلا يُقاس */
+      /* يُوازَن كلُّ سطرٍ بصندوقه هو — فالصفحتان الأوليان محصورتان في ٨٠٪ */
       for(var k = 0; k < ln.length; k++){
-        if(ln[k].scrollWidth > box + 1){ over = true; break; }
+        var lim = ln[k].clientWidth || box;
+        if(ln[k].scrollWidth > lim + 1){ over = true; break; }
       }
       if(over){ hi = mid; } else { best = mid; lo = mid; }
     }
@@ -8892,6 +8904,31 @@ function musDrawMarks(){
     return '<button class="mus-mark' + (n === _musPage ? ' cur' : '')
          + '" type="button" onclick="musLoad(' + n + ')">' + arNum(n) + '</button>';
   }).join('');
+}
+
+/* نغمةُ الورق: تتبع التطبيق افتراضًا، ويغيّرها القارئُ من مكانه */
+var MUS_TONE = 'zahim_mushaf_tone';
+var MUS_TONES = ['auto', 'light', 'warm', 'dark'];
+var MUS_TONE_AR = { auto:'تِبعًا للتطبيق', light:'فاتح', warm:'دافئ', dark:'ليليّ' };
+
+function musTone(){
+  try{ var v = localStorage.getItem(MUS_TONE);
+       return MUS_TONES.indexOf(v) !== -1 ? v : 'auto'; }catch(e){ return 'auto'; }
+}
+function musApplyTone(){
+  var scr = document.getElementById('screen-mushaf');
+  if(!scr) return;
+  var t = musTone();
+  MUS_TONES.forEach(function(x){ scr.classList.toggle('tone-' + x, x !== 'auto' && x === t); });
+  var b = document.getElementById('musTone');
+  if(b) b.classList.toggle('on', t !== 'auto');
+}
+function musNextTone(){
+  var i = MUS_TONES.indexOf(musTone());
+  var t = MUS_TONES[(i + 1) % MUS_TONES.length];
+  try{ localStorage.setItem(MUS_TONE, t); }catch(e){}
+  musApplyTone();
+  if(typeof showToast === 'function') showToast('الورق: ' + MUS_TONE_AR[t]);
 }
 
 /* الشاشةُ تبقى مضاءةً أثناء القراءة — كما لا يُطفأ المصباح على القارئ */
@@ -9030,6 +9067,7 @@ function openMushaf(from, to){
   });
   scr.classList.remove('hidden');
   scr.classList.remove('bare');
+  musApplyTone();
   scr.scrollTop = 0;
   musLoad(start);
   /* تُعرض الأدواتُ لحظةً ثم تنسحب، فتبقى الورقةُ وحدها */
@@ -11144,7 +11182,17 @@ window.addEventListener('popstate', function(){
     return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   }
-  function dismissed(){ try{ return localStorage.getItem(KEY) === '1'; }catch(e){ return false; } }
+  /* الرفضُ لا يدوم أبدًا — يُعاد العرضُ بعد أسبوعين، ولا يُلحُّ قبلها */
+  function dismissed(){
+    try{
+      var v = localStorage.getItem(KEY);
+      if(!v) return false;
+      if(v === 'installed') return true;
+      var t = parseInt(v, 10);
+      if(!t || String(t) !== v) return true;                  /* صيغةٌ قديمة */
+      return (Date.now() - t) < 14 * 24 * 60 * 60 * 1000;
+    }catch(e){ return false; }
+  }
   function hide(){ if(bar) bar.classList.remove('show'); }
 
   function show(iosMode){
@@ -11163,7 +11211,7 @@ window.addEventListener('popstate', function(){
     hint = document.getElementById('zxInstallHint');
     if(!bar) return;
     no.addEventListener('click', function(){
-      hide(); try{ localStorage.setItem(KEY,'1'); }catch(e){}
+      hide(); try{ localStorage.setItem(KEY, String(Date.now())); }catch(e){}
     });
     go.addEventListener('click', function(){
       if(!deferred) return;
@@ -11176,10 +11224,12 @@ window.addEventListener('popstate', function(){
 
   window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault(); deferred = e;
+    /* وقوعُ الحدث دليلٌ على أنّ التطبيق غيرُ مثبَّت — فإن كان محذوفًا عاد العرض */
+    try{ if(localStorage.getItem(KEY) === 'installed') localStorage.removeItem(KEY); }catch(err){}
     if(bar) show(false); else setTimeout(function(){ show(false); }, 800);
   });
   window.addEventListener('appinstalled', function(){
-    hide(); try{ localStorage.setItem(KEY,'1'); }catch(e){}
+    hide(); try{ localStorage.setItem(KEY, 'installed'); }catch(e){}
   });
 
   document.addEventListener('DOMContentLoaded', function(){ setTimeout(init, 500); });
