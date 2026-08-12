@@ -3082,7 +3082,7 @@ var ZahimHadithID = {
 #screen-mushaf .mus-sheet{flex:1 1 auto;overflow:auto;display:flex;
   justify-content:center;align-items:flex-start;padding:4px 8px;}
 #screen-mushaf .mus-page{width:100%;max-width:540px;background:var(--mpage);
-  border:1px solid rgba(0,0,0,.14);border-radius:6px;padding:14px 12px;
+  border:1px solid rgba(0,0,0,.14);border-radius:6px;padding:26px 20px;
   box-shadow:0 1px 2px rgba(20,40,30,.05),0 8px 26px rgba(20,40,30,.09);}
 #screen-mushaf .ln{display:flex;justify-content:space-between;align-items:center;
   direction:rtl;line-height:1.95;font-size:var(--mfs);white-space:nowrap;color:var(--mink);}
@@ -3092,7 +3092,7 @@ var ZahimHadithID = {
    سطورٌ موسَّطةٌ متقاربة، وعمودٌ أضيق، والكتلةُ في وسط الورقة لا في أعلاها. */
 #screen-mushaf .mus-sheet.framed-sheet{align-items:stretch;}
 #screen-mushaf .mus-page.framed{
-  padding:18px 14px;
+  padding:30px 24px;
   display:flex;flex-direction:column;justify-content:center;}
 #screen-mushaf .mus-page.framed .ln{
   justify-content:center;gap:.3em;
@@ -3101,6 +3101,27 @@ var ZahimHadithID = {
 #screen-mushaf .mus-page.framed .ln.mid{margin-bottom:4px;}
 
 /* ═══ أدواتُ القراءة ═══ */
+/* وضعُ التلاوة: لا شيء بين القارئ والورقة — واللمسُ يُظهر الأدوات ويُخفيها */
+#screen-mushaf .mus-head,
+#screen-mushaf .mus-wird,
+#screen-mushaf .mus-marks,
+#screen-mushaf .mus-foot,
+#screen-mushaf .topbar{
+  transition:opacity .28s ease, max-height .28s ease, padding .28s ease, margin .28s ease;}
+#screen-mushaf.bare .mus-head,
+#screen-mushaf.bare .mus-wird,
+#screen-mushaf.bare .mus-marks,
+#screen-mushaf.bare .mus-foot,
+#screen-mushaf.bare .topbar{
+  opacity:0;max-height:0;padding-top:0;padding-bottom:0;
+  margin-top:0;margin-bottom:0;overflow:hidden;pointer-events:none;border-top-width:0;}
+#screen-mushaf.bare .mus-sheet{padding-top:calc(6px + env(safe-area-inset-top,0px));
+  padding-bottom:calc(6px + env(safe-area-inset-bottom,0px));}
+/* إطارُ الورقة — من رسم زاحِم: خطٌّ عريضٌ يحصر، ورفيعٌ يهدّئ،
+   وبينهما شريطُ محاريبَ مدبَّبة الرأس كقوس المحراب. */
+#screen-mushaf .mus-page{position:relative;}
+#screen-mushaf .mus-frame{position:absolute;inset:0;pointer-events:none;}
+#screen-mushaf .mus-frame svg{width:100%;height:100%;display:block;}
 #screen-mushaf .mus-tools{display:flex;align-items:center;gap:7px;}
 #screen-mushaf .mus-tool{background:none;border:1px solid rgba(127,127,127,.24);
   border-radius:9px;padding:5px 9px;cursor:pointer;line-height:1;
@@ -8740,7 +8761,7 @@ function musRender(j){
     html += '<div class="ln' + (isText ? '' : ' mid') + '">' + out + '</div>';
   });
 
-  page.innerHTML = html;
+  page.innerHTML = html + musFrame();
   /* في المصحف المطبوع تقعان داخل إطار، فسطورُهما موسَّطةٌ لا ممدودة */
   page.classList.toggle('framed', _musPage <= 2);
   var sh = document.getElementById('musSheet');
@@ -8749,6 +8770,24 @@ function musRender(j){
   document.getElementById('musSurah').textContent = names.join(' · ') || '—';
   document.getElementById('musPageNo').textContent = 'صفحة ' + arNum(j.page || _musPage);
   musFit();
+}
+
+/* إطارُ الورقة: يُرسم متجهًا فلا يبهت على أيّ شاشة */
+function musFrame(){
+  return '<div class="mus-frame" aria-hidden="true">'
+   + '<svg viewBox="0 0 300 200" preserveAspectRatio="none">'
+   +   '<defs><pattern id="musArch" width="13" height="9" patternUnits="userSpaceOnUse">'
+   +     '<path d="M1.6,9 V3.8 Q1.6,2 6.5,1 Q11.4,2 11.4,3.8 V9"'
+   +          ' fill="none" stroke="var(--mhair)" stroke-width="0.9"/>'
+   +   '</pattern></defs>'
+   +   '<rect x="3" y="3" width="294" height="194" fill="none"'
+   +        ' stroke="var(--mband2)" stroke-width="5" vector-effect="non-scaling-stroke"/>'
+   +   '<rect x="8" y="17" width="284" height="166" fill="none"'
+   +        ' stroke="var(--mhair)" stroke-width="1.3" vector-effect="non-scaling-stroke"/>'
+   +   '<rect x="8" y="7" width="284" height="9" fill="url(#musArch)"/>'
+   +   '<g transform="translate(0,200) scale(1,-1)">'
+   +     '<rect x="8" y="7" width="284" height="9" fill="url(#musArch)"/></g>'
+   + '</svg></div>';
 }
 
 /* القياسُ يُحسب من عرض الورقة — فلا يفيض السطر ولا يقصر */
@@ -8762,6 +8801,7 @@ function musFit(){
       var mid = (lo + hi) / 2;
       page.style.setProperty('--mfs', mid + 'px');
       var over = false, ln = page.getElementsByClassName('ln');
+      /* .mus-frame ليس سطرًا فلا يُقاس */
       for(var k = 0; k < ln.length; k++){
         if(ln[k].scrollWidth > box + 1){ over = true; break; }
       }
@@ -8822,6 +8862,22 @@ function musLoad(n){
 }
 
 function mushafGo(step){ musLoad(_musPage + step); }
+
+/* لمسةٌ على الورقة تُخفي الأدوات وتُظهرها */
+var _musBareT = null;
+function musBare(on){
+  var s = document.getElementById('screen-mushaf');
+  if(!s) return;
+  s.classList.toggle('bare', on !== false ? !!on : false);
+  setTimeout(musFit, 320);
+}
+function musToggleBare(){
+  var s = document.getElementById('screen-mushaf');
+  if(!s) return;
+  clearTimeout(_musBareT);
+  s.classList.toggle('bare');
+  setTimeout(musFit, 320);
+}
 
 /* ═══ علاماتُ الحفظ ═══
    المصحفُ الورقيّ يُوضع فيه شريط، وهذا مثلُه: صفحاتٌ تُعلَّم ويُقفز إليها. */
@@ -8892,7 +8948,12 @@ function musReleaseAwake(){
     if(!on) return; on = false;
     var t = e.changedTouches[0];
     var dx = t.clientX - x0, dy = t.clientY - y0;
-    if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+    if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.6){
+      /* لمسةٌ ساكنة على الورقة: تبديلُ وضع التلاوة */
+      if(Math.abs(dx) < 12 && Math.abs(dy) < 12
+         && e.target && e.target.closest && e.target.closest('#musSheet')) musToggleBare();
+      return;
+    }
     mushafGo(dx > 0 ? 1 : -1);
   }, {passive:true});
 })();
@@ -8983,8 +9044,12 @@ function openMushaf(from, to){
     if(x.id !== 'screen-mushaf'){ x.classList.add('hidden'); }
   });
   scr.classList.remove('hidden');
+  scr.classList.remove('bare');
   scr.scrollTop = 0;
   musLoad(start);
+  /* تُعرض الأدواتُ لحظةً ثم تنسحب، فتبقى الورقةُ وحدها */
+  clearTimeout(_musBareT);
+  _musBareT = setTimeout(function(){ musBare(true); }, 2600);
 }
 
 function closeMushaf(){
@@ -8998,6 +9063,13 @@ function closeMushaf(){
 addEventListener('resize', function(){
   var s = document.getElementById('screen-mushaf');
   if(s && !s.classList.contains('hidden')) musFit();
+});
+
+document.addEventListener('click', function(e){
+  var s = document.getElementById('screen-mushaf');
+  if(!s || s.classList.contains('hidden')) return;
+  if(e.target && e.target.closest && e.target.closest('#musSheet')
+     && !('ontouchstart' in window)) musToggleBare();
 });
 addEventListener('online', function(){
   var s = document.getElementById('screen-mushaf');
