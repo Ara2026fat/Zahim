@@ -922,8 +922,8 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
 
 /* ═══ التسبيحُ الحرّ ═══
    لا هدفَ ولا نسبةَ إنجاز — حبّةٌ تُلمس، وعددٌ يُرى، ولا شيءَ يُحاسِب. */
-.tsb-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;
-  padding:26px 18px calc(40px + env(safe-area-inset-bottom));}
+.tsb-wrap{display:flex;flex-direction:column;align-items:center;gap:13px;
+  padding:18px 18px calc(40px + env(safe-area-inset-bottom));}
 /* أقراصُ الذكر: صغيرةٌ لامعة — زجاجٌ لا مربّعاتُ نصّ.
    كانت ضخمةً تزاحم الحبّة، والحبّةُ هي البطل. */
 .tsb-picks{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:340px;}
@@ -952,7 +952,7 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
 @media (prefers-reduced-motion: reduce){ .tsb-pick[aria-pressed="true"]::after{animation:none;} }
 /* الحبّةُ الحرّة والعدّادُ داخل الأذكار جسمٌ واحدٌ بمقاسين: زجاجٌ أخضرُ
    له لمعةٌ علويّةٌ وحاشيةُ حرف — كما كُسِي خاتمُ البوصلة والإبرة. */
-.tsb-bead{width:min(268px,74vw);aspect-ratio:1/1;border-radius:50%;border:0;cursor:pointer;
+.tsb-bead{width:min(186px,52vw);aspect-ratio:1/1;border-radius:50%;border:0;cursor:pointer;
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   background:radial-gradient(circle at 34% 26%, #3FA37A, var(--green) 58%, #0B2C1D 100%);
@@ -987,11 +987,11 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
   border-radius:50%;pointer-events:none;
   background:radial-gradient(ellipse at 50% 50%, rgba(255,255,255,.40), rgba(255,255,255,0) 70%);
   transform:rotate(-24deg);}
-.tsb-count{font-size:62px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;}
+.tsb-count{font-size:44px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;}
 .tsb-count.bump{animation:zkBump .22s cubic-bezier(.22,1,.36,1);}
 .tsb-round{font-size:12.5px;opacity:.78;font-weight:600;min-height:16px;}
-.tsb-word{font-family:'Amiri',serif;font-size:25px;color:var(--green);text-align:center;line-height:1.85;}
-.tsb-reset{padding:11px 26px;border-radius:99px;border:1px solid var(--zg-faint);
+.tsb-word{font-family:'Amiri',serif;font-size:20px;color:var(--green);text-align:center;line-height:1.85;}
+.tsb-reset{padding:8px 20px;font-size:12.5px;border-radius:99px;border:1px solid var(--zg-faint);
   background:transparent;color:var(--muted);font-size:14px;cursor:pointer;}
 
 /* ═══ الآيةُ داخل الذكر ═══ تُطوى فلا تُثقل البطاقة، وتُفتح فتُقرأ كاملة */
@@ -1141,17 +1141,17 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
 
 /* المجموعةُ بطاقةٌ زجاجيّة، ورأسُها سطرٌ صغيرٌ داخلها لا فوقها */
 .zx-pane .zx-group{
-  border-radius:20px;padding:14px 16px;margin-bottom:12px;
+  border-radius:20px;padding:16px 16px 8px;margin-bottom:14px;
   background:linear-gradient(158deg,rgba(255,255,255,.94),rgba(255,252,244,.70));
   border:1px solid rgba(255,255,255,.92);
   box-shadow:0 8px 24px rgba(120,90,42,.12),0 1px 0 rgba(255,255,255,.98) inset;
 }
 .zx-pane .zx-group-head{
-  font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:9px;
+  font-size:11.5px;font-weight:800;letter-spacing:1.4px;color:var(--gold);margin-bottom:11px;
   letter-spacing:0;text-transform:none;opacity:1;
 }
 .zx-pane .zx-row{
-  border-radius:14px;padding:13px 12px;margin:0 -4px;
+  border-radius:14px;padding:14px 12px;margin:0 -4px;min-height:60px;
   transition:transform .15s ease-out,background .15s ease;
 }
 .zx-pane .zx-row:active{transform:scale(.98);background:rgba(176,138,46,.07);}
@@ -1164,8 +1164,10 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
 .zx-row-ic.brass{color:#9A7739;
   background:linear-gradient(158deg,rgba(240,220,166,.55),rgba(216,181,89,.24));
   box-shadow:0 1px 0 rgba(255,255,255,.9) inset;}
-.zx-row-ic.green{color:#1B5C3F;
-  background:linear-gradient(158deg,rgba(143,217,182,.42),rgba(31,106,73,.16));
+/* لونٌ واحدٌ لأيقونات الإعدادات كلّها: النحاسُ الهادئ. كان فيها أخضرُ
+   ونحاسٌ فتفرّقت العين، والإعداداتُ ليست مكانَ تمييزٍ بصريّ. */
+.zx-row-ic.green{color:#9A7739;
+  background:linear-gradient(158deg,rgba(240,220,166,.55),rgba(216,181,89,.24));
   box-shadow:0 1px 0 rgba(255,255,255,.9) inset;}
 .zx-pane .zx-row{display:flex;align-items:center;}
 .zx-pane .zx-row .zx-row-label{flex:1;min-width:0;}
@@ -4389,6 +4391,10 @@ var ZahimHadithID = {
     <div class="compass-wrap">
       <svg id="compass-svg" viewBox="0 0 400 400" class="compass-svg" shape-rendering="geometricPrecision" text-rendering="optimizeLegibility">
         <defs>
+          <linearGradient id="iqama-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#5CE8B0"/><stop offset="60%" stop-color="#2E9B70"/>
+            <stop offset="100%" stop-color="#CBA45E"/></linearGradient>
+
           <radialGradient id="seal-aura">
             <stop offset="0%" stop-color="#3FD9A0" stop-opacity=".00"/>
             <stop offset="72%" stop-color="#3FD9A0" stop-opacity=".16"/>
@@ -4566,6 +4572,18 @@ var ZahimHadithID = {
         
 
         <g id="compass-ticks" aria-hidden="true"><path d="M 200.0 23.5 L 200.0 17.5" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 215.6 21.2 L 215.9 18.2" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 231.2 23.2 L 231.7 20.3" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 246.5 26.6 L 247.2 23.7" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 261.4 31.3 L 262.4 28.5" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 275.9 37.3 L 277.1 34.6" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 288.2 47.1 L 291.2 42.0" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 303.0 53.0 L 304.7 50.5" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 315.4 62.5 L 317.3 60.2" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 326.9 73.1 L 329.0 71.0" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 337.5 84.6 L 339.8 82.7" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 347.0 97.0 L 349.5 95.3" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 352.9 111.8 L 358.0 108.8" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 362.7 124.1 L 365.4 122.9" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 368.7 138.6 L 371.5 137.6" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 373.4 153.5 L 376.3 152.8" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 376.8 168.8 L 379.7 168.3" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 378.8 184.4 L 381.8 184.1" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 376.5 200.0 L 382.5 200.0" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 378.8 215.6 L 381.8 215.9" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 376.8 231.2 L 379.7 231.7" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 373.4 246.5 L 376.3 247.2" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 368.7 261.4 L 371.5 262.4" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 362.7 275.9 L 365.4 277.1" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 352.9 288.2 L 358.0 291.2" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 347.0 303.0 L 349.5 304.7" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 337.5 315.4 L 339.8 317.3" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 326.9 326.9 L 329.0 329.0" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 315.4 337.5 L 317.3 339.8" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 303.0 347.0 L 304.7 349.5" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 288.2 352.9 L 291.2 358.0" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 275.9 362.7 L 277.1 365.4" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 261.4 368.7 L 262.4 371.5" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 246.5 373.4 L 247.2 376.3" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 231.2 376.8 L 231.7 379.7" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 215.6 378.8 L 215.9 381.8" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 200.0 376.5 L 200.0 382.5" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 184.4 378.8 L 184.1 381.8" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 168.8 376.8 L 168.3 379.7" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 153.5 373.4 L 152.8 376.3" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 138.6 368.7 L 137.6 371.5" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 124.1 362.7 L 122.9 365.4" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 111.8 352.9 L 108.8 358.0" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 97.0 347.0 L 95.3 349.5" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 84.6 337.5 L 82.7 339.8" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 73.1 326.9 L 71.0 329.0" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 62.5 315.4 L 60.2 317.3" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 53.0 303.0 L 50.5 304.7" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 47.1 288.2 L 42.0 291.2" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 37.3 275.9 L 34.6 277.1" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 31.3 261.4 L 28.5 262.4" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 26.6 246.5 L 23.7 247.2" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 23.2 231.2 L 20.3 231.7" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 21.2 215.6 L 18.2 215.9" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 23.5 200.0 L 17.5 200.0" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 21.2 184.4 L 18.2 184.1" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 23.2 168.8 L 20.3 168.3" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 26.6 153.5 L 23.7 152.8" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 31.3 138.6 L 28.5 137.6" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 37.3 124.1 L 34.6 122.9" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 47.1 111.7 L 42.0 108.7" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 53.0 97.0 L 50.5 95.3" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 62.5 84.6 L 60.2 82.7" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 73.1 73.1 L 71.0 71.0" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 84.6 62.5 L 82.7 60.2" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 97.0 53.0 L 95.3 50.5" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 111.7 47.1 L 108.7 42.0" stroke="rgba(154,119,57,.40)" stroke-width="1.1"/><path d="M 124.1 37.3 L 122.9 34.6" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 138.6 31.3 L 137.6 28.5" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 153.5 26.6 L 152.8 23.7" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 168.8 23.2 L 168.3 20.3" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/><path d="M 184.4 21.2 L 184.1 18.2" stroke="rgba(154,119,57,.16)" stroke-width="0.6"/></g>
+        <!-- قوسُ ما بين الأذان والإقامة: يمشي على محيط الميناء داخلَ الطوق،
+             فلا يلمس اسمَ محطّةٍ ولا يزاحم أيقونة. يظهر في وقته ويختفي بانتهائه. -->
+        <g id="iqama-arc" style="opacity:0;transition:opacity .5s ease" aria-hidden="true">
+          <circle cx="200" cy="200" r="172" fill="none" stroke="rgba(154,119,57,.14)" stroke-width="3"/>
+          <circle id="iqama-arc-line" cx="200" cy="200" r="172" fill="none"
+                  stroke="url(#iqama-grad)" stroke-width="3.4" stroke-linecap="round"
+                  transform="rotate(-90 200 200)"
+                  stroke-dasharray="1080.7" stroke-dashoffset="1080.7"
+                  style="transition:stroke-dashoffset .9s linear"/>
+          <circle id="iqama-head" cx="200" cy="28" r="3.6" fill="#EAFFF5"
+                  style="filter:drop-shadow(0 0 5px rgba(92,232,176,.9))"/>
+        </g>
         <g id="compass-active-glow"></g>
 
         <!-- المحطات الست -->
@@ -4622,15 +4640,9 @@ var ZahimHadithID = {
     </div>
 
 
-    <!-- إحصائيات اليوم — بوابة إلى ميدان الطاعة -->
-    <div class="dash-progress-card" onclick="openInsightsScreen()" role="button" tabindex="0"
-         aria-label="ميدان الطاعة">
-      <div class="dpc-body">
-        <div class="dpc-name">ميدان الطاعة</div>
-        <div class="dpc-taste" id="dpcTaste">أعمالٌ يسيرة، وأجرٌ عظيم</div>
-      </div>
-      <div class="dpc-go" aria-hidden="true">‹</div>
-    </div>
+    <!-- ميدانُ الطاعة نُقل إلى الإعدادات: الرئيسيةُ للبوصلة وحدها.
+         وبقي عنصرُ التذوّق مخفيًّا لئلّا تنكسر الدوالُّ التي تكتب فيه. -->
+    <div id="dpcTaste" hidden></div>
 
   <div style="height:18px;"></div>
   </div><!-- end wird-circles-wrap -->
@@ -5955,7 +5967,9 @@ ZahimI18n.load('en', {
   'غيرُ متاحٍ هنا': 'Not available here',
   'افتح زرّ المشاركة ⬆ ثم «إضافة إلى الشاشة الرئيسية»': 'Open the share button ⬆ then “Add to Home Screen”',
   'زاحِم مثبَّتٌ على جهازك': 'Zahim is installed on your device',
-  'هذا المتصفّح لا يدعم التثبيت': 'This browser does not support installing'
+  'هذا المتصفّح لا يدعم التثبيت': 'This browser does not support installing',
+  'وقت الجمعة': 'Time of Jumuah',
+  'الجُمُعة': 'Jumuah'
 });
 /* ═══ زاحِم — الإندونيسية والماليزية ═══
    الواجهة فقط. الأحاديث والأذكار تبقى عربيةً، ومعناها بالإنجليزية حتى تُراجَع.
@@ -6336,7 +6350,9 @@ ZahimI18n.load('id', {
   'غيرُ متاحٍ هنا': 'Tidak tersedia di sini',
   'افتح زرّ المشاركة ⬆ ثم «إضافة إلى الشاشة الرئيسية»': 'Buka tombol bagikan ⬆ lalu «Tambahkan ke Layar Utama»',
   'زاحِم مثبَّتٌ على جهازك': 'Zahim sudah terpasang di perangkat Anda',
-  'هذا المتصفّح لا يدعم التثبيت': 'Peramban ini tidak mendukung pemasangan'
+  'هذا المتصفّح لا يدعم التثبيت': 'Peramban ini tidak mendukung pemasangan',
+  'وقت الجمعة': 'Waktu Jumat',
+  'الجُمُعة': 'Jumat'
 });
 
 /* ─────────── Bahasa Melayu ─────────── */
@@ -6700,12 +6716,22 @@ ZahimI18n.load('ms', {
   'غيرُ متاحٍ هنا': 'Tidak tersedia di sini',
   'افتح زرّ المشاركة ⬆ ثم «إضافة إلى الشاشة الرئيسية»': 'Buka butang kongsi ⬆ kemudian «Tambah ke Skrin Utama»',
   'زاحِم مثبَّتٌ على جهازك': 'Zahim telah dipasang pada peranti anda',
-  'هذا المتصفّح لا يدعم التثبيت': 'Pelayar ini tidak menyokong pemasangan'
+  'هذا المتصفّح لا يدعم التثبيت': 'Pelayar ini tidak menyokong pemasangan',
+  'وقت الجمعة': 'Waktu Jumaat',
+  'الجُمُعة': 'Jumaat'
 });
 
 
 </script>
 <script>
+/* يومَ الجمعة لا ظهرَ في المسجد — بل جمعة. الاسمُ يتبدّل من نفسه بتبدّل اليوم.
+   يُعرَّف قبل كلّ شيء لأنّ جداول الحال تستدعيه وهي تُبنى. */
+window.zxIsJumua = function(d){ return (d || new Date()).getDay() === 5; };
+window.zxPrayerName = function(key, base){
+  var names = {fajr:'الفجر',sunrise:'الشروق',dhuhr:'الظهر',asr:'العصر',maghrib:'المغرب',isha:'العشاء'};
+  var n = base || names[key] || '';
+  return (key === 'dhuhr' && zxIsJumua()) ? 'الجُمُعة' : n;
+};
 /* ═══════════════════════════════════════════════════════════════
    ZahimDay — مرجعٌ واحد لحال اليوم
    تقرأ منه البوصلة والمحراب معاً، فلا تختلف شاشتان على الساعة.
@@ -6882,13 +6908,14 @@ ZahimI18n.load('ms', {
   var STATE_DEFS=[
     {key:'fajr',    title:'وقت الفجر',  prayer:'fajr',    station:'fajr',    inWindow:true,  adhkar:'morning'},
     {key:'duha',    title:'الضحى',      prayer:null,      station:'sunrise', inWindow:false, adhkar:'morning'},
-    {key:'dhuhr',   title:'وقت الظهر',  prayer:'dhuhr',   station:'dhuhr',   inWindow:true,  adhkar:'morning'},
+    {key:'dhuhr',   title:(zxIsJumua()?'وقت الجمعة':'وقت الظهر'),  prayer:'dhuhr',   station:'dhuhr',   inWindow:true,  adhkar:'morning'},
     {key:'asr',     title:'وقت العصر',  prayer:'asr',     station:'asr',     inWindow:true,  adhkar:'evening'},
     {key:'maghrib', title:'وقت المغرب', prayer:'maghrib', station:'maghrib', inWindow:true,  adhkar:'evening'},
     {key:'isha',    title:'وقت العشاء', prayer:'isha',    station:'isha',    inWindow:true,  adhkar:'night'},
     {key:'night',   title:'جوف الليل',  prayer:null,      station:null,      inWindow:false, adhkar:'night'}
   ];
   var PRAYER_NAMES={fajr:'الفجر',sunrise:'الشروق',dhuhr:'الظهر',asr:'العصر',maghrib:'المغرب',isha:'العشاء'};
+
 
   var _cache=null, _cacheDay=null;
   function times(date){
@@ -6917,7 +6944,7 @@ ZahimI18n.load('ms', {
   // الصلاة التي نحن في وقتها الآن — وفي الضحى وجوف الليل لا صلاة، فنُرجع الآتية
   function currentPrayer(date){
     var s=state(date);
-    if(s.prayer) return {key:s.prayer,name:PRAYER_NAMES[s.prayer],inWindow:true};
+    if(s.prayer) return {key:s.prayer,name:zxPrayerName(s.prayer),inWindow:true};
     var np=nextPrayer(date);
     return {key:np.key,name:np.name,inWindow:false};
   }
@@ -6926,7 +6953,7 @@ ZahimI18n.load('ms', {
     var T=times(date), n=minutesNow(date);
     var order=['fajr','dhuhr','asr','maghrib','isha'];
     for(var i=0;i<order.length;i++) if(T[order[i]]>n)
-      return {key:order[i],name:PRAYER_NAMES[order[i]],at:T[order[i]],minutesLeft:Math.ceil(T[order[i]]-n)};
+      return {key:order[i],name:zxPrayerName(order[i]),at:T[order[i]],minutesLeft:Math.ceil(T[order[i]]-n)};
     return {key:'fajr',name:PRAYER_NAMES.fajr,at:T.fajr+1440,minutesLeft:Math.ceil(T.fajr+1440-n)};
   }
 
@@ -9055,7 +9082,7 @@ function sharePrayerTimesCard(){
     const f = m => (m==null?'—':String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'));
     ZahimCard.share({
       kind: 'مواقيت الصلاة',
-      rows: [['الفجر',f(T.fajr)],['الشروق',f(T.sunrise)],['الظهر',f(T.dhuhr)],
+      rows: [['الفجر',f(T.fajr)],['الشروق',f(T.sunrise)],[zxPrayerName('dhuhr'),f(T.dhuhr)],
              ['العصر',f(T.asr)],['المغرب',f(T.maghrib)],['العشاء',f(T.isha)]],
       meta: (c.city || 'موقعك') + ' — ' + ZahimDay.METHODS[c.method].name
     }).then(function(r){ if(r==='downloaded') showToast('حُفظت البطاقة'); });
@@ -10008,7 +10035,7 @@ function buildWirdCircles(){
 // بنية الفرائض الخمس مع رواتبها الحقيقية
 const PRAYER_STRUCTURE = [
   { key:'fajr',    name:'الفجر',   sunnah:[ {key:'fajr_sunnah',          label:'ركعتان قبل الفجر'} ] },
-  { key:'dhuhr',   name:'الظهر',   sunnah:[ {key:'dhuhr_sunnah_before',  label:'أربع ركعات قبل الظهر'},
+  { key:'dhuhr',   name:'الظهر',   jumua:'الجُمُعة', sunnah:[ {key:'dhuhr_sunnah_before',  label:'أربع ركعات قبل الظهر'},
                                              {key:'dhuhr_sunnah_after',   label:'ركعتان بعد الظهر'} ] },
   { key:'asr',     name:'العصر',   sunnah:[] },
   { key:'maghrib', name:'المغرب',  sunnah:[ {key:'maghrib_sunnah',       label:'ركعتان بعد المغرب'} ] },
@@ -12047,6 +12074,36 @@ function zxInstallTap(){
   showToast(ZahimI18n.t('هذا المتصفّح لا يدعم التثبيت'));
 }
 
+/* ═══ عدّادُ ما بين الأذان والإقامة ═══
+   قوسٌ يمشي على محيط الميناء يُري النسبةَ المنقضية. يُحدَّث كلَّ عشر ثوانٍ،
+   لأنّ الحركةَ البطيئة أهدأ من عقربٍ يقفز كلَّ ثانية — وهذا مبدأُ زاحِم في العدّ. */
+var ZX_ARC_C = 2 * Math.PI * 172;   // محيطُ القوس
+var _zxArcTimer = null;
+
+function zxIqamaTick(){
+  var g = document.getElementById('iqama-arc');
+  if(!g) return;
+  var win = null;
+  try{ win = window.zxIqamaWindow ? zxIqamaWindow() : null; }catch(e){}
+  if(!win || !win.active){ g.style.opacity = '0'; return; }
+
+  var p = Math.max(0, Math.min(1, win.progress));
+  g.style.opacity = '1';
+  var line = document.getElementById('iqama-arc-line');
+  if(line) line.setAttribute('stroke-dashoffset', String(ZX_ARC_C * (1 - p)));
+  var head = document.getElementById('iqama-head');
+  if(head){
+    var a = (-90 + p * 360) * Math.PI / 180;
+    head.setAttribute('cx', (200 + 172 * Math.cos(a)).toFixed(1));
+    head.setAttribute('cy', (200 + 172 * Math.sin(a)).toFixed(1));
+  }
+}
+function zxIqamaStart(){
+  if(_zxArcTimer) clearInterval(_zxArcTimer);
+  zxIqamaTick();
+  _zxArcTimer = setInterval(zxIqamaTick, 10000);
+}
+
 function zxOnly(id){
   var el = document.getElementById(id);
   if(!el) return;
@@ -12109,6 +12166,7 @@ function updateProgress(key){
 }
 
 function goHome(){
+  try{ zxIqamaStart(); }catch(e){}
   const home = document.getElementById('screen-home');
   const dhikr = document.getElementById('screen-dhikr');
   dhikr.classList.add('hidden');
@@ -12805,11 +12863,11 @@ window.addEventListener('popstate', function(){
   var STATES = [];
   function buildStates(){
     STATES = [
-    { key:'fajr', dark:true, station:'fajr', from:T.fajr, to:T.sunrise, inWindow:true, next:'الظهر', title:'وقت الفجر',
+    { key:'fajr', dark:true, station:'fajr', from:T.fajr, to:T.sunrise, inWindow:true, next:zxPrayerName('dhuhr'), title:'وقت الفجر',
       wall:'#3E3A33', niche:'#4B463D', ink:'#FBFAF7', soft:'rgba(251,250,247,.86)', hair:'rgba(246,244,239,.20)',
       lightIn:'rgba(222,238,252,.96)', lightOut:'rgba(58,78,92,0)', lx:296, ly:626, lr:440,
       wallOp:.20, dimOp:.10, litOp:.52, edgeOp:.62, edgeCol:'#C9963A' },
-    { key:'duha', station:'sunrise', from:T.sunrise, to:T.dhuhr, inWindow:false, next:'الظهر', title:'الضحى',
+    { key:'duha', station:'sunrise', from:T.sunrise, to:T.dhuhr, inWindow:false, next:zxPrayerName('dhuhr'), title:'الضحى',
       wall:'#E7E1D4', niche:'#F2EDE3', ink:'#153428', soft:'rgba(21,52,40,.76)', hair:'rgba(21,52,40,.16)',
       lightIn:'rgba(255,250,232,.95)', lightOut:'rgba(242,237,227,0)', lx:292, ly:206, lr:430,
       wallOp:.03, dimOp:.095, litOp:.31, edgeOp:.80, edgeCol:'#8A6522' },
@@ -12928,7 +12986,7 @@ window.addEventListener('popstate', function(){
     return rec ? {id:id, rec:rec} : null;   // مفقودٌ = لا يُعرض شيء
   }
 
-  var ORDER=[['fajr','الفجر'],['sunrise','الشروق'],['dhuhr','الظهر'],
+  var ORDER=[['fajr','الفجر'],['sunrise','الشروق'],['dhuhr',zxPrayerName('dhuhr')],
              ['asr','العصر'],['maghrib','المغرب'],['isha','العشاء']];
 
   var AR={'0':'٠','1':'١','2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩'};
@@ -13153,6 +13211,21 @@ window.addEventListener('popstate', function(){
     return (off && T[key] != null) ? (T[key] + off) % 1440 : null;
   }
 
+  /* نافذةُ ما بين الأذان والإقامة — تُقرأ من البوصلة لترسم قوسَ العدّ */
+  window.zxIqamaWindow = function(){
+    var d = new Date(), now = d.getHours() * 60 + d.getMinutes() + d.getSeconds() / 60;
+    var keys = ['fajr','dhuhr','asr','maghrib','isha'];
+    for(var i = 0; i < keys.length; i++){
+      var k = keys[i], a = T[k], q = iqamaOf(k);
+      if(a == null || q == null || q <= a) continue;
+      if(now >= a && now < q){
+        return { active:true, key:k, progress:(now - a) / (q - a),
+                 leftMin:Math.max(0, Math.ceil(q - now)) };
+      }
+    }
+    return { active:false };
+  };
+
   /* ═══ لوحُ الصلاة ═══
      تُلمس خانةُ الصلاة في الشريط فينفتح لوحُها: راتبتُها القبليّة، ثم الفريضة،
      ثم البعديّة، ثم بابٌ إلى أذكار دبر الصلاة. والعصرُ بلا راتبةٍ مؤكّدة،
@@ -13171,7 +13244,8 @@ window.addEventListener('popstate', function(){
 
     var iq = iqamaOf(key);
     document.getElementById('psKicker').textContent = _t('صلاة');
-    document.getElementById('psName').textContent   = _t(st.name);
+    document.getElementById('psName').textContent   =
+      _t((key === 'dhuhr' && zxIsJumua() && st.jumua) ? st.jumua : st.name);
     document.getElementById('psAdhan').textContent  = T[key] != null ? fmt(T[key]) : '—';
     document.getElementById('psIqama').textContent  = iq != null ? fmt(iq) : '—';
 
@@ -14089,6 +14163,7 @@ window.addEventListener('popstate', function(){
   });
 
   document.addEventListener('DOMContentLoaded', function(){ setTimeout(init, 500); });
+  setTimeout(function(){ try{ zxIqamaStart(); }catch(e){} }, 1500);
 
   /* تُقرأ من الإعدادات: أمثبَّتٌ هو؟ وهل يمكن تثبيتُه الآن؟ */
   window.ZahimInstall = {
