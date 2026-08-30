@@ -1077,8 +1077,16 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
   background:linear-gradient(to top, var(--cream) 62%, rgba(247,243,236,0));
   pointer-events:none;}
 .home-dock > *{pointer-events:auto;}
-#home-bg{padding-bottom:92px;}
-#screen-home{position:fixed;}
+/* في وضع التطبيق المثبَّت تكون الشاشةُ أطولَ ممّا هي في المتصفّح، فيبقى
+   الفراغُ متجمّعًا في الأسفل والبوصلةُ تبدو صغيرة. فيُوزَّع الفراغُ حولها،
+   ويُسمح لها بالنموّ مع ارتفاع الشاشة لا مع عرضها وحده. */
+#home-bg{padding-bottom:24px;flex:0 0 auto;}
+/* الشاشةُ نفسها هي التي تُوزّع الفراغ: الشريطُ العلويّ في أعلاها،
+   والمحتوى في وسطها، والشريطُ السفليّ في قاعها. */
+#screen-home{position:fixed;display:flex;flex-direction:column;justify-content:center;}
+#screen-home > .home-dock{margin-top:auto;position:static;padding-top:10px;}
+.compass-wrap{width:min(560px, 88vw, calc(100dvh - 430px)) !important;}
+@media (max-height:800px){ .compass-wrap{width:min(560px,88vw) !important;} }
 .dock-btn{flex:1;max-width:118px;display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:9px 6px;border-radius:15px;cursor:pointer;color:var(--muted);
   border:1px solid rgba(255,255,255,.9);
@@ -4644,24 +4652,32 @@ var ZahimHadithID = {
           <circle cx="200" cy="200" r="172" fill="none" stroke="rgba(154,119,57,.13)" stroke-width="7.2"/>
           <!-- هالةٌ تحت القوس، ثم جسمٌ زجاجيّ، ثم لبٌّ مضيء — مادّةُ الإبرة نفسها -->
           <circle id="iqama-arc-halo" cx="200" cy="200" r="172" fill="none"
-                  stroke="#3FD9A0" stroke-width="7.2" opacity=".30" stroke-linecap="round"
+                  stroke="#3FD9A0" stroke-width="8.4" opacity=".26" stroke-linecap="round"
                   transform="rotate(-90 200 200)" filter="url(#iqama-bloom)"
                   stroke-dasharray="1080.7" stroke-dashoffset="1080.7"
                   style="transition:stroke-dashoffset .9s linear"/>
+          <!-- أنبوبٌ لا شريط: ثلاثُ طبقاتٍ على أنصاف أقطارٍ متجاورة —
+               ظلٌّ في الحرف السفليّ، وجسمٌ أخضرُ واحدٌ على طوله، وضوءٌ في أعلاه.
+               فاللونُ لا يتبدّل بتبدّل الموضع، والاستدارةُ تُحسّ لا تُقرأ. -->
+          <circle id="iqama-arc-shade" cx="200" cy="200" r="173.6" fill="none"
+                  stroke="#0B3C28" stroke-width="4.4" stroke-linecap="round"
+                  transform="rotate(-90 200 200)" opacity=".55"
+                  stroke-dasharray="1090.8" stroke-dashoffset="1090.8"
+                  style="transition:stroke-dashoffset .9s linear"/>
           <circle id="iqama-arc-line" cx="200" cy="200" r="172" fill="none"
-                  stroke="url(#iqama-glass)" stroke-width="7.2" stroke-linecap="round"
+                  stroke="#1F7A55" stroke-width="7.2" stroke-linecap="round"
                   transform="rotate(-90 200 200)"
                   stroke-dasharray="1080.7" stroke-dashoffset="1080.7"
                   style="transition:stroke-dashoffset .9s linear"/>
-          <circle id="iqama-arc-core" cx="200" cy="200" r="172" fill="none"
-                  stroke="url(#iqama-core)" stroke-width="2.2" stroke-linecap="round"
-                  transform="rotate(-90 200 200)"
-                  stroke-dasharray="1080.7" stroke-dashoffset="1080.7"
+          <circle id="iqama-arc-core" cx="200" cy="200" r="170.2" fill="none"
+                  stroke="#7FE9BC" stroke-width="2.4" stroke-linecap="round"
+                  transform="rotate(-90 200 200)" opacity=".85"
+                  stroke-dasharray="1069.4" stroke-dashoffset="1069.4"
                   style="transition:stroke-dashoffset .9s linear"/>
           <circle id="iqama-head-glow" cx="200" cy="28" r="8.5" fill="url(#iqama-head-g)"/>
           <circle id="iqama-head" cx="200" cy="28" r="2.4" fill="#EFFFF7"/>
           <!-- بيانُ العدّاد: بلا هذا السطر يبقى القوسُ زينةً لا يُعرف معناها -->
-          <g id="iqama-caption" transform="translate(200,268)">
+          <g id="iqama-caption" transform="translate(200,252)">
             <g transform="translate(-7,-16) scale(.82)" fill="none" stroke="#2E9B70" stroke-width="1.7"
                stroke-linecap="round" stroke-linejoin="round" opacity=".92">
               <path d="M9 1.6c3.4 2.9 5 5.9 5 8.9V16H4v-5.5c0-3 1.6-6 5-8.9z"/>
@@ -9892,8 +9908,40 @@ function getTimeBandIndex(date){
 // تلقائياً، لا بلداً ثابتاً) — لكن إن كانت محطة الوقت الحالي قد اكتملت، تنتقل البوصلة
 // بلطف إلى أقرب محطة لاحقة لم تُنجز بعد اليوم، فتبقى دوماً ترافق رحلة المستخدم الفعلية
 // لا مجرد الساعة. لا رجوع للخلف — البوصلة تواكب تقدّم اليوم إلى الأمام فقط.
+/* ═══ نوافذُ الأوراد ═══
+   لكلّ وِردٍ وقتٌ ينتهي: الصباحُ بعد الفجر بثلاث ساعات، والمساءُ بين العصر
+   والمغرب، والنومُ بعد العشاء بساعتين، وأذكارُ الصلاة ورواتبُها نصفَ ساعةٍ
+   بعد الصلاة. فالبوصلةُ لا تقف على وِردٍ فات وقتُه. */
+var WIRD_WIN = {
+  morning: function(T,n){ return n >= T.fajr && n < T.fajr + 180; },
+  evening: function(T,n){ return n >= T.asr  && n < T.maghrib; },
+  night:   function(T,n){ return n >= T.isha + 0 && n < T.isha + 120; },
+  prayer:  function(T,n){
+    var k = ['fajr','dhuhr','asr','maghrib','isha'];
+    for(var i = 0; i < k.length; i++){
+      if(T[k[i]] != null && n >= T[k[i]] && n < T[k[i]] + 30) return true;
+    }
+    return false;
+  }
+};
+
+function zxWirdOpen(key){
+  var f = WIRD_WIN[key];
+  if(!f) return true;                        // القرآن والحديث بلا نافذة
+  try{
+    var T = ZahimDay.times();
+    var d = new Date(), n = d.getHours() * 60 + d.getMinutes();
+    return !!f(T, n);
+  }catch(e){ return true; }
+}
+
 function getCompassActiveIndex(doneMap){
   const timeIdx = getTimeBandIndex(new Date());
+  // لا تقف الإشارةُ على وِردٍ انقضت نافذتُه ولو لم يُتمّه صاحبُه
+  for(let idx = timeIdx; idx < 6; idx++){
+    const k = COMPASS_STAGES[idx].key;
+    if(!doneMap[k] && zxWirdOpen(k)) return idx;
+  }
   for(let idx = timeIdx; idx < 6; idx++){
     if(!doneMap[COMPASS_STAGES[idx].key]) return idx;
   }
@@ -12263,10 +12311,13 @@ function zxIqamaTick(){
 
   var p = Math.max(0, Math.min(1, win.progress));
   g.style.opacity = '1';
-  var off = String(ZX_ARC_C * (1 - p));
-  ['iqama-arc-halo','iqama-arc-line','iqama-arc-core'].forEach(function(id){
+  // لكلّ طبقةٍ محيطُها، لأنّ أنصافَ أقطارها متجاورةٌ لا متطابقة
+  var LAYERS = { 'iqama-arc-halo':172, 'iqama-arc-shade':173.6,
+                 'iqama-arc-line':172, 'iqama-arc-core':170.2 };
+  Object.keys(LAYERS).forEach(function(id){
     var el = document.getElementById(id);
-    if(el) el.setAttribute('stroke-dashoffset', off);
+    if(el) el.setAttribute('stroke-dashoffset',
+      String(2 * Math.PI * LAYERS[id] * (1 - p)));
   });
   var a = (-90 + p * 360) * Math.PI / 180;
   var hx = (200 + 172 * Math.cos(a)).toFixed(1), hy = (200 + 172 * Math.sin(a)).toFixed(1);
@@ -13078,7 +13129,7 @@ window.addEventListener('popstate', function(){
   // مرجعان للساعة يعني شاشتين تختلفان، وهذا ما بُنيت الوحدة لمنعه.
 
   // فروق الإقامة — إعدادُ المستخدم نفسه، لا ادّعاءَ معرفةٍ بإقامة مسجده
-  var IQAMA_DEFAULT = { fajr:20, dhuhr:15, asr:15, maghrib:5, isha:15 };
+  var IQAMA_DEFAULT = { fajr:25, dhuhr:20, asr:20, maghrib:10, isha:20 };
   // الموقع والطريقة والمذهب يملكها ZahimDay؛ والإقامة إعدادٌ خاصّ بهذه الشاشة
   var IQ_KEY = 'zahim_iqama_v1';
   var CFG = { iqama: Object.assign({}, IQAMA_DEFAULT) };
