@@ -1196,7 +1196,11 @@ body.theme-dark .iqama-cap{fill:#8FD9B6;stroke:rgba(20,26,23,.85);}
   background:linear-gradient(165deg,#2A805A,#0F3927);
   box-shadow:0 5px 14px rgba(15,57,39,.28),0 1px 0 rgba(255,255,255,.24) inset;
 }
-.zx-pane{display:none;animation:zxPaneIn .22s cubic-bezier(.22,1,.36,1) both;}
+/* ═══ شاشةٌ واحدة ═══ اللوحُ بارتفاعٍ ثابت، والتبويبُ يملأ ما بقي منه.
+   فلا نزولَ إلى الأسفل ولا انتقالَ من جهةٍ إلى جهة — أربعةُ أبوابٍ في مكانها. */
+.zx-panes{flex:1;min-height:0;display:flex;}
+.zx-pane{display:none;flex:1;min-height:0;overflow-y:auto;
+  animation:zxPaneIn .22s cubic-bezier(.22,1,.36,1) both;}
 .zx-pane.on{display:block;}
 @keyframes zxPaneIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){ .zx-pane{animation:none;} }
@@ -1204,7 +1208,7 @@ body.theme-dark .iqama-cap{fill:#8FD9B6;stroke:rgba(20,26,23,.85);}
 
 /* المجموعةُ بطاقةٌ زجاجيّة، ورأسُها سطرٌ صغيرٌ داخلها لا فوقها */
 .zx-pane .zx-group{
-  border-radius:20px;padding:16px 16px 8px;margin-bottom:14px;
+  border-radius:20px;padding:13px 14px 6px;margin-bottom:10px;
   background:linear-gradient(158deg,rgba(255,255,255,.94),rgba(255,252,244,.70));
   border:1px solid rgba(255,255,255,.92);
   box-shadow:0 8px 24px rgba(120,90,42,.12),0 1px 0 rgba(255,255,255,.98) inset;
@@ -1214,16 +1218,16 @@ body.theme-dark .iqama-cap{fill:#8FD9B6;stroke:rgba(20,26,23,.85);}
   letter-spacing:0;text-transform:none;opacity:1;
 }
 .zx-pane .zx-row{
-  border-radius:14px;padding:14px 12px;margin:0 -4px;min-height:60px;
+  border-radius:14px;padding:11px 12px;margin:0 -4px;min-height:52px;
   transition:transform .15s ease-out,background .15s ease;
 }
 .zx-pane .zx-row:active{transform:scale(.98);background:rgba(176,138,46,.07);}
 .zx-note{font-size:12px;color:var(--muted);line-height:1.7;margin-top:2px;}
 
 /* أيقونةُ الصفّ: مربّعٌ مستديرٌ يسبق الاسم — العينُ تجد السطرَ بالشكل قبل الحرف */
-.zx-row-ic{width:38px;height:38px;border-radius:12px;flex:0 0 auto;
+.zx-row-ic{width:34px;height:34px;border-radius:12px;flex:0 0 auto;
   display:flex;align-items:center;justify-content:center;margin-inline-end:11px;}
-.zx-row-ic svg{width:19px;height:19px;}
+.zx-row-ic svg{width:17px;height:17px;}
 .zx-row-ic.brass{color:#9A7739;
   background:linear-gradient(158deg,rgba(240,220,166,.55),rgba(216,181,89,.24));
   box-shadow:0 1px 0 rgba(255,255,255,.9) inset;}
@@ -1441,9 +1445,9 @@ body.theme-dark .dial-engrave.dim{fill:#8A8371;}
 /* الحقوق: خيطٌ متلاشٍ ثم سطران خافتان في قاع كل شاشة — يُقرأ إن قُصد، ولا يُرى إن لم يُقصد */
 /* ═══ الحقوق ═══ على تخطيط «صلة وتواصل»: شعارٌ باهتٌ فوق، ثم سطرٌ رئيسٌ
    بخطّ أميري صغير، ثم اسمُ المطوِّر، ثم الدعاء. هدوءٌ لا صراخ. */
-.zx-rights{padding:16px 10px 8px;text-align:center;}
+.zx-rights{padding:6px 8px 0;text-align:center;}
 /* في اللوح: حشوٌ أقلّ، فهو محصورٌ لا صفحة */
-#zxSheetRights .zx-rights{padding:14px 6px 4px;}
+#zxSheetRights .zx-rights{padding:6px 6px 0;}
 /* اسمُ المطوّر في الإعدادات: بلا سهم، فليس مدخلًا إلى شيء */
 .zx-row.zx-owner{cursor:default;}
 /* سطرُ التطوير: جملةٌ واحدة بلغتين — تُقرأ في كل واجهة، ولا تُترجَم */
@@ -1451,7 +1455,7 @@ body.theme-dark .dial-engrave.dim{fill:#8A8371;}
 .zx-row.zx-owner .zx-owner-ar{font-family:'Tajawal','Noto Kufi Arabic',sans-serif;
   font-size:12.5px;font-weight:600;color:var(--text,#1A2E22);opacity:.92;}
 .zx-row.zx-owner .zx-owner-en{font-size:11px;letter-spacing:.2px;color:var(--muted,#6B8C78);opacity:.9;}
-#zxSheetRights .zx-seal-mono{width:28px;margin:0 auto 8px;display:block;opacity:.9;}
+#zxSheetRights .zx-seal-mono{width:22px;margin:0 auto 5px;display:block;opacity:.85;}
 .zx-rights::before{content:none;display:none;}
 /* أميري جميلٌ في المتون، دقيقٌ في الحواشي — فالحاشية تأخذ تجوال الأوضح عند الصغر.
    واللون هو هو، إنما زاد الوزن والحجم والوضوح. */
@@ -1459,14 +1463,14 @@ body.theme-dark .dial-engrave.dim{fill:#8A8371;}
    وما دون ذلك يلتفّ ولا يُبتر، فالالتفاف أهون من البتر أو من خطٍّ لا يُقرأ. */
 /* السطرُ الرئيس: أميري صغيرٌ هادئ، بلون الهويّة لا رماديًّا كئيبًا */
 .zx-rights b{display:block;font-family:'Amiri',serif;font-weight:700;
-  font-size:clamp(10.5px, 2.9vw, 12.5px);
+  font-size:clamp(10px, 2.7vw, 11.5px);
   color:var(--green);opacity:.92;letter-spacing:.2px;line-height:1.6;white-space:nowrap;}
 body.theme-dark .zx-rights b{color:#B9D2C4;}
 /* الدعاء: بخطّ أميري وأخفتُ ما في القاع — يُقرأ إن قُصد، ولا يزاحم */
 /* الدعاء سطران بخطّ أميري — أوضحُ مما كان، لأنه دعاءٌ يُقرأ لا حاشيةٌ تُهمَل */
 /* سطرُ الدعاء: أميري، وأوضحُ ما في الكتلة — وهو أكبرُ من سطر الحقوق عمدًا */
 .zx-rights .zx-dua{display:block;font-family:'Amiri',serif;font-style:normal;
-  font-size:clamp(10.5px, 3vw, 12.5px);line-height:1.75;color:var(--muted);opacity:.88;
+  font-size:clamp(9.5px, 2.7vw, 11.5px);line-height:1.6;color:var(--muted);opacity:.88;
   margin-top:6px;letter-spacing:0;white-space:normal;}
 /* الختم: أصغرُ ما يُرى، أحاديُّ اللون، مفرَّغُ الفراغات */
 /* الشعار الأصلي بألوانه، صغيرًا فقط — لا نسخةً أحاديّة اللون */
@@ -1587,7 +1591,7 @@ body.mode-night .zx-rights b{color:#B9D2C4;}
 body.mode-night .zx-seal-mono{filter:none;}
 
 /* منتقي الوضع في الإعدادات */
-.zx-modes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 2px 2px;}
+.zx-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 2px 2px;max-width:230px;margin:0 auto;}
 /* ═══ عيّنةُ الوضع ═══ قرصٌ صغيرٌ بحاشيةٍ نحاسيّةٍ نقطتُها في طرفه.
    كانت مستطيلاتٍ ضخمةً بألوانٍ داكنةٍ تملأ اللوح فتُثقله. */
 .zx-mode{display:flex;flex-direction:column;align-items:center;gap:7px;
@@ -2432,7 +2436,7 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
 .zx-backdrop{position:fixed;inset:0;background:rgba(12,26,20,.34);opacity:0;visibility:hidden;
   transition:opacity .45s ease,visibility .45s;z-index:9000;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}
 .zx-backdrop.open{opacity:1;visibility:visible;}
-.zx-sheet{position:fixed;left:0;right:0;bottom:0;z-index:9001;
+.zx-sheet{position:fixed;left:0;right:0;bottom:0;z-index:9001;height:92dvh;display:flex;flex-direction:column;
   background:var(--cream);border-radius:22px 22px 0 0;
   box-shadow:0 -2px 8px rgba(20,40,30,.06),0 -18px 46px rgba(20,40,30,.18);
   transform:translateY(102%);transition:transform .5s cubic-bezier(.22,1,.36,1);
@@ -4448,6 +4452,12 @@ var ZahimHadithID = {
     </header>
 
   <!-- بوصلة العبادة اليومية -->
+  <!-- شريط الأفق: اتجاه القبلة، في شاشة البوصلة وحدها -->
+  <button type="button" class="zq-strip" id="zqStrip" onclick="openQibla()" aria-label="اتجاه القبلة">
+    <span class="zq-lbl" id="zqLbl">القبلة</span>
+    <svg id="zqSvg" viewBox="0 0 260 26" preserveAspectRatio="none" aria-hidden="true"></svg>
+  </button>
+
   <div id="wird-circles-wrap">
 
 
@@ -6138,7 +6148,9 @@ ZahimI18n.load('en', {
   'بتلتان أضاءتا': 'Two petals lit',
   'الوردةُ تتفتّح': 'The rosette is opening',
   'قاربت الوردةُ تمامَها': 'The rosette is nearly complete',
-  'تمّت الوردة': 'The rosette is complete'
+  'تمّت الوردة': 'The rosette is complete',
+  'نهاريّ': 'Day',
+  'ليليّ': 'Night'
 });
 /* ═══ زاحِم — الإندونيسية والماليزية ═══
    الواجهة فقط. الأحاديث والأذكار تبقى عربيةً، ومعناها بالإنجليزية حتى تُراجَع.
@@ -6531,7 +6543,9 @@ ZahimI18n.load('id', {
   'بتلتان أضاءتا': 'Dua kelopak menyala',
   'الوردةُ تتفتّح': 'Bunga sedang mekar',
   'قاربت الوردةُ تمامَها': 'Bunga hampir sempurna',
-  'تمّت الوردة': 'Bunga telah sempurna'
+  'تمّت الوردة': 'Bunga telah sempurna',
+  'نهاريّ': 'Siang',
+  'ليليّ': 'Malam'
 });
 
 /* ─────────── Bahasa Melayu ─────────── */
@@ -6907,7 +6921,9 @@ ZahimI18n.load('ms', {
   'بتلتان أضاءتا': 'Dua kelopak menyala',
   'الوردةُ تتفتّح': 'Bunga sedang mekar',
   'قاربت الوردةُ تمامَها': 'Bunga hampir sempurna',
-  'تمّت الوردة': 'Bunga telah sempurna'
+  'تمّت الوردة': 'Bunga telah sempurna',
+  'نهاريّ': 'Siang',
+  'ليليّ': 'Malam'
 });
 
 
@@ -12525,6 +12541,75 @@ function showToast(msg){
   <div class="ps-body" id="psBody"></div>
 </div>
 
+
+<!-- ═══ شاشة القبلة ═══
+     رواقٌ ينفتح عند الوصول ثم تنبسط السجّادة. لا اختيارَ على المستخدم: يدور بجسمه فحسب. -->
+<style>
+#screen-qibla{
+  --zqg:var(--gold); --zqb:var(--green-light); --zqe:var(--green);
+  --zqi:var(--text); --zqm:var(--muted); --zql:var(--line);
+  min-height:100vh;background:var(--cream);display:flex;flex-direction:column;
+}
+#zqScene{flex:1;position:relative;overflow:hidden;min-height:22rem}
+.zq-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#zqGateLayer{transform-origin:50% 58%;
+  transition:transform .78s cubic-bezier(.32,.9,.3,1),opacity .58s ease}
+#zqGateLayer.zq-gone{transform:scale(2.15);opacity:0}
+#zqGate{width:min(100%,24rem);height:auto;display:block}
+#zqRugLayer{perspective:820px;perspective-origin:50% 50%;opacity:0;pointer-events:none;
+  transition:opacity .62s ease .16s}
+#zqRugLayer.zq-here{opacity:1}
+#zqRug{width:13.5rem;height:20.25rem;position:relative;transform-style:preserve-3d;
+  transform:rotateX(80deg) rotateZ(0deg) scale(.72);
+  transition:transform .9s cubic-bezier(.22,.86,.28,1);
+  filter:drop-shadow(0 14px 26px rgba(20,67,46,.3))}
+#zqRugLayer.zq-here #zqRug{transform:rotateX(52deg) rotateZ(var(--zqrz,0deg)) scale(1)}
+#zqRugSvg{width:100%;height:100%;display:block}
+#zqArchGlow{opacity:0;transition:opacity .8s ease .35s}
+#zqRugLayer.zq-here #zqArchGlow{opacity:1}
+#zqCaption{position:absolute;left:0;right:0;bottom:.9rem;text-align:center;
+  font-size:.95rem;color:var(--zqi);opacity:.62;transition:opacity .4s,color .4s}
+#zqCaption.zq-lit{color:var(--zqb);opacity:1}
+#zqCaption small{display:block;font-size:.78rem;font-weight:400;color:var(--zqm);margin-top:.25rem}
+.zq-deck{border-top:1px solid var(--zql);padding:.85rem 1.1rem 1.2rem}
+.zq-deck .zq-row{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;
+  font-size:.78rem;color:var(--zqm)}
+.zq-chip{padding:.18rem .6rem;border-radius:999px;border:1px solid var(--zql);white-space:nowrap}
+.zq-chip.zq-on{color:var(--zqb);border-color:color-mix(in srgb,var(--zqb) 45%,transparent)}
+.zq-btns{display:flex;gap:.45rem;margin-top:.6rem;flex-wrap:wrap}
+.zq-btns button{font:inherit;font-size:.79rem;color:var(--zqi);background:transparent;
+  border:1px solid var(--zql);border-radius:.6rem;padding:.42rem .8rem;cursor:pointer}
+.zq-btns button.zq-live{border-color:var(--zqg);color:var(--zqg)}
+.zq-note{font-size:.75rem;color:var(--zqm);margin:.6rem 0 0;line-height:1.7}
+@media (prefers-reduced-motion:reduce){
+  #zqGateLayer,#zqRugLayer,#zqRug,#zqArchGlow,#zqCaption{transition-duration:.001s !important}
+}
+</style>
+
+<div class="screen hidden" id="screen-qibla">
+  <div class="topbar">
+    <button class="back-btn" onclick="closeQibla()">↩ الرئيسية</button>
+  </div>
+
+  <div id="zqScene">
+    <div class="zq-layer" id="zqGateLayer">
+      <svg id="zqGate" viewBox="0 0 300 322" role="img" aria-label="محراب ينفتح على رواق"></svg>
+    </div>
+    <div class="zq-layer" id="zqRugLayer">
+      <div id="zqRug"><svg id="zqRugSvg" viewBox="0 0 400 600" role="img" aria-label="سجّادة صلاة"></svg></div>
+    </div>
+    <div id="zqCaption">—</div>
+  </div>
+
+  <div class="zq-deck">
+    <div class="zq-row"><span id="zqState">ابحث عن القبلة</span><span class="zq-chip" id="zqSrc">الحسّاس متوقّف</span></div>
+    <div class="zq-btns">
+      <button type="button" id="zqSensor" onclick="zqStartSensor()">تشغيل الحسّاس</button>
+      <button type="button" id="zqCal" onclick="zqCalibrate()">عايِر: أواجه القبلة الآن</button>
+    </div>
+    <p class="zq-note" id="zqCalNote">لا معايرة — تُستعمل قراءةُ الحسّاس كما هي.</p>
+  </div>
+</div>
 <div class="screen hidden" id="screen-mihrab">
 
   <svg class="arch" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -15091,8 +15176,9 @@ body.theme-dark .zx-sw{
   var KEY = 'zahim_mode_v1';
   /* أربعةٌ تكفي: نهارٌ دافئ، ولازوردُ الهويّة، وليلٌ، وظلمةٌ شديدة.
    وسبعةٌ كانت تُرهق الاختيار وتُطيل اللوح. ومن كان على وضعٍ محذوفٍ يُنقل إلى أقربه. */
-var MODES = ['calm','lapis','night','obsidian'];
-var MODE_FALLBACK = { teal:'lapis', olive:'calm', sea:'lapis' };
+/* وضعان لا أكثر: نهارٌ وليل. وما سواهما زينةٌ تُثقل الاختيار ولا تُغيّر شيئًا. */
+var MODES = ['calm','night'];
+var MODE_FALLBACK = { teal:'calm', olive:'calm', sea:'calm', lapis:'calm', obsidian:'night' };
 
   function get(){
     try{
@@ -15126,8 +15212,8 @@ var MODE_FALLBACK = { teal:'lapis', olive:'calm', sea:'lapis' };
   /* اللوحة تُبنى من الأوضاع نفسها: عيّنةٌ ملوّنة واسمٌ تحتها —
      فيرى اللونَ قبل أن يختاره، ولا يحتاج تجريبَ كلٍّ ليعرف. */
   var LABELS = {
-    calm:'هادئ', lapis:'لازوردي', teal:'بترولي', olive:'أخضر عميق',
-    sea:'بحري', night:'ليلي', obsidian:'أوبسيديان'
+    calm:'نهاريّ', lapis:'لازوردي', teal:'بترولي', olive:'أخضر عميق',
+    sea:'بحري', night:'ليليّ', obsidian:'أوبسيديان'
   };
   var SWATCH = {
     calm:['#1B5C3F','#14432E','#C9963A'],
@@ -15184,6 +15270,284 @@ var MODE_FALLBACK = { teal:'lapis', olive:'calm', sea:'lapis' };
     document.addEventListener('DOMContentLoaded', function(){ setTimeout(zxPaintModes, 700); });
   })();
 })();
+</script>
+
+<!-- ═══ منطق القبلة: الشريط والشاشة معًا، حسّاسٌ واحدٌ يخدمهما ═══ -->
+<style>
+.zq-strip{display:flex;align-items:center;gap:.6rem;padding:.4rem .85rem;margin:0 14px 10px;
+  border:1px solid var(--line);border-radius:12px;background:transparent;cursor:pointer;
+  width:calc(100% - 28px);font:inherit;color:inherit;text-align:start;
+  transition:border-color .35s ease}
+.zq-strip.zq-on{border-color:color-mix(in srgb,var(--green-light) 42%,transparent)}
+.zq-strip svg{display:block;flex:1;height:26px}
+.zq-lbl{font-size:11.5px;color:var(--muted);white-space:nowrap;min-width:60px}
+.zq-strip.zq-on .zq-lbl{color:var(--green-light)}
+</style>
+<script>
+(function(global){
+"use strict";
+var RAD=Math.PI/180, DEG=180/Math.PI, KL=21.4225, KG=39.8262;
+var Q={lat:24.7136,lon:46.6753,qibla:0,heading:0,raw:0,offset:0,
+       sensor:false,attached:false,state:'seek',field:null,calField:null,stale:false,built:false};
+var ARRIVE_MS=1100, LEAVE_DEG=9, arriveAt=null, leaveAt=null, wasLit=false;
+function $(i){return document.getElementById(i);}
+function ar(n){
+  n=Math.round(Number(n));
+  if(typeof global.arNum==='function'){ try{ return global.arNum(n); }catch(e){} }
+  return String(n).replace(/[0-9]/g,function(d){ return '\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669'[+d]; });
+}
+function sgn(d){return (d+540)%360-180;}
+function T(k){ try{ if(global.ZahimI18n && ZahimI18n.t) return ZahimI18n.t(k); }catch(e){} return k; }
+function bearing(lat,lon){
+  var p1=lat*RAD,l1=lon*RAD,p2=KL*RAD,l2=KG*RAD;
+  var y=Math.sin(l2-l1), x=Math.cos(p1)*Math.tan(p2)-Math.sin(p1)*Math.cos(l2-l1);
+  return (Math.atan2(y,x)*DEG+360)%360;
+}
+function pullCoords(){
+  try{ var c=global.ZahimDay && ZahimDay.config();
+    if(c && c.lat!=null && c.lng!=null){ Q.lat=c.lat; Q.lon=c.lng; } }catch(e){}
+  Q.qibla=bearing(Q.lat,Q.lon);
+}
+
+/* ── الشريط ── */
+function paintStrip(){
+  var svg=$('zqSvg'); if(!svg) return;
+  var dl=sgn(Q.qibla-Q.heading), lit=Math.abs(dl)<=3, px=1.5, cx=130, o='';
+  var cards={0:'ش',90:'ق',180:'ج',270:'غ'};
+  o+='<line x1="0" y1="19" x2="260" y2="19" stroke="var(--line)" stroke-width="1"/>';
+  for(var d=-84;d<=84;d+=3){
+    var b=((Math.round(Q.heading+d)%360)+360)%360, x=cx+d*px;
+    if(x<6||x>254) continue;
+    var maj=(b%45===0), mid=(b%15===0), h=maj?9:(mid?6:3);
+    o+='<line x1="'+x.toFixed(1)+'" y1="'+(19-h)+'" x2="'+x.toFixed(1)+'" y2="19" stroke="var(--gold)" stroke-width="'
+      +(maj?1.2:.8)+'" opacity="'+(maj?.85:(mid?.45:.25))+'"/>';
+    if(maj&&cards[b]) o+='<text x="'+x.toFixed(1)+'" y="26" text-anchor="middle" font-family="inherit" font-size="8" fill="var(--text)" opacity=".45">'+cards[b]+'</text>';
+  }
+  var kx=cx+dl*px, clamp=false;
+  if(kx<10){kx=10;clamp=true;} if(kx>250){kx=250;clamp=true;}
+  o+='<g transform="translate('+kx.toFixed(1)+',10)">';
+  if(lit) o+='<circle r="10" fill="var(--green-light)" opacity=".16"/>';
+  o+='<rect x="-5" y="-5" width="10" height="10" rx="1.4" fill="'+(lit?'var(--green-light)':'var(--green)')+'"/>';
+  o+='<rect x="-5" y="-1.4" width="10" height="1.4" fill="var(--gold)"/>';
+  if(clamp){var sd=dl>0?1:-1;
+    o+='<path d="M'+(sd*9)+' -3.5 L'+(sd*15)+' 0 L'+(sd*9)+' 3.5 Z" fill="var(--gold)" opacity=".8"/>';}
+  o+='</g>';
+  o+='<path d="M130 6 L126.5 1 L133.5 1 Z" fill="var(--gold)"/>';
+  svg.innerHTML=o;
+  var s=$('zqStrip'); if(s){ s.classList.toggle('zq-on',lit); }
+  var l=$('zqLbl'); if(l) l.textContent = Q.sensor
+    ? (lit?T('على القبلة'):ar(Math.abs(dl))+'° '+T(dl>0?'يمينًا':'يسارًا'))
+    : T('القبلة');
+}
+
+/* ── الرواق ── */
+function archD(cx,base,w,h){
+  var l=(cx-w/2).toFixed(1), r=(cx+w/2).toFixed(1), c=cx.toFixed(1);
+  var sh=(base-h*0.48).toFixed(1), sq=(base-h*0.80).toFixed(1), ap=(base-h).toFixed(1);
+  return 'M'+l+' '+base+' L'+l+' '+sh+' Q'+l+' '+sq+' '+c+' '+ap+' Q'+r+' '+sq+' '+r+' '+sh+' L'+r+' '+base;
+}
+function paintGate(){
+  var host=$('zqGate'); if(!host) return;
+  var dl=sgn(Q.qibla-Q.heading), a=Math.min(Math.abs(dl),75), t=1-a/75, lit=Math.abs(dl)<=3;
+  var o='<defs><radialGradient id="zqgg" cx="50%" cy="42%">'
+   +'<stop offset="0%" stop-color="var(--green-light)" stop-opacity="'+(0.5*t*t*t).toFixed(3)+'"/>'
+   +'<stop offset="70%" stop-color="var(--green-light)" stop-opacity="0"/></radialGradient></defs>';
+  o+='<rect width="300" height="322" fill="url(#zqgg)"/>';
+  for(var i=5;i>=1;i--){
+    var dep=i/5, vis=Math.max(0,Math.min(1,(t-dep*0.46)/0.40));
+    if(vis<=0.01) continue;
+    var sc=1-dep*0.46, cx=150+dl*dep*1.5, bb=272-dep*44, op=(0.16+0.52*(1-dep))*vis;
+    o+='<path d="'+archD(cx,bb,116*sc,212*sc)+'" fill="none" stroke="var(--gold)" stroke-width="'
+      +(1.5-dep*0.75).toFixed(2)+'" opacity="'+op.toFixed(3)+'" stroke-linejoin="round"/>';
+    o+='<line x1="'+(cx-116*sc/2-8*sc).toFixed(1)+'" y1="'+bb+'" x2="'+(cx+116*sc/2+8*sc).toFixed(1)+'" y2="'+bb
+      +'" stroke="var(--gold)" stroke-width="'+(1.1-dep*0.5).toFixed(2)+'" opacity="'+(op*0.7).toFixed(3)+'"/>';
+  }
+  var sx=(0.56+0.44*t), skew=Math.max(-7,Math.min(7,dl*0.07));
+  o+='<g transform="translate(150,180) skewX('+skew.toFixed(2)+') scale('+sx.toFixed(3)+',1) translate(-150,-180)">';
+  o+='<path d="'+archD(150,272,116,212)+'" fill="none" stroke="var(--gold)" stroke-width="'+(1.6+1.7*t).toFixed(2)+'" stroke-linejoin="round"/>';
+  o+='<path d="'+archD(150,272,96,190)+'" fill="none" stroke="var(--green-light)" stroke-width=".9" opacity="'+(0.2+0.6*t).toFixed(2)+'"/>';
+  o+='</g>';
+  o+='<line x1="72" y1="272" x2="228" y2="272" stroke="var(--gold)" stroke-width="1.3" opacity=".6"/>';
+  if(!lit){var sd=dl>0?1:-1;
+    o+='<g transform="translate('+(150+sd*118)+',170) scale('+sd+',1)" opacity=".7">'
+     +'<path d="M-6 -17 Q11 0 -6 17" fill="none" stroke="var(--gold)" stroke-width="2.3" stroke-linecap="round"/></g>';}
+  host.innerHTML=o;
+}
+
+/* ── السجّادة ── */
+var RG={field:'#F5ECD9',gold:'#A97F2C',goldLt:'#CBA858',emerald:'#1C4B3E'};
+function rugArch(){
+  return 'M60 540 L60 218 A159.4 159.4 0 0 1 200 59.8 A159.4 159.4 0 0 1 340 218 L340 540 Z';
+}
+function circleNet(size,col,w){
+  var r=size/2,o='',i;
+  var pts=[[0,0],[size,0],[0,size],[size,size],[r,r],[0,r],[size,r],[r,0],[r,size]];
+  o+='<g fill="none" stroke="'+col+'" stroke-width="'+w+'">';
+  for(i=0;i<pts.length;i++) o+='<circle cx="'+pts[i][0]+'" cy="'+pts[i][1]+'" r="'+(r*0.72).toFixed(2)+'"/>';
+  return o+'</g>';
+}
+function buildRug(){
+  var host=$('zqRugSvg'); if(!host||Q.built) return;
+  var o='';
+  o+='<defs>';
+  o+='<pattern id="zqNetB" width="14" height="14" patternUnits="userSpaceOnUse">'+circleNet(14,RG.goldLt,.85)+'</pattern>';
+  o+='<pattern id="zqNetF" width="14" height="14" patternUnits="userSpaceOnUse">'+circleNet(14,RG.gold,.8)+'</pattern>';
+  o+='<mask id="zqBandM"><rect x="12" y="12" width="376" height="576" fill="#fff"/>'
+   +'<rect x="40" y="40" width="320" height="520" fill="#000"/></mask>';
+  o+='<clipPath id="zqArchC"><path d="'+rugArch()+'"/></clipPath>';
+  o+='<radialGradient id="zqNiche" cx="50%" cy="26%">'
+   +'<stop offset="0%" stop-color="#45C6A0" stop-opacity=".26"/>'
+   +'<stop offset="66%" stop-color="#45C6A0" stop-opacity="0"/></radialGradient>';
+  o+='</defs>';
+  o+='<rect x="12" y="12" width="376" height="576" rx="2" fill="'+RG.emerald+'"/>';
+  o+='<g mask="url(#zqBandM)"><rect x="12" y="12" width="376" height="576" fill="url(#zqNetB)"/></g>';
+  o+='<rect x="12" y="12" width="376" height="576" rx="2" fill="none" stroke="'+RG.gold+'" stroke-width="1.6"/>';
+  o+='<rect x="40" y="40" width="320" height="520" fill="none" stroke="'+RG.gold+'" stroke-width="1.6"/>';
+  o+='<rect x="40" y="40" width="320" height="520" fill="'+RG.field+'"/>';
+  o+='<g opacity=".07"><rect x="40" y="40" width="320" height="520" fill="url(#zqNetF)"/></g>';
+  o+='<g id="zqArchGlow" clip-path="url(#zqArchC)"><ellipse cx="200" cy="200" rx="130" ry="150" fill="url(#zqNiche)"/></g>';
+  o+='<path d="'+rugArch()+'" fill="none" stroke="'+RG.gold+'" stroke-width="3"/>';
+  host.innerHTML=o; Q.built=true;
+}
+
+/* ── الحالات ── */
+function settle(){
+  if(Q.state==='settled') return;
+  Q.state='settled';
+  var g=$('zqGateLayer'), r=$('zqRugLayer'), s=$('zqState');
+  if(g) g.classList.add('zq-gone');
+  if(r) r.classList.add('zq-here');
+  if(s) s.textContent=T('السجّادة منبسطة');
+  if(navigator.vibrate) navigator.vibrate(18);
+}
+function seek(){
+  if(Q.state==='seek') return;
+  Q.state='seek';
+  var g=$('zqGateLayer'), r=$('zqRugLayer'), s=$('zqState');
+  if(g) g.classList.remove('zq-gone');
+  if(r) r.classList.remove('zq-here');
+  if(s) s.textContent=T('ابحث عن القبلة');
+}
+function calNote(){
+  var n=$('zqCalNote'); if(!n) return;
+  if(Q.offset===0) n.textContent=T('لا معايرة — تُستعمل قراءةُ الحسّاس كما هي.');
+  else if(Q.stale) n.textContent=T('تغيّر المكان — أعِد المعايرة. الحقلُ المغناطيسيُّ الآن يختلف عمّا كان وقت المعايرة.');
+  else n.textContent=T('مُعايَر: تصحيحٌ قدرُه ')+ar(Math.abs(sgn(Q.offset)))+'° '
+    +T(sgn(Q.offset)>0?'يمينًا':'يسارًا')+T('. صالحٌ في هذا الموضع، ويُنسى عند إغلاق التطبيق.');
+  n.style.color = Q.stale ? '#B8862B' : '';
+}
+function open_(){ return $('screen-qibla') && !$('screen-qibla').classList.contains('hidden'); }
+
+function paint(){
+  paintStrip();
+  if(!open_()) return;
+  var dl=sgn(Q.qibla-Q.heading), lit=Math.abs(dl)<=3, now=Date.now();
+  if(lit){
+    leaveAt=null;
+    if(arriveAt===null) arriveAt=now;
+    if(Q.state==='seek' && now-arriveAt>=ARRIVE_MS) settle();
+  }else{
+    arriveAt=null;
+    if(Math.abs(dl)>LEAVE_DEG){
+      if(leaveAt===null) leaveAt=now;
+      if(Q.state==='settled' && now-leaveAt>=450) seek();
+    }else leaveAt=null;
+  }
+  paintGate();
+  var rug=$('zqRug'); if(rug) rug.style.setProperty('--zqrz',(-dl).toFixed(1)+'deg');
+  var cap=$('zqCaption');
+  if(cap){
+    if(Q.state==='settled'){ cap.className='zq-lit'; cap.innerHTML=T('أنت على القبلة'); }
+    else if(lit){ cap.className='zq-lit'; cap.innerHTML=T('أنت على القبلة')+'<small>'+T('اثبت لحظة')+'</small>'; }
+    else { cap.className=''; cap.innerHTML=ar(Math.abs(dl))+'° '+T(dl>0?'يمينًا':'يسارًا'); }
+  }
+  wasLit=lit;
+}
+function applyRaw(raw){ Q.raw=((raw%360)+360)%360; Q.heading=(Q.raw+Q.offset)%360; paint(); }
+
+/* ── الحسّاس ── */
+function onOri(e){
+  var h=null;
+  if(typeof e.webkitCompassHeading==='number') h=e.webkitCompassHeading;
+  else if(e.absolute&&typeof e.alpha==='number') h=360-e.alpha;
+  if(h===null) return;
+  if(!Q.sensor){ Q.sensor=true;
+    var c=$('zqSrc'); if(c){ c.textContent=T('الحسّاس يعمل'); c.className='zq-chip zq-on'; } }
+  applyRaw(h);
+}
+function startMag(){
+  if(typeof Magnetometer==='undefined') return;
+  try{
+    var m=new Magnetometer({frequency:4});
+    m.addEventListener('reading',function(){
+      var f=Math.sqrt(m.x*m.x+m.y*m.y+m.z*m.z);
+      Q.field=f;
+      if(Q.offset!==0&&Q.calField!==null){
+        var d=Math.abs(f-Q.calField), now=(d>8)||(d/Q.calField>0.15);
+        if(now!==Q.stale){ Q.stale=now; calNote(); }
+      }
+    });
+    m.addEventListener('error',function(){});
+    m.start();
+  }catch(e){}
+}
+global.zqStartSensor=function(){
+  var b=$('zqSensor');
+  function attach(){
+    if(Q.attached) return;
+    window.addEventListener('deviceorientationabsolute',onOri,true);
+    window.addEventListener('deviceorientation',onOri,true);
+    Q.attached=true;
+    if(b){ b.classList.add('zq-live'); b.textContent=T('الحسّاس مُشغَّل'); }
+    startMag();
+  }
+  if(typeof DeviceOrientationEvent!=='undefined'
+     && typeof DeviceOrientationEvent.requestPermission==='function'){
+    DeviceOrientationEvent.requestPermission().then(function(r){
+      if(r==='granted') attach();
+      else { var c=$('zqSrc'); if(c) c.textContent=T('رُفض الإذن'); }
+    })['catch'](function(){ var c=$('zqSrc'); if(c) c.textContent=T('تعذّر طلب الإذن'); });
+  } else attach();
+};
+global.zqCalibrate=function(){
+  var b=$('zqCal');
+  if(Q.offset!==0){
+    Q.offset=0; Q.calField=null; Q.stale=false;
+    if(b) b.textContent=T('عايِر: أواجه القبلة الآن');
+    calNote(); applyRaw(Q.raw); return;
+  }
+  Q.offset=((Q.qibla-Q.raw)%360+360)%360;
+  Q.calField=Q.field; Q.stale=false;
+  if(b) b.textContent=T('أزِل المعايرة');
+  calNote(); applyRaw(Q.raw);
+};
+
+/* ── الفتح والإغلاق ── */
+global.openQibla=function(){
+  pullCoords(); buildRug(); calNote();
+  if(typeof zxOnly==='function') zxOnly('screen-qibla');
+  else{
+    document.querySelectorAll('.screen').forEach(function(s){
+      if(s.id!=='screen-qibla') s.classList.add('hidden'); });
+    var e=$('screen-qibla'); if(e) e.classList.remove('hidden');
+  }
+  window.scrollTo(0,0);
+  seek(); arriveAt=null; leaveAt=null;
+  if(!Q.attached) global.zqStartSensor();
+  paint();
+};
+global.closeQibla=function(){
+  if(typeof zxOnly==='function') zxOnly('screen-home');
+  window.scrollTo(0,0);
+};
+
+function boot(){
+  pullCoords(); paintStrip();
+  setInterval(function(){ if(Q.attached||open_()) paint(); }, 140);
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+else boot();
+})(window);
 </script>
 <!-- ═══ عدّاد الزوّار ═══
      Cloudflare Web Analytics: عددٌ ودولٌ فقط — بلا كعكات، وبلا تتبّعِ أشخاص.
