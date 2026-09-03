@@ -1172,8 +1172,33 @@ body.theme-dark .iqama-cap{fill:#8FD9B6;stroke:rgba(20,26,23,.85);}
 .ps-door .chev{margin-inline-start:auto;color:var(--muted);}
 .ps-none{font-size:13px;color:var(--muted);padding:6px 2px 2px;}
 
+/* ═══ لوحُ الإعدادات: بنيةُ «صلة» ═══
+   ما رفع لوحَ «صلة» فوقنا لم يكن لونًا بل بنية: رأسٌ، ثمّ سطرُ شرح،
+   ثمّ الأداة. فمن قرأ «طريقة الحساب: أمّ القرى» لم يفهم ماذا يختار،
+   ومن قرأ تحتها سببَ الاختلاف اختار عن علم. */
+.zx-rule{width:48px;height:3px;border-radius:2px;margin:-8px auto 16px;
+  background:linear-gradient(90deg,var(--green-light),var(--gold));}
+.zx-pane .zx-hint{
+  font-size:11.5px;line-height:1.85;color:var(--muted);
+  margin:-6px 0 12px;padding:0 2px;
+}
+/* الرأسُ يسبقه عمودٌ متدرّجٌ صغير بدل أن يكون نصًّا عائمًا */
+.zx-pane .zx-group-head{display:flex;align-items:center;gap:9px;}
+.zx-pane .zx-group-head::before{
+  content:'';width:4px;height:15px;border-radius:3px;flex:0 0 auto;
+  background:linear-gradient(180deg,var(--gold),var(--green-light));
+}
+/* السطرُ الثاني في الصفّ: ما يفعله، لا اسمُه فقط */
+.zx-pane .zx-row-label{display:flex;flex-direction:column;gap:2px;line-height:1.35;}
+.zx-pane .zx-row-label i{
+  font-style:normal;font-size:10.5px;font-weight:500;color:var(--muted);
+  opacity:.92;line-height:1.5;
+}
+.zx-pane .zx-row{min-height:60px;}
+.zx-pane .zx-row-value{font-weight:800;color:var(--gold);}
+
 /* ═══ تبويباتُ الإعدادات ═══
-   اللوح كان شريطًا واحدًا طويلًا يُنزَل فيه؛ صار أربعةَ أبوابٍ لا يُفتح منها إلا واحد. */
+   اللوح كان شريطًا واحدًا طويلًا يُنزَل فيه; صار أربعةَ أبوابٍ لا يُفتح منها إلا واحد. */
 /* ═══ تبويباتُ الإعدادات ═══
    أقراصٌ صغيرةٌ في وسط الشاشة تلتفّ عند الضيق — لا صناديقُ كبيرة.
    والمجموعاتُ بطاقاتٌ لها رأسٌ صغيرٌ وسطرُ إيضاح. */
@@ -12894,6 +12919,7 @@ function showToast(msg){
   <div class="zx-grip"></div>
   <button class="zx-close" onclick="closeSettings()" aria-label="إغلاق">✕</button>
   <div class="zx-title">الإعدادات</div>
+  <div class="zx-rule" aria-hidden="true"></div>
 
   <div class="zx-tabs" role="tablist">
     <button class="zx-tab" data-tab="read"   onclick="zxTab('read')"   role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2 2 0 0 1 6 4h5v16H6a2 2 0 0 0-2 2z"/><path d="M20 5.5A2 2 0 0 0 18 4h-5v16h5a2 2 0 0 1 2 2z"/></svg><span>القراءة</span></button>
@@ -12904,12 +12930,15 @@ function showToast(msg){
   <div class="zx-panes">
   <section class="zx-pane" id="zxPane-read">
   <div class="zx-group">
-    <div class="zx-group-head">القراءة</div>
+    <div class="zx-group-head">مقاس النصّ</div>
+    <p class="zx-hint">يكبر النصُّ بنسبةٍ واحدةٍ في كلّ الشاشات، ويبقى التخطيطُ على حاله — فلا تنزلق الأعمدةُ ولا تُقطَع الأسماء.</p>
     <div class="zx-sizes" id="zxSizes">
       <div class="zx-size" data-lvl="1" onclick="setTextLevel(1)"><b class="s1" data-sacred>ع</b><span>صغير</span></div>
       <div class="zx-size" data-lvl="2" onclick="setTextLevel(2)"><b class="s2" data-sacred>ع</b><span>متوسط</span></div>
       <div class="zx-size" data-lvl="3" onclick="setTextLevel(3)"><b class="s3" data-sacred>ع</b><span>كبير</span></div>
     </div>
+    <div class="zx-group-head" style="margin-top:16px">وضع اللون</div>
+    <p class="zx-hint">النهاريُّ عاجيٌّ دافئ، والليليُّ أخضرُ عميقٌ يقلّ فيه الوهجُ قبل النوم.</p>
     <div class="zx-modes" id="zxModes">
     </div>
   </div>
@@ -12918,18 +12947,22 @@ function showToast(msg){
   <section class="zx-pane" id="zxPane-prayer">
   <div class="zx-group">
     <div class="zx-group-head">المواقيت</div>
+    <p class="zx-hint">من موقعك تُحسب المواقيتُ واتّجاهُ القبلة معًا — فتغييرُه يغيّرهما.</p>
     <div class="zx-row" onclick="openCityPicker()">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span><span class="zx-row-label">الموقع</span><span class="zx-row-value" id="zxCity">—</span><span class="zx-row-chev">←</span>
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span><span class="zx-row-label">الموقع<i>منه تُحسب المواقيتُ والقبلة</i></span><span class="zx-row-value" id="zxCity">—</span><span class="zx-row-chev">←</span>
     </div>
 
+    <div class="zx-row" onclick="zaToggle()">
+      <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11.4 5.2 7.2 8.8H4.2v6.4h3l4.2 3.6z"/><path d="M15.6 9.4a3.4 3.4 0 0 1 0 5.2"/><path d="M18.2 6.6a7 7 0 0 1 0 10.8"/></svg></span><span class="zx-row-label">الأذان<i>يُرفع والتطبيقُ مفتوح، ويهدأ إن كنتَ في المصحف</i></span><span class="zx-row-value" id="zaState">يعمل</span>
+    </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(openQibla, 180);">
-      <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M15.4 8.6 10.7 10.7 8.6 15.4l4.7-2.1z"/></svg></span><span class="zx-row-label">اتجاه القبلة</span><span class="zx-row-chev">←</span>
+      <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M15.4 8.6 10.7 10.7 8.6 15.4l4.7-2.1z"/></svg></span><span class="zx-row-label">اتجاه القبلة<i>الزاويةُ من الشمال الحقيقي</i></span><span class="zx-row-chev">←</span>
     </div>
     <div class="zx-row" onclick="zxCycleMethod()">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.4V12l3.1 1.9"/></svg></span><span class="zx-row-label">طريقة الحساب</span><span class="zx-row-value" id="zxMethod">—</span>
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.4V12l3.1 1.9"/></svg></span><span class="zx-row-label">طريقة الحساب<i>تختلف اصطلاحًا في زاويةِ الفجر والعشاء</i></span><span class="zx-row-value" id="zxMethod">—</span>
     </div>
     <div class="zx-row" onclick="zxToggleMadhab()">
-      <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 18.5h15"/><path d="M12 4.6v3"/><path d="M6.6 8.2 12 7.6l5.4.6"/><path d="M9.2 18.5c0-3.4 1.3-6 2.8-7.6 1.5 1.6 2.8 4.2 2.8 7.6"/></svg></span><span class="zx-row-label">العصر</span><span class="zx-row-value" id="zxMadhab">—</span>
+      <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 18.5h15"/><path d="M12 4.6v3"/><path d="M6.6 8.2 12 7.6l5.4.6"/><path d="M9.2 18.5c0-3.4 1.3-6 2.8-7.6 1.5 1.6 2.8 4.2 2.8 7.6"/></svg></span><span class="zx-row-label">العصر<i>الجمهورُ عند مثلِ الظلّ، والحنفيّةُ عند مثليه</i></span><span class="zx-row-value" id="zxMadhab">—</span>
     </div>
     <div class="zx-note" id="zxNote">طرق الحساب تختلف اصطلاحاً — اتبع ما عليه مسجد بلدك.</div>
   </div>
@@ -12947,20 +12980,22 @@ function showToast(msg){
 
   <section class="zx-pane" id="zxPane-lang">
   <div class="zx-group">
-    <div class="zx-group-head">اللغة</div>
+    <div class="zx-group-head">لغةُ الواجهة</div>
+    <p class="zx-hint">النصُّ الشرعيُّ لا يُترجَم — يبقى القرآنُ والحديثُ بالعربيّة، وتُترجَم الواجهةُ ومعاني الأحاديث.</p>
     <div class="zx-langs" id="zxLangs"></div>
-    <div class="zx-note">النصّ الشرعيّ لا يُترجَم — تُترجَم الواجهةُ ومعاني الأحاديث.</div>
+    
   </div>
   </section>
 
   <section class="zx-pane" id="zxPane-about">
   <div class="zx-group">
     <div class="zx-group-head">عن زاحِم</div>
+    <p class="zx-hint">ما يخصّ التطبيقَ نفسَه: هويّتك فيه، وأثرُ أيّامك، وطريقُ التواصل.</p>
     <div class="zx-row" onclick="zxEditWho()">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="3.4"/><path d="M5 19.4c0-3.3 3.1-5.4 7-5.4s7 2.1 7 5.4"/></svg></span><span class="zx-row-label">اسمك ودولتك</span><span class="zx-row-value" id="zxWho">—</span>
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="3.4"/><path d="M5 19.4c0-3.3 3.1-5.4 7-5.4s7 2.1 7 5.4"/></svg></span><span class="zx-row-label">اسمك ودولتك<i>يظهران في التحيّة وحدها</i></span><span class="zx-row-value" id="zxWho">—</span>
     </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(ztOpen, 260);">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.7-.9 1.3v.4"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg></span><span class="zx-row-label">جولة تعريفية</span><span class="zx-row-chev">←</span>
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.7-.9 1.3v.4"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg></span><span class="zx-row-label">جولة تعريفية<i>شاشاتٌ تشرح البوصلة ومحطّاتها</i></span><span class="zx-row-chev">←</span>
     </div>
     <div class="zx-row" id="zxInstallRow" onclick="zxInstallTap()">
       <span class="zx-row-ic brass" aria-hidden="true">
@@ -12968,14 +13003,14 @@ function showToast(msg){
              stroke-linecap="round" stroke-linejoin="round">
           <rect x="6.4" y="2.6" width="11.2" height="18.8" rx="2.4"/><path d="M10.6 18.6h2.8"/></svg>
       </span>
-      <span class="zx-row-label">التطبيق</span>
+      <span class="zx-row-label">التطبيق<i>يعمل دون إنترنت بعد التثبيت</i></span>
       <span class="zx-row-value" id="zxInstallState">—</span>
     </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(openInsightsScreen, 300);">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.2h15"/><path d="M7.6 19.2v-6.4M12 19.2V6.6M16.4 19.2v-9"/></svg></span><span class="zx-row-label">ميدان الطاعة</span><span class="zx-row-chev">←</span>
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.2h15"/><path d="M7.6 19.2v-6.4M12 19.2V6.6M16.4 19.2v-9"/></svg></span><span class="zx-row-label">ميدان الطاعة<i>قَلِيلٌ دَائِمٌ خَيْرٌ مِنْ كَثِيرٍ مُنْقَطِعٍ</i></span><span class="zx-row-chev">←</span>
     </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(openFeedbackScreen, 300);">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12.6a7.4 7.4 0 0 1-7.4 7.4H7.2L4 22.4v-4.9A7.4 7.4 0 0 1 4 12.6 7.4 7.4 0 0 1 11.4 5.2h1.2A7.4 7.4 0 0 1 20 12.6z"/></svg></span><span class="zx-row-label">تواصل مع مطوري زاحِم</span><span class="zx-row-chev">←</span>
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12.6a7.4 7.4 0 0 1-7.4 7.4H7.2L4 22.4v-4.9A7.4 7.4 0 0 1 4 12.6 7.4 7.4 0 0 1 11.4 5.2h1.2A7.4 7.4 0 0 1 20 12.6z"/></svg></span><span class="zx-row-label">تواصل مع مطوري زاحِم<i>ملاحظةٌ أو تصحيحٌ في نصّ</i></span><span class="zx-row-chev">←</span>
     </div>
     <div class="zx-row zx-owner">
       <span class="zx-owner-ar" data-sacred dir="rtl">طوّر هذا التطبيق عرفات الراجحي</span>
@@ -14544,10 +14579,10 @@ window.addEventListener('popstate', function(){
     };
     /* الدعاءُ يتحوّل مع اللغة — وقد كان يبقى عربيًّا فلا يُدرَك */
     var DUA = {
-      ar: 'غفر اللهُ لمطوِّرها ولمستخدميها ولوالديهم وللمسلمين أجمعين',
-      en: 'May Allah forgive its developer, its users, their parents, and all Muslims',
-      id: 'Semoga Allah mengampuni pengembangnya, para penggunanya, orang tua mereka, dan seluruh kaum muslimin',
-      ms: 'Semoga Allah mengampuni pembangunnya, para penggunanya, ibu bapa mereka, dan seluruh kaum muslimin'
+      ar: 'اللّهمّ اغفرْ لمطوِّرها ومستخدميها ووالديهم والمسلمين أجمعين',
+      en: 'O Allah, forgive its developer, its users, their parents, and all Muslims',
+      id: 'Ya Allah, ampunilah pengembangnya, para penggunanya, orang tua mereka, dan seluruh kaum muslimin',
+      ms: 'Ya Allah, ampunilah pembangunnya, para penggunanya, ibu bapa mereka, dan seluruh kaum muslimin'
     };
     var isAr = (L === 'ar');
     d.innerHTML = mark
@@ -15506,6 +15541,11 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   if(typeof ZahimI18n==='undefined' || !ZahimI18n.load) return;
 
   ZahimI18n.load('en', {
+    'أذان ': 'Adhan for ',
+    'يعمل': 'On',
+    'صامت': 'Silent',
+    'الأذان يعمل': 'Adhan is on',
+    'الأذان صامت': 'Adhan is silent',
     'زاوية القبلة من الشمال الحقيقي: ': 'Qibla bearing from true north: ',
     ' — قارِنها برقم أيّ تطبيقٍ آخر.': ' — compare it with any other app\u2019s figure.',
     'أهلًا بعودتك': 'Welcome back',
@@ -15540,6 +15580,11 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('id', {
+    'أذان ': 'Azan ',
+    'يعمل': 'Aktif',
+    'صامت': 'Senyap',
+    'الأذان يعمل': 'Azan aktif',
+    'الأذان صامت': 'Azan disenyapkan',
     'زاوية القبلة من الشمال الحقيقي: ': 'Arah kiblat dari utara sejati: ',
     ' — قارِنها برقم أيّ تطبيقٍ آخر.': ' — bandingkan dengan angka aplikasi lain.',
     'أهلًا بعودتك': 'Selamat datang kembali',
@@ -15574,6 +15619,11 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('ms', {
+    'أذان ': 'Azan ',
+    'يعمل': 'Aktif',
+    'صامت': 'Senyap',
+    'الأذان يعمل': 'Azan aktif',
+    'الأذان صامت': 'Azan disenyapkan',
     'زاوية القبلة من الشمال الحقيقي: ': 'Arah kiblat dari utara benar: ',
     ' — قارِنها برقم أيّ تطبيقٍ آخر.': ' — bandingkan dengan angka aplikasi lain.',
     'أهلًا بعودتك': 'Selamat kembali',
@@ -15861,6 +15911,199 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
 else boot();
 })(window);
 </script>
+<!-- ═══ الأذان ═══
+     يعمل والتطبيقُ مفتوحٌ فقط. مغلقًا لا سبيل: إشعاراتُ الويب لا تحمل
+     صوتًا مخصّصًا، وعلى آيفون تصل صامتة. ولا نَعِد بما لا نفي. -->
+<style>
+#zaBar{
+  position:fixed;left:0;right:0;bottom:0;z-index:60;
+  display:none;align-items:center;gap:12px;
+  max-width:480px;margin:0 auto;padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(20,67,46,.96),rgba(13,50,34,.98));
+  color:#F4EEE0;box-shadow:0 -10px 30px rgba(0,0,0,.22);
+}
+#zaBar.on{display:flex;}
+#zaBar .zaPulse{
+  width:34px;height:34px;border-radius:50%;flex:0 0 auto;
+  background:radial-gradient(circle at 35% 30%,#CDEFE0,#2E8B63 68%);
+  animation:zaPulse 2.4s ease-in-out infinite;
+}
+@keyframes zaPulse{0%,100%{box-shadow:0 0 0 0 rgba(95,199,154,.5)}50%{box-shadow:0 0 0 10px rgba(95,199,154,0)}}
+#zaBar .zaTxt{flex:1;min-width:0}
+#zaBar .zaTxt b{display:block;font-size:14px;font-weight:800}
+#zaBar .zaTxt span{display:block;font-size:11px;opacity:.8;margin-top:2px}
+#zaBar button{
+  font:inherit;font-size:12.5px;font-weight:700;color:#F4EEE0;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
+  border-radius:999px;padding:9px 16px;cursor:pointer;
+}
+@media (prefers-reduced-motion:reduce){#zaBar .zaPulse{animation:none}}
+</style>
+
+<div id="zaBar" role="status" aria-live="polite">
+  <span class="zaPulse" aria-hidden="true"></span>
+  <span class="zaTxt"><b id="zaTitle">الأذان</b><span>حان وقت الصلاة</span></span>
+  <button type="button" onclick="zaStop()">إسكات</button>
+</div>
+
+<script>
+(function(global){
+"use strict";
+var SRC='./adhan.mp3';
+var KEY_ON='zahim_adhan_on', KEY_FIRED='zahim_adhan_fired';
+var audio=null, unlocked=false, timer=null, playing=null;
+
+function on(){ try{ return localStorage.getItem(KEY_ON)!=='0'; }catch(e){ return true; } }
+function today(){
+  var d=new Date();
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+}
+function fired(){
+  try{ var v=JSON.parse(localStorage.getItem(KEY_FIRED)||'{}');
+       return (v.d===today() && Array.isArray(v.k)) ? v.k : []; }catch(e){ return []; }
+}
+function markFired(k){
+  var a=fired(); if(a.indexOf(k)<0) a.push(k);
+  try{ localStorage.setItem(KEY_FIRED, JSON.stringify({d:today(), k:a})); }catch(e){}
+}
+function T(k){ try{ if(global.ZahimI18n && ZahimI18n.t) return ZahimI18n.t(k); }catch(e){} return k; }
+
+function el(){
+  if(audio) return audio;
+  audio=new Audio(SRC);
+  audio.preload='none';
+  audio.addEventListener('ended', function(){ hide(); });
+  audio.addEventListener('error', function(){ hide(); });
+  return audio;
+}
+
+/* المتصفّحُ يمنع الصوتَ حتى يلمس المستخدمُ الشاشة مرّة.
+   فنفتح القفلَ بتشغيلٍ صامتٍ خاطف عند أوّل لمسة. */
+function unlock(){
+  if(unlocked) return;
+  unlocked=true;
+  var a=el(), v=a.volume;
+  a.volume=0;
+  var p=a.play();
+  if(p && p.then) p.then(function(){ a.pause(); a.currentTime=0; a.volume=v; })
+                   ['catch'](function(){ a.volume=v; unlocked=false; });
+  else { try{ a.pause(); a.currentTime=0; }catch(e){} a.volume=v; }
+}
+
+function inMushaf(){
+  var m=document.getElementById('screen-mushaf');
+  return !!(m && !m.classList.contains('hidden'));
+}
+function show(name){
+  var b=document.getElementById('zaBar'), t=document.getElementById('zaTitle');
+  if(t) t.textContent=T('أذان ')+name;
+  if(b) b.classList.add('on');
+}
+function hide(){
+  var b=document.getElementById('zaBar');
+  if(b) b.classList.remove('on');
+  playing=null;
+}
+global.zaStop=function(){
+  try{ var a=el(); a.pause(); a.currentTime=0; }catch(e){}
+  hide();
+};
+function play(key,name){
+  if(!on() || playing) return;
+  var a=el();
+  a.preload='auto';
+  /* في المصحف يهدأ ولا يقاطع: ثلثُ الجهارة يكفي تنبيهًا */
+  a.volume = inMushaf() ? 0.34 : 1;
+  playing=key;
+  var p=a.play();
+  if(p && p.then) p['catch'](function(){ hide(); });
+  show(name);
+  if(navigator.vibrate) navigator.vibrate([16,90,16]);
+}
+
+/* الفجرُ صامتٌ حتى يصل تسجيلٌ فيه التثويب — «الصلاةُ خيرٌ من النوم».
+   وأذانٌ ناقصٌ أسوأُ من صمت. */
+var ORDER=['dhuhr','asr','maghrib','isha'];
+
+function tick(){
+  if(!on()) return;
+  var Tm, d=new Date();
+  try{ Tm=ZahimDay.times(d); }catch(e){ return; }
+  var n=d.getHours()*60+d.getMinutes(), done=fired();
+  for(var i=0;i<ORDER.length;i++){
+    var k=ORDER[i], t=Tm[k];
+    if(t==null || done.indexOf(k)>=0) continue;
+    if(n>=t && n<t+2){
+      markFired(k);
+      var nm=k;
+      try{ nm=ZahimDay.PRAYER_NAMES[k] || k; }catch(e){}
+      play(k,nm);
+      return;
+    }
+  }
+}
+
+/* معاينةٌ قصيرة: من شغّل الأذان سمع مستواه فورًا، فلا ينتظر وقتَ صلاةٍ
+   ليكتشف أنّه عالٍ أو خافت. وهي أيضًا طريقُ التجربة. */
+var previewT=null;
+global.zaPreview=function(sec){
+  var a=el(); a.preload='auto';
+  clearTimeout(previewT);
+  try{ a.pause(); a.currentTime=0; }catch(e){}
+  a.volume = inMushaf() ? 0.34 : 1;
+  playing='preview';
+  var p=a.play();
+  if(p && p.then) p['catch'](function(){ hide(); });
+  show(T('معاينة'));
+  previewT=setTimeout(function(){
+    /* تلاشٍ لطيفٌ بدل قطعٍ مفاجئ */
+    var v=a.volume, steps=10, i=0;
+    var f=setInterval(function(){
+      i++; a.volume=Math.max(0, v*(1-i/steps));
+      if(i>=steps){ clearInterval(f); global.zaStop(); a.volume=v; }
+    }, 60);
+  }, (sec||12)*1000);
+};
+
+global.zaToggle=function(){
+  var next = on() ? '0' : '1';
+  try{ localStorage.setItem(KEY_ON,next); }catch(e){}
+  zaLabel();
+  if(next==='0'){ global.zaStop(); }
+  else { global.zaPreview(12); }
+  try{ if(typeof showToast==='function')
+        showToast(next==='1' ? T('الأذان يعمل') : T('الأذان صامت')); }catch(e){}
+};
+function zaLabel(){
+  var v=document.getElementById('zaState');
+  if(v) v.textContent = on() ? T('يعمل') : T('صامت');
+}
+global.zaRefreshLabel=zaLabel;
+
+function boot(){
+  zaLabel();
+  /* ‎?adhan=test‎ في آخر الرابط: يُرفع الأذانُ كاملًا عند أوّل لمسة.
+     للتجربة في أيّ وقتٍ دون انتظار الصلاة. */
+  var wantTest = /[?&]adhan=test/.test(location.search);
+  ['pointerdown','touchstart','keydown'].forEach(function(ev){
+    window.addEventListener(ev, function(){
+      unlock();
+      if(wantTest){ wantTest=false; setTimeout(function(){
+        var nm='التجربة';
+        try{ nm=ZahimDay.PRAYER_NAMES[ORDER[0]] || nm; }catch(e){}
+        play('test', nm);
+      }, 260); }
+    }, {once:true, passive:true});
+  });
+  clearInterval(timer);
+  timer=setInterval(tick, 15000);
+  tick();
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+else boot();
+})(window);
+</script>
+
 <!-- ═══ عدّاد الزوّار ═══
      Cloudflare Web Analytics: عددٌ ودولٌ فقط — بلا كعكات، وبلا تتبّعِ أشخاص.
      الرمزُ موضوعٌ ومربوطٌ بالمضيف ara2026fat.github.io -->
