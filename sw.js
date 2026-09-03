@@ -1,101 +1,126 @@
-/* زاحِم — عاملُ الخدمة
-   بسيط: نحفظ الصدفة والأيقونات، ونخدمها من المخزن أولًا.
-   وعند تغيّر النسخة يُمسح ما قبله، فلا تتراكم نسخٌ قديمة على جهاز المستخدم.
+/* ═══════════════════════════════════════════════════════════════════════════
+   زاحِم — عاملُ الخدمة
 
-   ملحوظة: ارفع الرقم في VERSION مع كلّ تحديثٍ تريد أن يصل كلَّ جهاز نظيفًا. */
-const VERSION = 'zahim-v2';
-const SHELL = [
+   ═══════════════════════════════════════════════════════════════════════════
+   قاعدةُ التحديث
+   ═══════════════════════════════════════════════════════════════════════════
+   المتصفّح لا يُعيد تنزيل ما هو مخزَّن. فما دام اسمُ المخزن ثابتًا، يُقدَّم
+   ما حُفظ أوّل مرّة: الصفحة، والمانيفست، والأيقونات.
+
+   فلكلّ رفعةٍ: **غيّر الرقم في السطر التالي.** رقمٌ واحدٌ يُبطل القديم كلَّه.
+   ولن تظهر أيُّ نسخةٍ جديدة قبل ذلك.
+
+   وصفحاتُ التصفّح هنا تُطلب من الشبكة أوّلًا والذاكرةُ احتياطٌ عند الانقطاع،
+   فلا تعلق على نسخةٍ قديمة ولو نسيتَ رفع الرقم.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+const VERSION    = 'zahim-v233';          // ← ارفعه مع كلّ نشرة
+const SHELL      = VERSION + '-shell';
+const RUNTIME    = VERSION + '-runtime';
+
+/* ما يُحفظ عند التثبيت. أبقِ القائمة قصيرة: كلُّ إخفاقٍ هنا يُفشل التثبيت كلَّه. */
+const SHELL_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/apple-touch-icon.png'
+  './icons/icon-512.png'
 ];
 
-/* مخزنٌ منفصل لخطوط المصحف وصفحاته — لا يُمسح مع تحديث التطبيق،
-   فما نزّله القارئ مرّةً يبقى معه ولا يُطلب ثانية. */
-const QURAN_CACHE = 'zahim-quran-v1';
-const QURAN_HOSTS = ['cdn.jsdelivr.net', 'raw.githubusercontent.com'];
-
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(VERSION)
-      .then(c => c.addAll(SHELL).catch(() => {}))
-      .then(() => self.skipWaiting())
-  );
+/* ═══ التثبيت ═══ */
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(SHELL);
+    /* addAll يسقط كلُّه بسقوط واحد، فنضيف كلًّا على حدة */
+    await Promise.all(SHELL_URLS.map(u =>
+      cache.add(new Request(u, { cache: 'reload' })).catch(() => {})
+    ));
+    /* لا ننتظر إغلاق كلّ الألسنة: النسخةُ الجديدة تحلّ فورًا */
+    await self.skipWaiting();
+  })());
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(
-        keys.filter(k => k !== VERSION && k !== QURAN_CACHE)
-            .map(k => caches.delete(k))
-      ))
-      .then(() => self.clients.claim())
-  );
+/* ═══ التفعيل: تُمحى مخازنُ الإصدارات السابقة ═══ */
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(
+      keys.filter(k => k !== SHELL && k !== RUNTIME).map(k => caches.delete(k))
+    );
+    await self.clients.claim();
+  })());
 });
 
-self.addEventListener('fetch', e => {
-  const req = e.request;
+/* ═══ الجلب ═══ */
+self.addEventListener('fetch', event => {
+  const req = event.request;
   if (req.method !== 'GET') return;
 
-  let url;
-  try { url = new URL(req.url); } catch (err) { return; }
+  const url = new URL(req.url);
 
-  /* ═══ خطوط المصحف وصفحاته ═══
-     المخزنُ أولًا: ما نُزّل مرّةً يُقرأ بلا شبكة إلى الأبد.
-     وما لم يُنزَّل بعد يُجلب ويُحفظ. */
-  if (QURAN_HOSTS.indexOf(url.hostname) !== -1) {
-    e.respondWith(
-      caches.open(QURAN_CACHE).then(c =>
-        c.match(req).then(hit => {
-          if (hit) return hit;
-          return fetch(req).then(r => {
-            if (r && r.status === 200 && r.type !== 'opaque') {
-              c.put(req, r.clone()).catch(() => {});
-            }
-            return r;
-          });
-        })
-      ).catch(() => fetch(req))
-    );
-    return;
-  }
-
-  if (url.origin !== self.location.origin) return;
-
-  /* ═══ فتحُ التطبيق ═══
-     الشبكةُ أولًا ليصل التحديث، والمخزنُ احتياطًا عند انقطاعها. */
+  /* ١) صفحاتُ التصفّح: الشبكةُ أوّلًا.
+        وهذا هو الفرق الحاسم — لو كانت الذاكرةُ أوّلًا لبقيتَ على القديم
+        حتى بعد تغيير الإصدار. */
   if (req.mode === 'navigate') {
-    e.respondWith(
-      fetch(req)
-        .then(r => {
-          const c = r.clone();
-          caches.open(VERSION).then(cache => cache.put('./index.html', c)).catch(() => {});
-          return r;
-        })
-        .catch(() => caches.match('./index.html').then(hit => hit || caches.match('./')))
-    );
+    event.respondWith((async () => {
+      try {
+        const fresh = await fetch(req);
+        const cache = await caches.open(SHELL);
+        cache.put('./index.html', fresh.clone());
+        return fresh;
+      } catch (e) {
+        return (await caches.match('./index.html')) || Response.error();
+      }
+    })());
     return;
   }
 
-  /* ═══ الأصول ═══ المخزنُ أولًا، ثم الشبكة. */
-  e.respondWith(
-    caches.match(req).then(hit =>
-      hit || fetch(req).then(r => {
-        if (r && r.status === 200) {
-          const c = r.clone();
-          caches.open(VERSION).then(cache => cache.put(req, c)).catch(() => {});
+  /* ٢) المصحفُ وخطوطُه: الذاكرةُ أوّلًا. لا تتبدّل، وحجمُها كبير. */
+  const isQuran =
+    url.hostname.includes('githubusercontent.com') ||
+    url.hostname.includes('jsdelivr.net') ||
+    url.hostname.includes('fonts.gstatic.com');
+
+  if (isQuran) {
+    event.respondWith((async () => {
+      const hit = await caches.match(req);
+      if (hit) return hit;
+      try {
+        const res = await fetch(req);
+        if (res && res.status === 200) {
+          const cache = await caches.open(RUNTIME);
+          cache.put(req, res.clone());
         }
-        return r;
-      }).catch(() => hit)
-    )
-  );
+        return res;
+      } catch (e) {
+        return Response.error();
+      }
+    })());
+    return;
+  }
+
+  /* ٣) ما بقي من أصولنا: الذاكرةُ أوّلًا مع تحديثٍ صامتٍ في الخلفيّة،
+        فيُعرض السريعُ ويُحدَّث للمرّة القادمة. */
+  if (url.origin === self.location.origin) {
+    event.respondWith((async () => {
+      const hit = await caches.match(req);
+      const net = fetch(req).then(res => {
+        if (res && res.status === 200) {
+          caches.open(RUNTIME).then(c => c.put(req, res.clone()));
+        }
+        return res;
+      }).catch(() => hit || Response.error());
+      return hit || net;
+    })());
+  }
 });
 
-/* رسالةٌ من الصفحة تطلب تفعيل النسخة الجديدة فورًا */
-self.addEventListener('message', e => {
-  if (e.data === 'skipWaiting') self.skipWaiting();
+/* ═══ للطوارئ: تفريغُ كلّ المخازن من وحدة التحكّم ═══
+   navigator.serviceWorker.controller.postMessage('zahim-purge');            */
+self.addEventListener('message', event => {
+  if (event.data === 'zahim-purge') {
+    event.waitUntil(
+      caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))))
+    );
+  }
 });
