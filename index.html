@@ -925,12 +925,16 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
 
 /* ═══ التسبيحُ الحرّ ═══
    لا هدفَ ولا نسبةَ إنجاز — حبّةٌ تُلمس، وعددٌ يُرى، ولا شيءَ يُحاسِب. */
-.tsb-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;
+.tsb-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   gap:18px;min-height:calc(100dvh - 74px);
   padding:14px 18px calc(40px + env(safe-area-inset-bottom));}
 /* أقراصُ الذكر: صغيرةٌ لامعة — زجاجٌ لا مربّعاتُ نصّ.
    كانت ضخمةً تزاحم الحبّة، والحبّةُ هي البطل. */
-.tsb-picks{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:340px;}
+/* ستّةُ أذكارٍ في صفٍّ واحدٍ تفيض، فتنزل السادسةُ وحدها مبعثرة.
+   الشبكةُ المنتظمة ٣×٢ تُسوّيها. */
+.tsb-picks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  justify-content:center;max-width:340px;width:calc(100% - 32px);}
+@media (max-width:340px){ .tsb-picks{grid-template-columns:repeat(2,1fr);} }
 .tsb-pick{
   padding:7px 13px;border-radius:99px;font-size:12.5px;font-weight:700;cursor:pointer;
   color:var(--muted);border:1px solid rgba(255,255,255,.9);
@@ -1099,9 +1103,9 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
   .home-topbar{padding-top:6px;padding-bottom:6px;}
 }
 #screen-home > .home-dock{margin-top:auto;position:sticky;bottom:0;padding-top:10px;}
-.compass-wrap{width:min(620px, 92vw, calc(100dvh - 415px)) !important;}
-@media (max-height:800px){ .compass-wrap{width:min(620px,92vw,calc(100dvh - 482px)) !important;} }
-@media (max-height:700px){ .compass-wrap{width:min(620px,92vw,calc(100dvh - 466px)) !important;} }
+.compass-wrap{width:min(600px, 96vw, calc(100dvh - 514px)) !important;}
+@media (max-height:800px){ .compass-wrap{width:min(660px,96vw,calc(100dvh - 518px)) !important;} }
+@media (max-height:700px){ .compass-wrap{width:min(660px,96vw,calc(100dvh - 502px)) !important;} }
 .dock-btn{flex:1;max-width:118px;display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:9px 6px;border-radius:15px;cursor:pointer;color:var(--muted);
   border:1px solid rgba(255,255,255,.9);
@@ -1210,6 +1214,15 @@ body.theme-dark .iqama-cap{fill:#8FD9B6;stroke:rgba(20,26,23,.85);}
 #zxPane-about [data-zx-rights] b{flex:1 1 auto;text-align:center;}
 #zxPane-about [data-zx-rights] b{font-size:9.5px;line-height:1.6;}
 #zxPane-about [data-zx-rights] .zx-dua{font-size:11.5px;margin-top:3px;}
+
+/* سطرُ الإقامة تحت الميناء: لا يزاحم إبرةً ولا اسمَ محطّة */
+#zxIqamaLine{
+  text-align:center;font-size:13px;font-weight:700;letter-spacing:.2px;
+  color:var(--green-light);opacity:0;max-height:0;overflow:hidden;
+  transition:opacity .45s ease,max-height .45s ease,margin .45s ease;
+  margin:0 16px;
+}
+#zxIqamaLine.on{opacity:1;max-height:26px;margin:2px 16px 4px;}
 
 /* ═══ التبويباتُ الفرعيّة ═══
    لوحُ المواقيت كان ستّةَ صفوفٍ لا تسع شاشةً بلا تمرير. فقسمناه ثلاثةً:
@@ -4728,15 +4741,15 @@ var ZahimHadithID = {
         <!-- الإطار الذهبي ووجه الميدالية -->
         <g filter="url(#ring-lift-shadow)">
           <circle cx="200" cy="200" r="190" fill="url(#face-grad)"/>
-          <circle cx="200" cy="200" r="190" fill="none" stroke="url(#ring-lift)" stroke-width="6"/>
+          <circle cx="200" cy="200" r="190" fill="none" stroke="url(#ring-lift)" stroke-width="4.2"/>
         </g>
         <!-- بريقٌ على الحافة العليا، وظلٌّ على السفلى: ارتفاعٌ يُحسّ ولا يُرى -->
         <path d="M31.1,102.5 A195,195 0 0 1 368.9,102.5" fill="none"
               stroke="rgba(255,252,240,0.50)" stroke-width="1.3" stroke-linecap="round"/>
         <path d="M360.2,292.5 A185,185 0 0 1 39.8,292.5" fill="none"
               stroke="rgba(92,68,28,0.24)" stroke-width="1.2" stroke-linecap="round"/>
-        <circle cx="200" cy="200" r="186.6" fill="none" stroke="rgba(120,90,42,0.26)" stroke-width="0.8"/>
-        <circle cx="200" cy="200" r="193.4" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="0.8"/>
+        <circle cx="200" cy="200" r="187.7" fill="none" stroke="rgba(120,90,42,0.26)" stroke-width="0.7"/>
+        <circle cx="200" cy="200" r="192.3" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="0.7"/>
 
         <!-- توهّج المحطة النشطة -->
         
@@ -4760,10 +4773,10 @@ var ZahimHadithID = {
             </linearGradient>
           </defs>
           <g id="iqama-arc" style="opacity:0;transition:opacity .5s ease" aria-hidden="true">
-          <circle cx="200" cy="200" r="82" fill="none" stroke="rgba(154,119,57,.15)" stroke-width="5.4"/>
+          <circle cx="200" cy="200" r="82" fill="none" stroke="rgba(154,119,57,.30)" stroke-width="7"/>
           <!-- هالةٌ تحت القوس، ثم جسمٌ زجاجيّ، ثم لبٌّ مضيء — مادّةُ الإبرة نفسها -->
           <circle id="iqama-arc-halo" cx="200" cy="200" r="82" fill="none"
-                  stroke="#3FD9A0" stroke-width="6.4" opacity=".30" stroke-linecap="round"
+                  stroke="#3FD9A0" stroke-width="9" opacity=".50" stroke-linecap="round"
                   transform="rotate(-90 200 200)" filter="url(#iqama-bloom)"
                   stroke-dasharray="515.22" stroke-dashoffset="515.22"
                   style="transition:stroke-dashoffset .9s linear"/>
@@ -4776,19 +4789,19 @@ var ZahimHadithID = {
                   stroke-dasharray="525.27" stroke-dashoffset="525.27"
                   style="transition:stroke-dashoffset .9s linear"/>
           <circle id="iqama-arc-line" cx="200" cy="200" r="82" fill="none"
-                  stroke="url(#iqama-metal)" stroke-width="5.4" stroke-linecap="round"
+                  stroke="url(#iqama-metal)" stroke-width="7" stroke-linecap="round"
                   transform="rotate(-90 200 200)"
                   stroke-dasharray="515.22" stroke-dashoffset="515.22"
                   style="transition:stroke-dashoffset .9s linear"/>
           <circle id="iqama-arc-core" cx="200" cy="200" r="80.2" fill="none"
-                  stroke="#F2FFFA" stroke-width="1.5" stroke-linecap="round"
-                  transform="rotate(-90 200 200)" opacity=".9"
+                  stroke="#F2FFFA" stroke-width="2" stroke-linecap="round"
+                  transform="rotate(-90 200 200)" opacity="1"
                   stroke-dasharray="503.91" stroke-dashoffset="503.91"
                   style="transition:stroke-dashoffset .9s linear"/>
           <circle id="iqama-head-glow" cx="200" cy="118" r="6.5" fill="url(#iqama-head-g)"/>
           <circle id="iqama-head" cx="200" cy="118" r="2" fill="#FFFFFF"/>
           <!-- بيانُ العدّاد: بلا هذا السطر يبقى القوسُ زينةً لا يُعرف معناها -->
-          <g id="iqama-caption" transform="translate(200,92)">
+          <g id="iqama-caption" transform="translate(200,305)" style="display:none">
             
             <text id="iqama-cap-txt" x="0" y="18" text-anchor="middle" class="iqama-cap"></text>
           </g>
@@ -7362,6 +7375,18 @@ async function submitDeveloperFeedback(){
 
   const client = getSupabaseClient();
   if(!client){
+    /* لا خادمَ مربوطًا: نُسلّم الرسالةَ إلى واتساب بنصّها بدل أن تضيع.
+       وهذا أصدقُ من زرٍّ يوهم بالإرسال ولا يُرسل. */
+    try{
+      var body = zxContactSubject() + '\n\n' + message;
+      window.open('https://wa.me/' + ZAHIM_CONTACT.whatsapp
+        + '?text=' + encodeURIComponent(body), '_blank');
+      var okEl = document.getElementById('fb-success');
+      if(okEl){ okEl.style.display = 'block'; }
+      textarea.value = '';
+      if(errEl) errEl.style.display = 'none';
+      return;
+    }catch(e){}
     if(errEl){
       var L2 = 'ar'; try{ L2 = ZahimI18n.lang(); }catch(e){}
       errEl.textContent = {
@@ -10061,6 +10086,22 @@ function zxWirdOpen(key){
 
 function getCompassActiveIndex(doneMap){
   const timeIdx = getTimeBandIndex(new Date());
+  /* كانت الإشارةُ تمضي إلى الأمام فتقف عند أوّل وِردٍ غيرِ مُتَمّ، ولو لم يدخل
+     وقتُه — فتُشير إلى «النوم» والساعةُ سبعٌ مساءً. الآن: ما لم يُفتح بابُه
+     لا يُختار. */
+  try{
+    for(let j = 0; j < COMPASS_STAGES.length; j++){
+      const st = COMPASS_STAGES[(timeIdx + j) % COMPASS_STAGES.length];
+      const i  = (timeIdx + j) % COMPASS_STAGES.length;
+      if(doneMap[st.key]) continue;
+      if(typeof zxWirdOpen === 'function' && WIRD_WIN && WIRD_WIN[st.key]
+         && !zxWirdOpen(st.key)) continue;
+      return i;
+    }
+    /* لم يُفتح بابٌ بعد: نُشير إلى محطّة الوقت الذي نحن فيه، لا إلى وِردٍ
+       لم يحن. */
+    return timeIdx;
+  }catch(e){}
   /* حين يُؤذَّن، الصلاةُ أولى من كلّ وِرد. كانت الإشارةُ تمضي من نطاق الوقت
      إلى الأمام فحسب، فتبقى عند القرآن والأذانُ قائم. */
   if(!doneMap.prayer && zxWirdOpen('prayer')) return 0;
@@ -12592,7 +12633,12 @@ function zxIqamaTick(){
   if(!g) return;
   var win = null;
   try{ win = window.zxIqamaWindow ? zxIqamaWindow() : null; }catch(e){}
-  if(!win || !win.active){ g.style.opacity = '0'; return; }
+  if(!win || !win.active){
+    g.style.opacity = '0';
+    var _l = document.getElementById('zxIqamaLine');
+    if(_l) _l.classList.remove('on');
+    return;
+  }
 
   var p = Math.max(0, Math.min(1, win.progress));
   g.style.opacity = '1';
@@ -12611,12 +12657,21 @@ function zxIqamaTick(){
     if(el){ el.setAttribute('cx', hx); el.setAttribute('cy', hy); }
   });
   // البيان: «الإقامة بعد ٩ د» — يقول ما هو، ويعدّ ما بقي
+  var t1 = (function(){ try{ return ZahimI18n.t('الإقامة بعد'); }catch(e){ return 'الإقامة بعد'; } })();
+  var t2 = (function(){ try{ return ZahimI18n.t('د'); }catch(e){ return 'د'; } })();
+  var txt = t1 + ' ' + arNum(win.leftMin) + ' ' + t2;
   var cap = document.getElementById('iqama-cap-txt');
-  if(cap){
-    var t1 = (function(){ try{ return ZahimI18n.t('الإقامة بعد'); }catch(e){ return 'الإقامة بعد'; } })();
-    var t2 = (function(){ try{ return ZahimI18n.t('د'); }catch(e){ return 'د'; } })();
-    cap.textContent = t1 + ' ' + arNum(win.leftMin) + ' ' + t2;
+  if(cap) cap.textContent = txt;
+  var line = document.getElementById('zxIqamaLine');
+  if(!line){
+    var wrap = document.querySelector('#screen-home .compass-wrap');
+    if(wrap && wrap.parentNode){
+      line = document.createElement('div');
+      line.id = 'zxIqamaLine';
+      wrap.parentNode.insertBefore(line, wrap.nextSibling);
+    }
   }
+  if(line){ line.textContent = txt; line.classList.add('on'); }
 }
 function zxIqamaStart(){
   if(_zxArcTimer) clearInterval(_zxArcTimer);
