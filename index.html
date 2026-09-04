@@ -1084,8 +1084,10 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
 #home-bg{padding-bottom:24px;flex:0 0 auto;}
 /* الشاشةُ نفسها هي التي تُوزّع الفراغ: الشريطُ العلويّ في أعلاها،
    والمحتوى في وسطها، والشريطُ السفليّ في قاعها. */
-#screen-home{position:fixed;display:flex;flex-direction:column;justify-content:center;}
-#screen-home > .home-dock{margin-top:auto;position:static;padding-top:10px;}
+#screen-home{position:fixed;display:flex;flex-direction:column;justify-content:flex-start;
+  padding-top:env(safe-area-inset-top,0px);}
+#screen-home > #home-bg{margin-top:auto;}
+#screen-home > .home-dock{margin-top:auto;position:sticky;bottom:0;padding-top:10px;}
 .compass-wrap{width:min(620px, 96vw, calc(100dvh - 360px)) !important;}
 @media (max-height:800px){ .compass-wrap{width:min(620px,96vw) !important;} }
 .dock-btn{flex:1;max-width:118px;display:flex;flex-direction:column;align-items:center;gap:3px;
@@ -1173,6 +1175,46 @@ body.theme-dark .iqama-cap{fill:#8FD9B6;stroke:rgba(20,26,23,.85);}
 .ps-door .chev{margin-inline-start:auto;color:var(--muted);}
 .ps-none{font-size:13px;color:var(--muted);padding:6px 2px 2px;}
 
+@media (max-height:790px){
+  #zxPane-about .zx-row{min-height:38px;padding-top:4px;padding-bottom:4px;margin-bottom:4px;}
+  #zxPane-about .zx-row-label i{display:none;}
+  #zxPane-about .zx-hint{display:none;}
+  #zxPane-about .zx-row-ic{width:30px;height:30px;}
+  #zxPane-about [data-zx-rights]{margin-top:6px;padding-top:6px;}
+  .zx-pane .zx-group{padding:11px 12px;}
+  .zx-sizes .zx-size-btn{padding:8px 0;}
+}
+/* «عن زاحِم» صفحةٌ واحدة: لا تمرير ولا انقطاع للخاتمة */
+#zxPane-about .zx-row{min-height:44px;padding-top:6px;padding-bottom:6px;margin-bottom:5px;}
+#zxPane-about .zx-row-label{line-height:1.3;}
+#zxPane-about .zx-row-label i{font-size:10px;}
+#zxPane-about .zx-hint{margin-bottom:7px;font-size:10.5px;}
+#zxPane-about .zx-group{padding-top:11px;padding-bottom:11px;}
+#zxPane-about .zx-row-ic{width:34px;height:34px;}
+#zxPane-about .zx-row-ic svg{width:16px;height:16px;}
+#zxPane-about [data-zx-rights]{margin-top:10px;padding-top:9px;}
+#zxPane-about [data-zx-rights]{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;}
+#zxPane-about [data-zx-rights] .zx-seal-mono{width:18px;margin:0;}
+#zxPane-about [data-zx-rights] b{flex:1 1 auto;text-align:center;}
+#zxPane-about [data-zx-rights] b{font-size:9.5px;line-height:1.6;}
+#zxPane-about [data-zx-rights] .zx-dua{font-size:11.5px;margin-top:3px;}
+
+/* ═══ التبويباتُ الفرعيّة ═══
+   لوحُ المواقيت كان ستّةَ صفوفٍ لا تسع شاشةً بلا تمرير. فقسمناه ثلاثةً:
+   الموقعُ والقبلة، والأذان، والحساب. الشاشةُ لا تتغيّر، والانتقالُ في مكانه. */
+.zx-sub{display:flex;gap:6px;margin:2px 0 10px;}
+.zx-sub-btn{
+  flex:1;min-height:32px;padding:7px 6px;border-radius:999px;cursor:pointer;font:inherit;
+  font-size:11.5px;font-weight:700;color:var(--muted);
+  border:1px solid var(--line);background:var(--cream);
+  transition:background .2s,color .2s,border-color .2s;
+}
+.zx-sub-btn.on{background:var(--green);color:#fff;border-color:var(--green);}
+.zx-subpane{display:none;animation:zxSubIn .3s cubic-bezier(.22,1,.36,1) both;}
+.zx-subpane.on{display:block;}
+@keyframes zxSubIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.zx-subpane{animation:none}}
+
 /* ═══ لوحةُ الوِرد ═══
    أضفنا الجزءَ باسمه، وعددَ ما مضى وما بقي.
    ولم نضع «أنت متأخّرٌ بكذا يومًا» ولا علامةَ خطرٍ حمراء — العددُ خبرٌ،
@@ -1217,11 +1259,11 @@ body.theme-dark .iqama-cap{fill:#8FD9B6;stroke:rgba(20,26,23,.85);}
 /* ═══ تبويباتُ الإعدادات ═══
    أقراصٌ صغيرةٌ في وسط الشاشة تلتفّ عند الضيق — لا صناديقُ كبيرة.
    والمجموعاتُ بطاقاتٌ لها رأسٌ صغيرٌ وسطرُ إيضاح. */
-.zx-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;
-  padding-bottom:4px;margin-bottom:14px;border:0;}
+.zx-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;
+  padding-bottom:2px;margin-bottom:10px;border:0;}
 .zx-tab{
-  flex:0 0 auto;min-height:36px;padding:9px 15px;border-radius:999px;
-  display:flex;align-items:center;gap:6px;cursor:pointer;
+  min-height:44px;padding:10px 12px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;
   font-size:12.5px;font-weight:700;color:var(--muted);
   border:1px solid rgba(255,255,255,.9);
   background:linear-gradient(165deg,rgba(255,255,255,.96),rgba(246,240,228,.72));
@@ -2476,11 +2518,11 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
 .zx-backdrop{position:fixed;inset:0;background:rgba(12,26,20,.34);opacity:0;visibility:hidden;
   transition:opacity .45s ease,visibility .45s;z-index:9000;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}
 .zx-backdrop.open{opacity:1;visibility:visible;}
-.zx-sheet{position:fixed;left:0;right:0;bottom:0;z-index:9001;height:92dvh;display:flex;flex-direction:column;
+.zx-sheet{position:fixed;left:0;right:0;bottom:0;z-index:9001;height:94dvh;display:flex;flex-direction:column;
   background:var(--cream);border-radius:22px 22px 0 0;
   box-shadow:0 -2px 8px rgba(20,40,30,.06),0 -18px 46px rgba(20,40,30,.18);
   transform:translateY(102%);transition:transform .5s cubic-bezier(.22,1,.36,1);
-  max-height:86vh;overflow-y:auto;padding:0 20px calc(26px + env(safe-area-inset-bottom,0px));
+  max-height:94vh;overflow-y:auto;padding:0 18px calc(14px + env(safe-area-inset-bottom,0px));
   -webkit-overflow-scrolling:touch;}
 .zx-sheet.open{transform:none;}
 .zx-grip{width:38px;height:4px;border-radius:999px;background:rgba(20,67,46,.16);margin:10px auto 4px;}
@@ -10053,11 +10095,13 @@ function refreshPrayerStation(){
       if(PRAYER_ICON[fresh.key]) COMPASS_STAGES[0].icon = PRAYER_ICON[fresh.key];
       return;
     }
-    /* انقضت النافذة: لا نُبقي اسمَ صلاةٍ مضت، بل نُسمّي القادمة */
-    const np = ZahimDay.nextPrayer(new Date());
-    COMPASS_STAGES[0].label = np.name;
-    COMPASS_STAGES[0].stageName = 'الصلاة القادمة: ' + np.name;
-    if(PRAYER_ICON[np.key]) COMPASS_STAGES[0].icon = PRAYER_ICON[np.key];
+    /* انقضت النافذة: نُسمّي الوقتَ الذي نحن فيه — كما يقول المحراب —
+       ونذكر القادمةَ في السطر تحته. فلا يختلف اسمان على شاشتين. */
+    const cur = ZahimDay.currentPrayer(new Date());
+    const np  = ZahimDay.nextPrayer(new Date());
+    COMPASS_STAGES[0].label = cur.name;
+    COMPASS_STAGES[0].stageName = 'أنت في وقت ' + cur.name + ' · القادمة ' + np.name;
+    if(PRAYER_ICON[cur.key]) COMPASS_STAGES[0].icon = PRAYER_ICON[cur.key];
   }catch(e){}
 }
 
@@ -12982,18 +13026,30 @@ function showToast(msg){
   <section class="zx-pane" id="zxPane-prayer">
   <div class="zx-group">
     <div class="zx-group-head">المواقيت</div>
-    <p class="zx-hint">من موقعك تُحسب المواقيتُ واتّجاهُ القبلة معًا — فتغييرُه يغيّرهما.</p>
+    <div class="zx-sub" role="tablist">
+      <button class="zx-sub-btn on" data-sub="place"  onclick="zxSub('place')"  role="tab">الموقع</button>
+      <button class="zx-sub-btn"    data-sub="adhan"  onclick="zxSub('adhan')"  role="tab">الأذان</button>
+      <button class="zx-sub-btn"    data-sub="calc"   onclick="zxSub('calc')"   role="tab">القبلة والحساب</button>
+    </div>
+    <p class="zx-hint" id="zxSubHint">من موقعك تُحسب المواقيتُ واتّجاهُ القبلة معًا — فتغييرُه يغيّرهما.</p>
+    <div class="zx-subpane on" data-sub="place">
     <div class="zx-row" onclick="openCityPicker()">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span><span class="zx-row-label">الموقع<i>منه تُحسب المواقيتُ والقبلة</i></span><span class="zx-row-value" id="zxCity">—</span><span class="zx-row-chev">←</span>
     </div>
 
+    </div>
+
+    <div class="zx-subpane" data-sub="adhan">
     <div class="zx-row" onclick="zaToggle()">
       <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11.4 5.2 7.2 8.8H4.2v6.4h3l4.2 3.6z"/><path d="M15.6 9.4a3.4 3.4 0 0 1 0 5.2"/><path d="M18.2 6.6a7 7 0 0 1 0 10.8"/></svg></span><span class="zx-row-label">الأذان<i>يُرفع والتطبيقُ مفتوح، ويهدأ إن كنتَ في المصحف</i></span><span class="zx-row-value" id="zaState">يعمل</span>
     </div>
     <div class="zx-row" onclick="zaVoiceToggle()">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4a3 3 0 0 1 3 3v5.2a3 3 0 0 1-6 0V6.4a3 3 0 0 1 3-3z"/><path d="M6.2 11.2a5.8 5.8 0 0 0 11.6 0"/><path d="M12 17v3.6"/></svg></span><span class="zx-row-label">صوت الأذان<i>مؤذّنان للصلوات؛ والفجرُ له أذانُه بالتثويب</i></span><span class="zx-row-value" id="zaVoice">مؤذّن ١</span>
     </div>
-    <div class="zx-row" onclick="closeSettings(); setTimeout(openQibla, 180);">
+    </div>
+
+    <div class="zx-subpane" data-sub="calc">
+    <div class="zx-row zx-only-place" onclick="closeSettings(); setTimeout(openQibla, 180);">
       <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M15.4 8.6 10.7 10.7 8.6 15.4l4.7-2.1z"/></svg></span><span class="zx-row-label">اتجاه القبلة<i>الزاويةُ من الشمال الحقيقي</i></span><span class="zx-row-chev">←</span>
     </div>
     <div class="zx-row" onclick="zxCycleMethod()">
@@ -13001,6 +13057,7 @@ function showToast(msg){
     </div>
     <div class="zx-row" onclick="zxToggleMadhab()">
       <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 18.5h15"/><path d="M12 4.6v3"/><path d="M6.6 8.2 12 7.6l5.4.6"/><path d="M9.2 18.5c0-3.4 1.3-6 2.8-7.6 1.5 1.6 2.8 4.2 2.8 7.6"/></svg></span><span class="zx-row-label">العصر<i>الجمهورُ عند مثلِ الظلّ، والحنفيّةُ عند مثليه</i></span><span class="zx-row-value" id="zxMadhab">—</span>
+    </div>
     </div>
     <div class="zx-note" id="zxNote">طرق الحساب تختلف اصطلاحاً — اتبع ما عليه مسجد بلدك.</div>
   </div>
@@ -13994,7 +14051,9 @@ window.addEventListener('popstate', function(){
       el.grad.setAttribute('r', (s.lr/GEO.s).toFixed(1));
       el.gIn.setAttribute('stop-color', s.lightIn);
       el.gOut.setAttribute('stop-color', s.lightOut);
-      el.name.textContent = s.title;
+      /* يُحسب الآن لا عند التحميل: الجمعةُ تحلّ محلّ الظهر متى دخلت */
+      el.name.textContent = (s.station === 'dhuhr' && typeof zxIsJumua === 'function' && zxIsJumua())
+        ? 'وقت الجمعة' : s.title;
       lastStationKey = s.station;
       paintTimes(s.station);
       lastKey = s.key;
@@ -16216,6 +16275,33 @@ function boot(){
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
 else boot();
 })(window);
+</script>
+
+<script>
+/* تبديلُ التبويبات الفرعيّة في لوح المواقيت */
+window.zxSub = function(key){
+  var HINTS = {
+    place: 'منه تُحسب المواقيتُ واتّجاهُ القبلة معًا — فتغييرُه يغيّرهما.',
+    adhan: 'الأذانُ يُرفع والتطبيقُ مفتوح. والفجرُ له أذانُه بالتثويب، فلا يتبدّل باختيار الصوت.',
+    calc:  'القبلةُ تُحسب من موقعك، وطرقُ التوقيت تختلف اصطلاحًا — اتّبعْ ما عليه مسجدُ بلدك.'
+  };
+  document.querySelectorAll('.zx-sub-btn').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-sub') === key);
+  });
+  document.querySelectorAll('.zx-subpane').forEach(function(p){
+    p.classList.remove('on');
+  });
+  var pane = document.querySelector('.zx-subpane[data-sub="' + key + '"]');
+  if(pane){ requestAnimationFrame(function(){ pane.classList.add('on'); }); }
+  var h = document.getElementById('zxSubHint');
+  if(h){
+    var t = HINTS[key] || '';
+    try{ if(window.ZahimI18n && ZahimI18n.t) t = ZahimI18n.t(t); }catch(e){}
+    h.textContent = t;
+  }
+  var n = document.getElementById('zxNote');
+  if(n) n.style.display = (key === 'calc') ? '' : 'none';
+};
 </script>
 
 <!-- ═══ عدّاد الزوّار ═══
