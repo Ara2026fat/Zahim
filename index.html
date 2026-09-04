@@ -1087,9 +1087,21 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
 #screen-home{position:fixed;display:flex;flex-direction:column;justify-content:flex-start;
   padding-top:env(safe-area-inset-top,0px);}
 #screen-home > #home-bg{margin-top:auto;}
+/* الشاشةُ الرئيسيّة لا تُمرَّر: كلُّ شيءٍ يسعها أو يتقلّص ليسعها،
+   فلا يُقصّ شريطٌ ولا يختفي رصيف. */
+#screen-home{overflow:hidden;}
+/* الشاشاتُ القصيرة: نضغط ما حول الميناء بدل أن نُصغّره أكثر */
+@media (max-height:800px){
+  #home-bg{padding-bottom:8px;}
+  .home-tagline{font-size:14px;margin:2px 16px 6px;}
+  .home-dock{padding:5px 16px calc(5px + env(safe-area-inset-bottom));}
+  .dock-btn{padding:6px 6px;}
+  .home-topbar{padding-top:6px;padding-bottom:6px;}
+}
 #screen-home > .home-dock{margin-top:auto;position:sticky;bottom:0;padding-top:10px;}
-.compass-wrap{width:min(620px, 96vw, calc(100dvh - 360px)) !important;}
-@media (max-height:800px){ .compass-wrap{width:min(620px,96vw) !important;} }
+.compass-wrap{width:min(620px, 92vw, calc(100dvh - 415px)) !important;}
+@media (max-height:800px){ .compass-wrap{width:min(620px,92vw,calc(100dvh - 482px)) !important;} }
+@media (max-height:700px){ .compass-wrap{width:min(620px,92vw,calc(100dvh - 466px)) !important;} }
 .dock-btn{flex:1;max-width:118px;display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:9px 6px;border-radius:15px;cursor:pointer;color:var(--muted);
   border:1px solid rgba(255,255,255,.9);
