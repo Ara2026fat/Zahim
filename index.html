@@ -90,11 +90,12 @@ body{max-width:480px;margin:0 auto;position:relative;}
 
 /* ===== TOPBAR ===== */
 .topbar{
+  padding-top:env(safe-area-inset-top,0px);
   position:sticky;top:0;z-index:50;
   display:flex;align-items:center;justify-content:space-between;
   padding:12px 16px;
   background:var(--topbar-bg);
-  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   border-bottom:1px solid rgba(26,107,74,0.1);
 }
 .brand-wrap{display:flex;align-items:center;gap:8px;}
@@ -373,7 +374,7 @@ body{max-width:480px;margin:0 auto;position:relative;}
   border:1px solid rgba(201,150,58,0.35);
   border-radius:22px;
   padding:18px 6px 12px;
-  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 8px 24px rgba(0,0,0,0.18);
 }
 .wird-circles{
@@ -936,7 +937,7 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
   background:linear-gradient(165deg,rgba(255,255,255,.96),rgba(246,240,228,.72));
   box-shadow:0 2px 7px rgba(120,90,42,.12),0 1px 0 rgba(255,255,255,.98) inset,
              0 -1px 0 rgba(176,138,46,.10) inset;
-  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  -webkit--webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
   transition:transform .14s cubic-bezier(.4,0,.2,1);
 }
 .tsb-pick:active{transform:scale(.94);}
@@ -955,7 +956,7 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
 @media (prefers-reduced-motion: reduce){ .tsb-pick[aria-pressed="true"]::after{animation:none;} }
 /* الحبّةُ الحرّة والعدّادُ داخل الأذكار جسمٌ واحدٌ بمقاسين: زجاجٌ أخضرُ
    له لمعةٌ علويّةٌ وحاشيةُ حرف — كما كُسِي خاتمُ البوصلة والإبرة. */
-.tsb-bead{width:min(200px,56vw);aspect-ratio:1/1;border-radius:50%;border:0;cursor:pointer;
+.tsb-bead{width:min(130px,36vw);aspect-ratio:1/1;border-radius:50%;border:0;cursor:pointer;
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   background:radial-gradient(circle at 34% 26%, #3FA37A, var(--green) 58%, #0B2C1D 100%);
@@ -992,9 +993,9 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
   border-radius:50%;pointer-events:none;
   background:radial-gradient(ellipse at 50% 50%, rgba(255,255,255,.40), rgba(255,255,255,0) 70%);
   transform:rotate(-24deg);}
-.tsb-count{font-size:44px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;}
+.tsb-count{font-size:30px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;}
 .tsb-count.bump{animation:zkBump .22s cubic-bezier(.22,1,.36,1);}
-.tsb-round{font-size:12.5px;opacity:.78;font-weight:600;min-height:16px;}
+.tsb-round{font-size:10.5px;opacity:.78;font-weight:600;min-height:13px;}
 .tsb-word{font-family:'Amiri',serif;font-size:20px;color:var(--green);text-align:center;line-height:1.85;}
 .tsb-reset{padding:8px 20px;font-size:12.5px;border-radius:99px;border:1px solid var(--zg-faint);
   background:transparent;color:var(--muted);font-size:14px;cursor:pointer;}
@@ -1070,7 +1071,7 @@ body.mode-obsidian{ --home-wash:rgba(224,188,114,.09); }
 }
 
 /* شريطُ الأدوات السفليّ: صغيرٌ هادئ، ثلاثةُ أبوابٍ بأيقوناتٍ ١٨ بكسلًا */
-.home-dock{position:absolute;left:0;right:0;bottom:0;z-index:40;
+.home-dock{position:absolute;left:0;right:0;bottom:0;z-index:40;padding-bottom:env(safe-area-inset-bottom,0px);
   display:flex;gap:8px;justify-content:center;
   padding:8px 16px calc(8px + env(safe-area-inset-bottom));
   max-width:480px;
@@ -4970,7 +4971,7 @@ body.theme-dark .brand-wrap::after{border-color:#161D19;}
 #screen-mushaf .mus-chev{width:34px;height:34px;border-radius:50%;margin:0 6px;
   display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;
   color:var(--gold);background:rgba(255,255,255,.55);border:1px solid rgba(176,138,46,.22);
-  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  -webkit--webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
   opacity:0;transition:opacity .3s ease;}
 #screen-mushaf .mus-edge:active .mus-chev{opacity:1;}
 #screen-mushaf:not(.bare) .mus-chev{opacity:.5;}
@@ -9249,7 +9250,7 @@ function closeRxSheet(fromPop){
   const el = document.getElementById('rxSheet');
   if(!el) return;
   el.classList.remove('open');
-  if(!fromPop){ try{ if(history.state && history.state.rxSheet) history.back(); }catch(e){} }
+  if(!fromPop){ try{ if(history.state && history.state.rxSheet){ window.__zxHandled = true; history.back(); } }catch(e){} }
 }
 const RX_SHORT = {"s20":"الوضوء","s30":"الأذان","s60":"إلى المسجد","s70":"الجماعة","s80":"الرواتب","s90":"النافلة","s130":"تلاوة القرآن","s160":"الأذكار","s150":"الدعاء","s140":"الصلاة على النبي","s100":"الصيام","s110":"الحج والعمرة","s270":"حسن الخلق","s200":"صلة الرحم","s250":"التزاور","s190":"الصدقة","s230":"رعاية الضعفاء","s240":"الذبّ عن العِرض","s170":"العلم","s300":"الزهد","s10":"جوامع الخير"};
 // رمزٌ لكل باب: خطٌّ واحد في مربّع ٣٢، بلغة رموز البوصلة نفسها
@@ -12787,7 +12788,7 @@ function showToast(msg){
 .zq-deck .zq-row{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;
   font-size:.78rem;color:var(--zqm)}
 .zq-chip{padding:.18rem .6rem;border-radius:999px;border:1px solid var(--zql);white-space:nowrap}
-.zq-chip.zq-on{color:var(--zqb);border-color:color-mix(in srgb,var(--zqb) 45%,transparent)}
+.zq-chip.zq-on{color:var(--zqb);border-color:rgba(46,139,99,.45);border-color:color-mix(in srgb,var(--zqb) 45%,transparent)}
 .zq-btns{display:flex;gap:.45rem;margin-top:.6rem;flex-wrap:wrap}
 .zq-btns button{font:inherit;font-size:.79rem;color:var(--zqi);background:transparent;
   border:1px solid var(--zql);border-radius:.6rem;padding:.42rem .8rem;cursor:pointer}
@@ -13164,7 +13165,7 @@ function openSettings(){
 function closeSettings(fromPop){
   document.getElementById('zxBackdrop').classList.remove('open');
   document.getElementById('zxSheet').classList.remove('open');
-  if(!fromPop){ try{ if(history.state && history.state.zxSheet) history.back(); }catch(e){} }
+  if(!fromPop){ try{ if(history.state && history.state.zxSheet){ window.__zxHandled = true; history.back(); } }catch(e){} }
 }
 window.addEventListener('popstate', function(){
   // الأعمق أولاً: إن كان منتقي المدينة مفتوحاً فهو صاحب الرجوع، لا اللوح
@@ -13243,7 +13244,7 @@ function openCityPicker(){
 }
 function closeCityPicker(fromPop){
   document.getElementById('zxCities').classList.remove('open');
-  if(!fromPop){ try{ if(history.state && history.state.zxCity) history.back(); }catch(e){} }
+  if(!fromPop){ try{ if(history.state && history.state.zxCity){ window.__zxHandled = true; history.back(); } }catch(e){} }
 }
 function pickCity(name, lat, lng){
   ZahimDay.setCity(name, lat, lng);
@@ -13891,7 +13892,7 @@ window.addEventListener('popstate', function(){
   window.closePrayerSheet = function(fromPop){
     document.getElementById('psBack').classList.remove('open');
     document.getElementById('psSheet').classList.remove('open');
-    if (!fromPop) { try { if (history.state && history.state.psSheet) history.back(); } catch(e){} }
+    if (!fromPop) { try { if (history.state && history.state.psSheet) { window.__zxHandled = true; history.back(); } } catch(e){} }
   };
   window.addEventListener('popstate', function(){
     var sh = document.getElementById('psSheet');
@@ -14142,7 +14143,7 @@ function closeMihrab(fromPop){
   el.classList.add('hidden'); el.classList.remove('active');
   if(typeof goHome==='function') goHome();
   // إن جاء الإغلاق من الزرّ لا من رجوع المتصفح، نسحب مدخل السجلّ حتى لا يتراكم
-  if(!fromPop){ try{ if(history.state && history.state.mihrab) history.back(); }catch(e){} }
+  if(!fromPop){ try{ if(history.state && history.state.mihrab){ window.__zxHandled = true; history.back(); } }catch(e){} }
 }
 window.addEventListener('popstate', function(){
   var el=document.getElementById('screen-mihrab');
@@ -15064,8 +15065,8 @@ body.mode-obsidian #home-bg{
    بطاقةٌ زجاجيةٌ أوضح من الحاوية، بحافّةٍ رفيعة تُمسك حدّها. */
 body.theme-dark .dash-progress-card{
   background:linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.022));
-  -webkit-backdrop-filter:blur(12px);
-  backdrop-filter:blur(12px);
+  -webkit--webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
   box-shadow:0 8px 24px rgba(0,0,0,.26);
@@ -15292,7 +15293,7 @@ body.theme-dark .zx-sw{
     var st = document.getElementById('ztStage');
     if(st) st.innerHTML = '';
     try{ localStorage.setItem(KEY, '1'); }catch(e){}
-    if(!fromPop){ try{ if(history.state && history.state.ztour) history.back(); }catch(e){} }
+    if(!fromPop){ try{ if(history.state && history.state.ztour){ window.__zxHandled = true; history.back(); } }catch(e){} }
   };
 
   window.ztPickCity = function(){
@@ -16011,17 +16012,58 @@ function el(){
   return audio;
 }
 
+/* ═══ الجهارة على آيفون ═══
+   في iOS خاصّيّة volume للقراءة فقط: إسنادُها لا يفعل شيئًا. فلو فتحنا
+   القفلَ بـ volume=0 لانطلق الأذانُ بكامل جهارته في وجه المستخدم عند
+   أوّل لمسة. ولو خفّضناه في المصحف لم ينخفض.
+   فالحلّ طبقتان: muted (وهي قابلةٌ للإسناد في iOS) لفتح القفل،
+   وعقدةُ كسبٍ من Web Audio للتحكّم في الجهارة. */
+var actx=null, gainNode=null;
+
+function buildGraph(a){
+  if(gainNode) return;
+  var AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return;
+  try{
+    actx = new AC();
+    var src = actx.createMediaElementSource(a);
+    gainNode = actx.createGain();
+    src.connect(gainNode);
+    gainNode.connect(actx.destination);
+  }catch(e){ actx=null; gainNode=null; }
+}
+
+function setGain(v){
+  if(gainNode){
+    try{ gainNode.gain.value=v; return; }catch(e){}
+  }
+  try{ el().volume=v; }catch(e){}   /* أندرويد وسطحُ المكتب */
+}
+
+function fadeOut(ms, done){
+  var steps=12, i=0, start=(gainNode? gainNode.gain.value : el().volume);
+  var f=setInterval(function(){
+    i++; setGain(Math.max(0, start*(1-i/steps)));
+    if(i>=steps){ clearInterval(f); done(); setGain(start); }
+  }, Math.max(20, ms/steps));
+}
+
 /* المتصفّحُ يمنع الصوتَ حتى يلمس المستخدمُ الشاشة مرّة.
-   فنفتح القفلَ بتشغيلٍ صامتٍ خاطف عند أوّل لمسة. */
+   فنفتح القفلَ بتشغيلٍ مكتومٍ خاطفٍ عند أوّل لمسة. */
 function unlock(){
   if(unlocked) return;
   unlocked=true;
-  var a=el(), v=a.volume;
-  a.volume=0;
+  var a=el();
+  a.muted=true;                     /* muted تعمل في iOS، بخلاف volume */
   var p=a.play();
-  if(p && p.then) p.then(function(){ a.pause(); a.currentTime=0; a.volume=v; })
-                   ['catch'](function(){ a.volume=v; unlocked=false; });
-  else { try{ a.pause(); a.currentTime=0; }catch(e){} a.volume=v; }
+  function settle(){
+    try{ a.pause(); a.currentTime=0; }catch(e){}
+    a.muted=false;
+    buildGraph(a);
+    if(actx && actx.state==='suspended'){ try{ actx.resume(); }catch(e){} }
+  }
+  if(p && p.then) p.then(settle)['catch'](function(){ a.muted=false; unlocked=false; });
+  else settle();
 }
 
 function inMushaf(){
@@ -16046,8 +16088,9 @@ function play(key,name){
   if(!on() || playing) return;
   var a=el();
   a.preload='auto';
+  if(actx && actx.state==='suspended'){ try{ actx.resume(); }catch(e){} }
   /* في المصحف يهدأ ولا يقاطع: ثلثُ الجهارة يكفي تنبيهًا */
-  a.volume = inMushaf() ? 0.34 : 1;
+  setGain(inMushaf() ? 0.34 : 1);
   playing=key;
   var p=a.play();
   if(p && p.then) p['catch'](function(){ hide(); });
@@ -16084,18 +16127,14 @@ global.zaPreview=function(sec){
   var a=el(); a.preload='auto';
   clearTimeout(previewT);
   try{ a.pause(); a.currentTime=0; }catch(e){}
-  a.volume = inMushaf() ? 0.34 : 1;
+  if(actx && actx.state==='suspended'){ try{ actx.resume(); }catch(e){} }
+  setGain(inMushaf() ? 0.34 : 1);
   playing='preview';
   var p=a.play();
   if(p && p.then) p['catch'](function(){ hide(); });
   show(T('معاينة'));
   previewT=setTimeout(function(){
-    /* تلاشٍ لطيفٌ بدل قطعٍ مفاجئ */
-    var v=a.volume, steps=10, i=0;
-    var f=setInterval(function(){
-      i++; a.volume=Math.max(0, v*(1-i/steps));
-      if(i>=steps){ clearInterval(f); global.zaStop(); a.volume=v; }
-    }, 60);
+    fadeOut(600, function(){ global.zaStop(); });   /* تلاشٍ لطيفٌ بدل قطعٍ مفاجئ */
   }, (sec||12)*1000);
 };
 
