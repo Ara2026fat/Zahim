@@ -1172,6 +1172,20 @@ body.theme-dark .iqama-cap{fill:#8FD9B6;stroke:rgba(20,26,23,.85);}
 .ps-door .chev{margin-inline-start:auto;color:var(--muted);}
 .ps-none{font-size:13px;color:var(--muted);padding:6px 2px 2px;}
 
+/* ═══ لوحةُ الوِرد ═══
+   أضفنا الجزءَ باسمه، وعددَ ما مضى وما بقي.
+   ولم نضع «أنت متأخّرٌ بكذا يومًا» ولا علامةَ خطرٍ حمراء — العددُ خبرٌ،
+   والتأخيرُ حكمٌ. ومن رأى حُكمًا عليه في تطبيق عبادةٍ أغلقه. */
+.qdc-juzz{
+  font-size:12.5px;font-weight:700;letter-spacing:.2px;
+  color:rgba(255,248,240,.72);margin-top:6px;
+}
+.qdc-neigh{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-top:9px;font-size:11px;font-weight:600;color:rgba(255,248,240,.55);
+}
+.qdc-neigh i{width:3px;height:3px;border-radius:50%;background:rgba(255,248,240,.35);}
+
 /* ═══ لوحُ الإعدادات: بنيةُ «صلة» ═══
    ما رفع لوحَ «صلة» فوقنا لم يكن لونًا بل بنية: رأسٌ، ثمّ سطرُ شرح،
    ثمّ الأداة. فمن قرأ «طريقة الحساب: أمّ القرى» لم يفهم ماذا يختار،
@@ -11371,6 +11385,20 @@ function renderQuranProgress(wrap){
   const fromSurah = JUZZ_START[juzzStart-1] || 'الجزء ' + juzzStart;
   const toSurah = JUZZ_END[juzzEnd-1] || 'الجزء ' + juzzEnd;
 
+  /* الجزءُ باسمه لا برقمه: «الجزء السادس والعشرون» أوقعُ من «الجزء ٢٦» */
+  const JUZZ_NAMES = ['الأوّل','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن',
+    'التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر',
+    'السادس عشر','السابع عشر','الثامن عشر','التاسع عشر','العشرون','الحادي والعشرون',
+    'الثاني والعشرون','الثالث والعشرون','الرابع والعشرون','الخامس والعشرون','السادس والعشرون',
+    'السابع والعشرون','الثامن والعشرون','التاسع والعشرون','الثلاثون'];
+  const juzzLabel = (juzzStart === juzzEnd)
+    ? 'الجزء ' + (JUZZ_NAMES[juzzStart-1] || arNum(juzzStart))
+    : 'الأجزاء ' + arNum(juzzStart) + ' — ' + arNum(juzzEnd);
+
+  /* السابقُ والقادم: عددٌ مجرّدٌ بلا لومٍ ولا علامةِ خطر */
+  const beforeCount = selIdx;
+  const afterCount  = Math.max(days - selIdx - 1, 0);
+
   const cardHTML = `
     <div class="quran-day-card">
       <div class="qdc-top">
@@ -11384,6 +11412,7 @@ function renderQuranProgress(wrap){
         <div class="qdc-range">
           <span class="qdc-range-text">صفحة ${arNum(pageStart)} <span class="qdc-range-arrow">←</span> صفحة ${arNum(pageEnd)}</span>
         </div>
+        <div class="qdc-juzz">${juzzLabel}</div>
         <div class="qdc-range-sub">${arNum(plan.pagesPerDay)} صفحة يومياً</div>
       </div>
       <div class="qdc-progress">
@@ -11393,6 +11422,11 @@ function renderQuranProgress(wrap){
         </div>
         <div class="qdc-prog-bar">
           <div class="qdc-prog-fill" style="width:${pct}%"></div>
+        </div>
+        <div class="qdc-neigh">
+          <span>الأورادُ السابقة: ${arNum(beforeCount)}</span>
+          <i></i>
+          <span>القادمة: ${arNum(afterCount)}</span>
         </div>
       </div>
       <div onclick="openMushaf(${pageStart}, ${pageEnd})"
@@ -16079,22 +16113,26 @@ function zaLabel(){
   if(v) v.textContent = on() ? T('يعمل') : T('صامت');
 }
 global.zaRefreshLabel=zaLabel;
+/* للتجربة اليدويّة من أيّ مكان */
+global.zaTest=function(){ unlock(); setTimeout(function(){ global.zaPreview(200); }, 200); };
 
 function boot(){
   zaLabel();
   /* ‎?adhan=test‎ في آخر الرابط: يُرفع الأذانُ كاملًا عند أوّل لمسة.
      للتجربة في أيّ وقتٍ دون انتظار الصلاة. */
-  var wantTest = /[?&]adhan=test/.test(location.search);
   ['pointerdown','touchstart','keydown'].forEach(function(ev){
-    window.addEventListener(ev, function(){
-      unlock();
-      if(wantTest){ wantTest=false; setTimeout(function(){
-        var nm='التجربة';
-        try{ nm=ZahimDay.PRAYER_NAMES[ORDER[0]] || nm; }catch(e){}
-        play('test', nm);
-      }, 260); }
-    }, {once:true, passive:true});
+    window.addEventListener(ev, unlock, {once:true, passive:true});
   });
+  /* ‎?adhan=test‎ في آخر الرابط: يُرفع الأذانُ كاملًا عند أوّل لمسة.
+     لا نعلّقه على مستمعٍ واحدٍ لأنّ التطبيق قد يستهلكه قبلنا؛
+     بل ننتظر انفتاح القفل ثمّ نرفع. */
+  if(/[?&]adhan=test/.test(location.search)){
+    var tries=0, w=setInterval(function(){
+      tries++;
+      if(unlocked){ clearInterval(w); setTimeout(function(){ global.zaPreview(200); }, 350); }
+      else if(tries>70) clearInterval(w);   /* نحو ٢٠ ثانية ثمّ نكفّ */
+    }, 300);
+  }
   clearInterval(timer);
   timer=setInterval(tick, 15000);
   tick();
