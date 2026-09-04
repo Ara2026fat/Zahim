@@ -12990,6 +12990,9 @@ function showToast(msg){
     <div class="zx-row" onclick="zaToggle()">
       <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11.4 5.2 7.2 8.8H4.2v6.4h3l4.2 3.6z"/><path d="M15.6 9.4a3.4 3.4 0 0 1 0 5.2"/><path d="M18.2 6.6a7 7 0 0 1 0 10.8"/></svg></span><span class="zx-row-label">الأذان<i>يُرفع والتطبيقُ مفتوح، ويهدأ إن كنتَ في المصحف</i></span><span class="zx-row-value" id="zaState">يعمل</span>
     </div>
+    <div class="zx-row" onclick="zaVoiceToggle()">
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4a3 3 0 0 1 3 3v5.2a3 3 0 0 1-6 0V6.4a3 3 0 0 1 3-3z"/><path d="M6.2 11.2a5.8 5.8 0 0 0 11.6 0"/><path d="M12 17v3.6"/></svg></span><span class="zx-row-label">صوت الأذان<i>مؤذّنان للصلوات؛ والفجرُ له أذانُه بالتثويب</i></span><span class="zx-row-value" id="zaVoice">مؤذّن ١</span>
+    </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(openQibla, 180);">
       <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M15.4 8.6 10.7 10.7 8.6 15.4l4.7-2.1z"/></svg></span><span class="zx-row-label">اتجاه القبلة<i>الزاويةُ من الشمال الحقيقي</i></span><span class="zx-row-chev">←</span>
     </div>
@@ -15984,8 +15987,11 @@ else boot();
 <script>
 (function(global){
 "use strict";
-var SRC='./adhan.mp3';
-var KEY_ON='zahim_adhan_on', KEY_FIRED='zahim_adhan_fired';
+/* ثلاثةُ ملفّات: مؤذّنان للصلوات، وأذانُ فجرٍ فيه التثويب.
+   والفجرُ لا يتبع الاختيار — «الصلاةُ خيرٌ من النوم» ليست في غيره. */
+var VOICES = { 1:'./adhan.mp3', 2:'./adhan-2.mp3' };
+var SRC_FAJR = './adhan-fajr.mp3';
+var KEY_ON='zahim_adhan_on', KEY_FIRED='zahim_adhan_fired', KEY_VOICE='zahim_adhan_voice';
 var audio=null, unlocked=false, timer=null, playing=null;
 
 function on(){ try{ return localStorage.getItem(KEY_ON)!=='0'; }catch(e){ return true; } }
@@ -16003,12 +16009,28 @@ function markFired(k){
 }
 function T(k){ try{ if(global.ZahimI18n && ZahimI18n.t) return ZahimI18n.t(k); }catch(e){} return k; }
 
+function voice(){
+  try{ return localStorage.getItem(KEY_VOICE)==='2' ? 2 : 1; }catch(e){ return 1; }
+}
+function srcFor(key){ return key==='fajr' ? SRC_FAJR : (VOICES[voice()] || VOICES[1]); }
+
 function el(){
   if(audio) return audio;
-  audio=new Audio(SRC);
+  audio=new Audio(VOICES[1]);
   audio.preload='none';
   audio.addEventListener('ended', function(){ hide(); });
-  audio.addEventListener('error', function(){ hide(); });
+  audio.addEventListener('error', function(){
+    /* لو غاب ملفُّ المؤذّن الثاني رجعنا إلى الأوّل بدل أن نصمت */
+    if(audio.getAttribute('data-src') === VOICES[2]){
+      try{ localStorage.setItem(KEY_VOICE,'1'); }catch(e){}
+      audio.setAttribute('data-src', VOICES[1]);
+      audio.src = VOICES[1];
+      try{ audio.load(); audio.play(); }catch(e){ hide(); }
+      zaLabel();
+      return;
+    }
+    hide();
+  });
   return audio;
 }
 
@@ -16084,9 +16106,18 @@ global.zaStop=function(){
   try{ var a=el(); a.pause(); a.currentTime=0; }catch(e){}
   hide();
 };
+function useSrc(a, key){
+  var want = srcFor(key);
+  if(a.getAttribute('data-src') !== want){
+    a.setAttribute('data-src', want);
+    a.src = want;
+    try{ a.load(); }catch(e){}
+  }
+}
 function play(key,name){
   if(!on() || playing) return;
   var a=el();
+  useSrc(a, key);
   a.preload='auto';
   if(actx && actx.state==='suspended'){ try{ actx.resume(); }catch(e){} }
   /* في المصحف يهدأ ولا يقاطع: ثلثُ الجهارة يكفي تنبيهًا */
@@ -16098,9 +16129,7 @@ function play(key,name){
   if(navigator.vibrate) navigator.vibrate([16,90,16]);
 }
 
-/* الفجرُ صامتٌ حتى يصل تسجيلٌ فيه التثويب — «الصلاةُ خيرٌ من النوم».
-   وأذانٌ ناقصٌ أسوأُ من صمت. */
-var ORDER=['dhuhr','asr','maghrib','isha'];
+var ORDER=['fajr','dhuhr','asr','maghrib','isha'];
 
 function tick(){
   if(!on()) return;
@@ -16123,8 +16152,8 @@ function tick(){
 /* معاينةٌ قصيرة: من شغّل الأذان سمع مستواه فورًا، فلا ينتظر وقتَ صلاةٍ
    ليكتشف أنّه عالٍ أو خافت. وهي أيضًا طريقُ التجربة. */
 var previewT=null;
-global.zaPreview=function(sec){
-  var a=el(); a.preload='auto';
+global.zaPreview=function(sec, key){
+  var a=el(); useSrc(a, key); a.preload='auto';
   clearTimeout(previewT);
   try{ a.pause(); a.currentTime=0; }catch(e){}
   if(actx && actx.state==='suspended'){ try{ actx.resume(); }catch(e){} }
@@ -16150,7 +16179,15 @@ global.zaToggle=function(){
 function zaLabel(){
   var v=document.getElementById('zaState');
   if(v) v.textContent = on() ? T('يعمل') : T('صامت');
+  var w=document.getElementById('zaVoice');
+  if(w) w.textContent = (voice()===1 ? T('مؤذّن ١') : T('مؤذّن ٢'));
 }
+global.zaVoiceToggle=function(){
+  var next = voice()===1 ? '2' : '1';
+  try{ localStorage.setItem(KEY_VOICE,next); }catch(e){}
+  zaLabel();
+  if(on()){ unlock(); setTimeout(function(){ global.zaPreview(12); }, 200); }
+};
 global.zaRefreshLabel=zaLabel;
 /* للتجربة اليدويّة من أيّ مكان */
 global.zaTest=function(){ unlock(); setTimeout(function(){ global.zaPreview(200); }, 200); };
