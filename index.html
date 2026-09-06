@@ -1341,19 +1341,52 @@ body.theme-dark .iqama-cap{fill:#8FD9B6;stroke:rgba(20,26,23,.85);}
   box-shadow:0 0 10px rgba(255,255,255,.7);}
 .tsb-seal[aria-pressed="true"] small{color:var(--gold-deep,#9A7739);}
 
-/* ══ بَكَرةُ الخطّ (شكلٌ اختياريّ) ══ */
-.tsb-orbit{position:absolute;left:50%;bottom:5.6rem;width:224px;height:224px;
-  margin:0 0 -62px -112px;border-radius:50%;border:1px dashed rgba(201,150,58,.26);z-index:3;}
-.tsb-reel{position:absolute;inset:0;z-index:5;pointer-events:none;}
-.tsb-reel .row{position:absolute;left:50%;bottom:5.6rem;white-space:nowrap;max-width:94%;
-  font-family:'Amiri',serif;transform-origin:50% 50%;
-  transition:all .46s cubic-bezier(.22,1,.36,1);}
-.tsb-orbit[hidden],.tsb-reel[hidden]{display:none;}
-body.tsb-reel-on .tsb-word{opacity:0;pointer-events:none;}
-body.tsb-reel-on .tsb-arc{display:none;}
+/* ══ عجلةُ الأذكار (شكلٌ اختياريّ) ══
+   المدارُ الدائريُّ هُدم: الكلماتُ كانت تدور حول الحجر فلا يُدرى أيّها
+   المختار، وكانت تُزاحمه. البديلُ منتقٍ رأسيٌّ يُفَرّ بالإبهام كمنتقي
+   التواريخ: المختارُ في المنتصف بين شريطين، وما حوله يخفت ويصغر.
+   وموضعُه مكانُ الذكر نفسِه — فوق ساحة العدّ لا فوقها — فلا يسرق لمسة. */
+.tsb-wheel{
+  position:absolute;top:5.2rem;left:0;right:0;z-index:6;
+  /* الساحةُ تبدأ عند ‎56%‎ من الأسفل، فالعجلةُ لا تتعدّى ما قبلها:
+     على شاشةٍ قصيرةٍ تنكمش ولا تسرق لمسةَ العدّ. */
+  height:min(11.2rem, max(7.2rem, calc(44% - 5.6rem)));
+  touch-action:none;-webkit-user-select:none;user-select:none;cursor:grab;
+  -webkit-tap-highlight-color:transparent;overflow:hidden;
+  /* الطرفانِ يتلاشيان فيُفهم أنّ فوقَ المرئيّ وتحتَه مزيدًا */
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 26%,#000 74%,transparent);
+          mask-image:linear-gradient(180deg,transparent,#000 26%,#000 74%,transparent);
+}
+.tsb-wheel:active{cursor:grabbing;}
+/* الشريطان: نافذةُ الاختيار، لا إطارَ مغلقًا */
+.tsb-wheel-rail{
+  position:absolute;top:50%;left:8%;right:8%;height:3.4rem;
+  transform:translateY(-50%);pointer-events:none;
+  border-top:1px solid rgba(201,150,58,.34);
+  border-bottom:1px solid rgba(201,150,58,.34);
+}
+.tsb-wheel-list{position:absolute;inset:0;pointer-events:none;}
+.tsb-wheel-list .row{
+  position:absolute;top:50%;left:50%;white-space:nowrap;
+  font-family:'Amiri',serif;line-height:1.6;transform-origin:50% 50%;
+  will-change:transform,opacity;
+}
+.tsb-wheel-list.settle .row{transition:transform .34s cubic-bezier(.22,1,.36,1),
+  opacity .34s ease, color .34s ease;}
+.tsb-wheel[hidden]{display:none;}
+/* في وضع العجلة: الذكرُ داخلها، والقوسُ يستريح */
+body.tsb-wheel-on .tsb-word{opacity:0;pointer-events:none;}
+body.tsb-wheel-on .tsb-stone{width:84px;height:84px;}
+body.tsb-wheel-on .tsb-stone .in{width:35px;height:35px;}
+body.tsb-wheel-on .tsb-arc{display:none;}
+@media (prefers-reduced-motion:reduce){
+  .tsb-wheel-list.settle .row{transition:none;}
+}
 
 .tsb-wrap .tsb-reset{
-  position:absolute;top:1.2rem;inset-inline-end:1rem;z-index:7;font:inherit;font-size:12px;
+  /* في متناول الإبهام: التصفيرُ فعلٌ يتكرّر، فلا يُرفع إلى أعلى الشاشة.
+     ويُوضع في الطرف المقابل للبلاطة الأولى لئلّا يتداخلا. */
+  position:absolute;bottom:.7rem;inset-inline-start:1rem;z-index:7;font:inherit;font-size:12px;
   color:var(--muted);background:var(--card-bg);border:1px solid var(--line);
   border-radius:999px;padding:.32rem .85rem;cursor:pointer;
 }
@@ -1366,32 +1399,67 @@ body.tsb-reel-on .tsb-arc{display:none;}
    قائمةٌ رأسيّةٌ لا تُرى بنظرة. البلاطاتُ المسدَّسة تُرى كلُّها معًا،
    والسدسُ من هندسة وردة زاحِم نفسِها. */
 .zx-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  position:relative;display:block;height:20.6rem;
   padding:2px 0 6px;margin-bottom:6px;
 }
+/* البلاطةُ هي المسدَّسُ نفسُه: البطاقةُ المستديرةُ حولَه كانت تُزاحم جارتَها
+   في عنقودٍ دائريّ. وهذا هو شكلُ قوس التسبيح نفسِه — حجرٌ واسمٌ تحته. */
 .zx-tile{
+  position:absolute;top:50%;left:50%;width:5.62rem;
   display:flex;flex-direction:column;align-items:center;gap:6px;
-  padding:12px 4px 11px;cursor:pointer;font:inherit;text-align:center;
-  border:1px solid rgba(255,255,255,.9);border-radius:18px;
-  background:linear-gradient(160deg,rgba(255,255,255,.92),rgba(255,251,240,.55));
-  box-shadow:0 8px 20px rgba(20,67,46,.09), inset 0 1px 0 rgba(255,255,255,.95);
-  transition:transform .16s ease, box-shadow .2s ease, border-color .2s ease;
+  padding:0;cursor:pointer;font:inherit;text-align:center;
+  border:0;border-radius:0;background:none;box-shadow:none;
+  transform:translate(-50%,-50%) translate(var(--zx-x,0),var(--zx-y,0));
+  transition:transform .16s ease;
 }
-.zx-tile:active{transform:scale(.965);box-shadow:0 3px 10px rgba(20,67,46,.14);}
-.zx-tile b{font-size:12px;font-weight:800;color:var(--text);line-height:1.25;}
+/* المواضعُ على محيطٍ بيضويّ — أفقيُّه ‎6.4rem‎ ورأسيُّه ‎8.1rem‎ — بزوايا
+   ‎−18°‎ ‎−90°‎ ‎−162°‎ ‎126°‎ ‎54°‎، ثمّ إزاحةٌ ‎0.775rem‎ لأسفل: الخماسيُّ
+   واحدٌ فوق واثنانِ تحت، فمركزُ الأشكال ليس مركزَ الدائرة. */
+.zx-tile:nth-child(1){--zx-x:6.09rem; --zx-y:-1.73rem;}
+.zx-tile:nth-child(2){--zx-x:0rem;    --zx-y:-7.33rem;}
+.zx-tile:nth-child(3){--zx-x:-6.09rem;--zx-y:-1.73rem;}
+.zx-tile:nth-child(4){--zx-x:-3.76rem;--zx-y:7.33rem;}
+.zx-tile:nth-child(5){--zx-x:3.76rem; --zx-y:7.33rem;}
+.zx-tile:nth-child(6){--zx-x:0rem;    --zx-y:0.775rem;}
+.zx-tile:active{transform:translate(-50%,-50%) translate(var(--zx-x,0),var(--zx-y,0)) scale(.94);}
+.zx-tile b{font-size:10.5px;font-weight:800;color:var(--text);line-height:1.35;}
 .zx-tile i{font-size:9.5px;font-style:normal;color:var(--muted);line-height:1.4;}
+/* الخمسُ حول المركز: اسمٌ وحده. سطرُ الإيضاح يُزاحم في عنقودٍ دائريّ،
+   وهو باقٍ في البناء لمن قرأ بقارئ الشاشة. */
+.zx-tile:not(:nth-child(6)) i{position:absolute;width:1px;height:1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;}
+/* المركزُ هو الهويّة: أوسعُ وأعمقُ لونًا، وله سطرُ إيضاحه */
+.zx-tile:nth-child(6){width:6rem;z-index:2;}
+.zx-tile:nth-child(6) b{font-size:12.5px;}
 /* البلاطةُ مسدَّسة: الهندسةُ الإسلاميّة أولى من المربّع المستدير */
 .zx-tile-hex{
-  width:44px;height:44px;display:grid;place-items:center;flex:0 0 auto;
+  width:56px;height:56px;display:grid;place-items:center;flex:0 0 auto;
   clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%);
   background:linear-gradient(150deg,#F7EEDA,#E3D0A6);color:var(--green);
+  box-shadow:0 6px 15px rgba(48,42,38,.13);
   transition:background .25s ease;
 }
+/* الأخضرُ يتناوب حول المركز، والمركزُ نفسُه أعمقُ لأنّه المقصد */
 .zx-tile:nth-child(2) .zx-tile-hex,
-.zx-tile:nth-child(4) .zx-tile-hex,
-.zx-tile:nth-child(6) .zx-tile-hex{background:linear-gradient(150deg,#DFEDE5,#B9D6C7);}
-.zx-tile-hex svg{width:21px;height:21px;}
-@media (max-width:340px){ .zx-grid{grid-template-columns:repeat(2,1fr);} }
+.zx-tile:nth-child(4) .zx-tile-hex{background:linear-gradient(150deg,#DFEDE5,#B9D6C7);}
+.zx-tile:nth-child(6) .zx-tile-hex{width:68px;height:68px;color:#F4FFF9;
+  background:linear-gradient(150deg,#3FA97B,#14432E);
+  box-shadow:0 10px 22px rgba(20,67,46,.28);}
+.zx-tile:nth-child(6) .zx-tile-hex svg{width:27px;height:27px;}
+.zx-tile-hex svg{width:23px;height:23px;}
+@media (max-width:340px){
+  .zx-grid{height:19rem;}
+  .zx-tile{width:5.2rem;}
+  .zx-tile:nth-child(6){width:5.6rem;}
+  .zx-tile-hex{width:50px;height:50px;}
+  .zx-tile:nth-child(6) .zx-tile-hex{width:62px;height:62px;}
+  .zx-tile:nth-child(1){--zx-x:5.61rem; --zx-y:-1.60rem;}
+  .zx-tile:nth-child(2){--zx-x:0rem;    --zx-y:-6.75rem;}
+  .zx-tile:nth-child(3){--zx-x:-5.61rem;--zx-y:-1.60rem;}
+  .zx-tile:nth-child(4){--zx-x:-3.47rem;--zx-y:6.75rem;}
+  .zx-tile:nth-child(5){--zx-x:3.47rem; --zx-y:6.75rem;}
+  .zx-tile:nth-child(6){--zx-x:0rem;    --zx-y:0.72rem;}
+}
 /* display:grid يغلب سمةَ hidden، فيبقى العنصرُ يشغل مكانَه وهو مخفيّ */
 .zx-grid[hidden], .zx-tabs[hidden]{display:none !important;}
 
@@ -4858,9 +4926,9 @@ var ZahimHadithID = {
             <stop offset="55%" stop-color="#9CFFD8" stop-opacity=".55"/>
             <stop offset="100%" stop-color="#3FD9A0" stop-opacity=".18"/></linearGradient>
           <radialGradient id="iqama-head-g">
-            <stop offset="0%" stop-color="#EAFFF5"/>
-            <stop offset="55%" stop-color="#5CE8B0" stop-opacity=".55"/>
-            <stop offset="100%" stop-color="#5CE8B0" stop-opacity="0"/></radialGradient>
+            <stop offset="0%" stop-color="#9BFFD6"/>
+            <stop offset="42%" stop-color="#2FE2A2" stop-opacity=".62"/>
+            <stop offset="100%" stop-color="#16D18E" stop-opacity="0"/></radialGradient>
           <filter id="iqama-bloom" x="-60%" y="-60%" width="220%" height="220%">
             <feGaussianBlur stdDeviation="4"/></filter>
 
@@ -5044,43 +5112,71 @@ var ZahimHadithID = {
         <!-- قوسُ ما بين الأذان والإقامة: يمشي على محيط الميناء داخلَ الطوق،
              فلا يلمس اسمَ محطّةٍ ولا يزاحم أيقونة. يظهر في وقته ويختفي بانتهائه. -->
         <defs>
-            <!-- الفضّةُ والزمرّد معًا: الضوءُ يمرّ على الطوق فيلمع عند الحرفين -->
-            <linearGradient id="iqama-metal" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stop-color="#7FE9C0"/>
-              <stop offset="22%"  stop-color="#3FC994"/>
-              <stop offset="50%"  stop-color="#178A5F"/>
-              <stop offset="76%"  stop-color="#0B5138"/>
-              <stop offset="100%" stop-color="#2FA97C"/>
-            </linearGradient>
+            <!-- لا تدرّجَ خطّيًّا هنا: مقطعُ الأنبوب يُبنى بحِلَقٍ متجاورة -->
           </defs>
           <g id="iqama-arc" style="opacity:0;transition:opacity .5s ease" aria-hidden="true">
-          <circle cx="200" cy="200" r="82" fill="none" stroke="rgba(23,110,79,.16)" stroke-width="10"/>
-          <!-- هالةٌ تحت القوس، ثم جسمٌ زجاجيّ، ثم لبٌّ مضيء — مادّةُ الإبرة نفسها -->
-          <circle id="iqama-arc-halo" cx="200" cy="200" r="82" fill="none"
-                  stroke="#3FD9A0" stroke-width="13" opacity=".42" stroke-linecap="round"
+          <!-- المجرى: أخدودٌ غائرٌ يمشي فيه الأنبوب — حرفٌ داكنٌ خارجَه
+               وحرفٌ فاتحٌ داخلَه، فيبدو محفورًا في الميناء لا مرسومًا عليه. -->
+          <circle cx="200" cy="200" r="86.6" fill="none" stroke="rgba(6,48,31,.14)" stroke-width="1.4"/>
+          <circle cx="200" cy="200" r="82" fill="none" stroke="rgba(23,110,79,.12)" stroke-width="9.6"/>
+          <circle cx="200" cy="200" r="77.4" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="1.2"/>
+
+          <!-- وهجٌ أخضرُ مشبعٌ تحت الأنبوب: الزجاجُ يُضيء ما حوله -->
+          <circle class="iq-band" data-r="82.0" cx="200" cy="200" r="82" fill="none"
+                  stroke="#16D18E" stroke-width="15" opacity=".36" stroke-linecap="round"
                   transform="rotate(-90 200 200)" filter="url(#iqama-bloom)"
                   stroke-dasharray="515.22" stroke-dashoffset="515.22"
                   style="transition:stroke-dashoffset .9s linear"/>
-          <!-- أنبوبٌ لا شريط: ثلاثُ طبقاتٍ على أنصاف أقطارٍ متجاورة —
-               ظلٌّ في الحرف السفليّ، وجسمٌ أخضرُ واحدٌ على طوله، وضوءٌ في أعلاه.
-               فاللونُ لا يتبدّل بتبدّل الموضع، والاستدارةُ تُحسّ لا تُقرأ. -->
-          <circle id="iqama-arc-shade" cx="200" cy="200" r="83.6" fill="none"
-                  stroke="#06301F" stroke-width="4.4" stroke-linecap="round"
-                  transform="rotate(-90 200 200)" opacity=".5"
-                  stroke-dasharray="525.27" stroke-dashoffset="525.27"
-                  style="transition:stroke-dashoffset .9s linear"/>
-          <circle id="iqama-arc-line" cx="200" cy="200" r="82" fill="none"
-                  stroke="url(#iqama-metal)" stroke-width="10" stroke-linecap="round"
+
+          <!-- ═══ الأنبوب الزجاجيّ ═══
+               سبعُ حِلَقٍ متجاورةٍ في نصف القطر: كلُّ حلقةٍ صفٌّ عرضيٌّ من
+               مقطع الأنبوب. الحرفانِ داكنان واللبُّ مشبعٌ لمّاع، فتُقرأ
+               الاستدارةُ في كلّ موضعٍ من الدائرة سواء.
+               والتدرّجُ الخطّيُّ لا يصلح هنا: إنّما يمتدّ على المربّع المحيط،
+               فيتبدّل اللونُ بتبدّل الموضع — وهذا ما كان يُفقد القوسَ أخضرَه. -->
+          <circle class="iq-band" data-r="86.3" cx="200" cy="200" r="86.3" fill="none"
+                  stroke="#052E1E" stroke-width="1.5" stroke-linecap="round" opacity=".6"
                   transform="rotate(-90 200 200)"
-                  stroke-dasharray="515.22" stroke-dashoffset="515.22"
+                  stroke-dasharray="542.24" stroke-dashoffset="542.24"
                   style="transition:stroke-dashoffset .9s linear"/>
-          <circle id="iqama-arc-core" cx="200" cy="200" r="80.2" fill="none"
-                  stroke="#A8F5D2" stroke-width="2.4" stroke-linecap="round"
-                  transform="rotate(-90 200 200)" opacity=".75"
+          <circle class="iq-band" data-r="85.0" cx="200" cy="200" r="85.0" fill="none"
+                  stroke="#0A4C34" stroke-width="1.8" stroke-linecap="round"
+                  transform="rotate(-90 200 200)"
+                  stroke-dasharray="534.07" stroke-dashoffset="534.07"
+                  style="transition:stroke-dashoffset .9s linear"/>
+          <circle class="iq-band" data-r="83.4" cx="200" cy="200" r="83.4" fill="none"
+                  stroke="#10714D" stroke-width="2.0" stroke-linecap="round"
+                  transform="rotate(-90 200 200)"
+                  stroke-dasharray="524.02" stroke-dashoffset="524.02"
+                  style="transition:stroke-dashoffset .9s linear"/>
+          <circle class="iq-band" data-r="81.8" cx="200" cy="200" r="81.8" fill="none"
+                  stroke="#17A06C" stroke-width="2.2" stroke-linecap="round"
+                  transform="rotate(-90 200 200)"
+                  stroke-dasharray="513.96" stroke-dashoffset="513.96"
+                  style="transition:stroke-dashoffset .9s linear"/>
+          <circle class="iq-band" data-r="80.2" cx="200" cy="200" r="80.2" fill="none"
+                  stroke="#23CE90" stroke-width="2.2" stroke-linecap="round"
+                  transform="rotate(-90 200 200)"
                   stroke-dasharray="503.91" stroke-dashoffset="503.91"
                   style="transition:stroke-dashoffset .9s linear"/>
-          <circle id="iqama-head-glow" cx="200" cy="118" r="6.5" fill="url(#iqama-head-g)"/>
-          <circle id="iqama-head" cx="200" cy="118" r="2" fill="#FFFFFF"/>
+          <circle class="iq-band" data-r="78.8" cx="200" cy="200" r="78.8" fill="none"
+                  stroke="#4FE3AC" stroke-width="1.6" stroke-linecap="round"
+                  transform="rotate(-90 200 200)"
+                  stroke-dasharray="495.12" stroke-dashoffset="495.12"
+                  style="transition:stroke-dashoffset .9s linear"/>
+          <circle class="iq-band" data-r="77.7" cx="200" cy="200" r="77.7" fill="none"
+                  stroke="#1B7A55" stroke-width="1.2" stroke-linecap="round" opacity=".78"
+                  transform="rotate(-90 200 200)"
+                  stroke-dasharray="488.20" stroke-dashoffset="488.20"
+                  style="transition:stroke-dashoffset .9s linear"/>
+          <circle class="iq-band" data-r="80.9" cx="200" cy="200" r="80.9" fill="none"
+                  stroke="#E8FFF6" stroke-width="0.8" stroke-linecap="round" opacity=".5"
+                  transform="rotate(-90 200 200)"
+                  stroke-dasharray="508.31" stroke-dashoffset="508.31"
+                  style="transition:stroke-dashoffset .9s linear"/>
+          <!-- رأسُ الأنبوب: وهجٌ أخضرُ وحده. النقطةُ البيضاءُ أُزيلت —
+               كانت تُقرأ شائبةً في زجاجٍ أخضر. -->
+          <circle id="iqama-head-glow" cx="200" cy="118" r="7.5" fill="url(#iqama-head-g)"/>
           <!-- بيانُ العدّاد: بلا هذا السطر يبقى القوسُ زينةً لا يُعرف معناها -->
           <g id="iqama-caption" transform="translate(200,305)" style="display:none">
             
@@ -5482,9 +5578,11 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
 
     <div class="tsb-word" id="tsbWord" data-sacred dir="rtl"></div>
 
-    <!-- بَكَرةُ الخطّ: الأذكارُ على مدارٍ حول الحجر (شكلٌ اختياريّ) -->
-    <div class="tsb-orbit" id="tsbOrbit" hidden></div>
-    <div class="tsb-reel" id="tsbReel" hidden></div>
+    <!-- عجلةُ الأذكار: منتقٍ رأسيٌّ يُفَرّ بالإبهام (شكلٌ اختياريّ) -->
+    <div class="tsb-wheel" id="tsbWheel" hidden>
+      <div class="tsb-wheel-rail" aria-hidden="true"></div>
+      <div class="tsb-wheel-list" id="tsbWheelList" dir="rtl"></div>
+    </div>
 
     <!-- الساحةُ كلُّها تَعُدّ: لا هدفَ صغيرًا يُخطَأ -->
     <button type="button" class="tsb-field" id="tsbField" onclick="tsbTap(event)" aria-label="عُدّ">
@@ -12898,7 +12996,7 @@ function tsbRoundLine(n){
   return t;
 }
 
-/* هل يُعرض قوسُ الإبهام أم بَكَرةُ الخطّ؟ */
+/* هل يُعرض قوسُ الإبهام أم عجلةُ الأذكار؟ */
 function tsbShape(){
   try{ return localStorage.getItem('zahim_tasbih_shape') === 'reel' ? 'reel' : 'arc'; }
   catch(e){ return 'arc'; }
@@ -12913,8 +13011,9 @@ function tsbDrawArc(){
   if(!arc) return;
   arc.innerHTML = '';
   TSB_WORDS.forEach(function(x, i){
-    /* قوسٌ من ٢٠٢° إلى ٣٣٨° نصفُ قطره ٤٠٪ — مسارُ الإبهام في يدٍ واحدة */
-    var a = (204 + i * (132/5)) * Math.PI/180, R = 38;
+    /* قوسٌ من ٣٣٦° إلى ٢٠٤° — يُقرأ كما يُقرأ العربيّ: الأوّلُ أقصى
+       اليمين والأخيرُ أقصى اليسار. مسارُ الإبهام في يدٍ واحدة. */
+    var a = (336 - i * (132/5)) * Math.PI/180, R = 38;
     var b = document.createElement('button');
     b.type = 'button';
     b.className = 'tsb-seal';
@@ -12930,34 +13029,126 @@ function tsbDrawArc(){
   });
 }
 
-function tsbDrawReel(){
-  var reel = document.getElementById('tsbReel');
-  if(!reel) return;
-  if(!reel.children.length){
+/* ══ عجلةُ الأذكار ══
+   منتقٍ رأسيّ: كلُّ ذكرٍ سطرٌ، والمنتصفُ هو المختار. لا التفافَ بلا
+   نهاية — الأذكارُ ستّةٌ معدودة، فالطرفُ يُحسّ به كما في منتقي التواريخ. */
+var TSB_WH_STEP = 54;          /* المسافةُ بين سطرين، بالبكسل */
+function tsbIndex(){
+  var k = 0;
+  TSB_WORDS.forEach(function(x, i){ if(x.id === _tsbId) k = i; });
+  return k;
+}
+/* النصُّ الشرعيُّ لا يُقَصّ ولا يُلَفّ: يُصغَّر الخطُّ حتى يسع السطر */
+function tsbFitRow(d, maxW){
+  var size = 27;
+  d.style.fontSize = size + 'px';
+  while(size > 13 && d.offsetWidth > maxW){ size -= 1; d.style.fontSize = size + 'px'; }
+  d.setAttribute('data-base', String(size));
+}
+function tsbDrawWheel(dy, settling){
+  var wh = document.getElementById('tsbWheel'),
+      wl = document.getElementById('tsbWheelList');
+  if(!wh || !wl) return;
+  if(!wl.children.length){
     TSB_WORDS.forEach(function(x){
       var d = document.createElement('div');
-      d.className = 'row'; d.textContent = x.word;
-      reel.appendChild(d);
+      d.className = 'row';
+      d.textContent = x.word;
+      d.setAttribute('data-sacred', '');
+      wl.appendChild(d);
     });
   }
-  var pick = 0;
-  TSB_WORDS.forEach(function(x,i){ if(x.id === _tsbId) pick = i; });
-  var R = 112, STEP = 54, L = TSB_WORDS.length;
-  [].forEach.call(reel.children, function(d, i){
-    var k = i - pick;
-    if(k > L/2) k -= L;
-    if(k < -L/2) k += L;
-    var abs = Math.abs(k), a = (-90 + k*STEP) * Math.PI/180;
-    d.style.transform = 'translate(-50%,50%) translate(' + (R*Math.cos(a)).toFixed(1) + 'px,'
-      + (R*Math.sin(a)).toFixed(1) + 'px) rotate(' + (k*7) + 'deg) scale('
-      + Math.max(.34, 1 - abs*0.30).toFixed(3) + ')';
-    d.style.fontSize = abs === 0 ? '26px' : '18px';
-    d.style.opacity  = String(Math.max(0, 1 - abs*0.40));
-    d.style.color    = abs === 0 ? 'var(--green)' : 'var(--muted)';
-    d.style.fontWeight = abs === 0 ? '700' : '400';
-    d.style.zIndex   = String(10 - abs);
+  var maxW = Math.max(120, wh.clientWidth * 0.86);
+  [].forEach.call(wl.children, function(d){
+    if(d.getAttribute('data-fit') !== String(Math.round(maxW))){
+      tsbFitRow(d, maxW);
+      d.setAttribute('data-fit', String(Math.round(maxW)));
+    }
+  });
+  wl.classList.toggle('settle', !!settling);
+
+  var pick = tsbIndex(), off = dy || 0;
+  [].forEach.call(wl.children, function(d, i){
+    var y = (i - pick) * TSB_WH_STEP + off;
+    var t = Math.min(Math.abs(y) / TSB_WH_STEP, 2.6);   /* البعدُ بالسطور */
+    var near = t < 0.5;
+    d.style.transform = 'translate(-50%,-50%) translateY(' + y.toFixed(1) + 'px) scale('
+      + (1 - t * 0.21).toFixed(3) + ')';
+    d.style.opacity = Math.max(0, 1 - t * 0.44).toFixed(3);
+    d.style.color = near ? 'var(--green)' : 'var(--muted)';
+    d.style.zIndex = String(10 - Math.round(t));
   });
 }
+/* فَرُّ الإبهام: جرٌّ حرٌّ، ثمّ انجذابٌ إلى أقرب سطر. والدفعةُ السريعة
+   تتجاوز سطرًا أو سطرين — كما يُفَرّ منتقي التواريخ. */
+(function(){
+  var y0 = 0, dy = 0, live = false, trail = [];   /* أثرُ الإصبع: للتفريق بين جرٍّ ودفعة */
+  /* السرعةُ تُقاس على آخر ٩٠ مِلّيثانية لا على آخر حركتين: من جرَّ متمهّلًا
+     ثمّ أوقف إصبعَه قبل الرفع سرعتُه صفر، فينجذب إلى السطر الذي وقف عنده. */
+  function speed(now){
+    while(trail.length > 1 && now - trail[0].t > 90) trail.shift();
+    var a = trail[0], b = trail[trail.length - 1];
+    if(!a || !b || b.t - a.t < 12) return 0;
+    return (b.y - a.y) / (b.t - a.t);
+  }
+  function wheelEl(){ return document.getElementById('tsbWheel'); }
+  function limit(v){
+    var pick = tsbIndex(), L = TSB_WORDS.length, R = 34;   /* شدُّ المطّاط عند الطرف */
+    var hi = pick * TSB_WH_STEP + R, lo = -((L - 1 - pick) * TSB_WH_STEP) - R;
+    if(v > hi) v = hi + (v - hi) * 0.18;
+    if(v < lo) v = lo + (v - lo) * 0.18;
+    return v;
+  }
+  function down(e){
+    var wh = wheelEl();
+    if(!wh || wh.hidden) return;
+    live = true; dy = 0;
+    y0 = e.clientY;
+    trail = [{ t: e.timeStamp || Date.now(), y: e.clientY }];
+    try{ wh.setPointerCapture(e.pointerId); }catch(err){}
+    tsbDrawWheel(0, false);
+  }
+  function move(e){
+    if(!live) return;
+    e.preventDefault();
+    dy = limit(e.clientY - y0);
+    trail.push({ t: e.timeStamp || Date.now(), y: e.clientY });
+    if(trail.length > 12) trail.shift();
+    tsbDrawWheel(dy, false);
+  }
+  function up(e){
+    if(!live) return;
+    live = false;
+    var wh = wheelEl();
+    try{ if(wh) wh.releasePointerCapture(e.pointerId); }catch(err){}
+    /* الدفعةُ تتجاوز سطرًا أو سطرين، والجرُّ المتمهّل لا يتجاوز شيئًا:
+       دون نصفِ بكسلٍ في المِلّيثانية لا زيادة، وفوقَه سطرانِ على الأكثر. */
+    var v = speed(e.timeStamp || Date.now()), boost = 0;
+    if(Math.abs(v) >= 0.5){
+      boost = v * 70;
+      var cap = 2 * TSB_WH_STEP;
+      if(boost >  cap) boost =  cap;
+      if(boost < -cap) boost = -cap;
+    }
+    /* الجرُّ نزولًا يُظهر ما قبله: فالخطوةُ عكسُ إشارة الإزاحة */
+    var steps = Math.round((dy + boost) / TSB_WH_STEP);
+    var L = TSB_WORDS.length;
+    var k = Math.max(0, Math.min(L - 1, tsbIndex() - steps));
+    dy = 0;
+    if(TSB_WORDS[k].id !== _tsbId) tsbPick(TSB_WORDS[k].id);
+    else tsbDrawWheel(0, true);
+  }
+  function bind(){
+    var wh = wheelEl();
+    if(!wh) return;
+    wh.addEventListener('pointerdown', down);
+    wh.addEventListener('pointermove', move, { passive:false });
+    wh.addEventListener('pointerup', up);
+    wh.addEventListener('pointercancel', up);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+  else bind();
+})();
 
 function tsbPaint(){
   var w = TSB_WORDS.filter(function(x){ return x.id === _tsbId; })[0] || TSB_WORDS[0];
@@ -12965,12 +13156,16 @@ function tsbPaint(){
   var wd = document.getElementById('tsbWord'); if(wd) wd.textContent = w.word;
   var r = document.getElementById('tsbRound'); if(r) r.innerHTML = tsbRoundLine(_tsbN);
 
-  var reelOn = tsbShape() === 'reel';
-  document.body.classList.toggle('tsb-reel-on', reelOn);
-  var orb = document.getElementById('tsbOrbit'), reel = document.getElementById('tsbReel');
-  if(orb)  orb.hidden  = !reelOn;
-  if(reel) reel.hidden = !reelOn;
-  if(reelOn) tsbDrawReel(); else tsbDrawArc();
+  var wheelOn = tsbShape() === 'reel';   /* المفتاحُ المحفوظ باقٍ لئلّا يضيع اختيارُ من سبق */
+  document.body.classList.toggle('tsb-wheel-on', wheelOn);
+  var wh = document.getElementById('tsbWheel');
+  if(wh) wh.hidden = !wheelOn;
+  if(wheelOn){
+    tsbDrawWheel(0, true);
+    /* يُعاد الرسمُ بعد إطار: عرضُ العجلة يُقاس لضبط مقاس الخطّ،
+       وقياسُه قبل استقرار التخطيط يعطي صفرًا. */
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ tsbDrawWheel(0, true); }); });
+  } else tsbDrawArc();
 
   try{ ZahimI18n.applyTo(document.getElementById('screen-tasbih')); }catch(e){}
 }
@@ -13111,20 +13306,16 @@ function zxIqamaTick(){
 
   var p = Math.max(0, Math.min(1, win.progress));
   g.style.opacity = '1';
-  // لكلّ طبقةٍ محيطُها، لأنّ أنصافَ أقطارها متجاورةٌ لا متطابقة
-  var LAYERS = { 'iqama-arc-halo':82, 'iqama-arc-shade':83.6,
-                 'iqama-arc-line':82, 'iqama-arc-core':80.2 };
-  Object.keys(LAYERS).forEach(function(id){
-    var el = document.getElementById(id);
-    if(el) el.setAttribute('stroke-dashoffset',
-      String(2 * Math.PI * LAYERS[id] * (1 - p)));
+  // لكلّ حلقةٍ محيطُها، لأنّ أنصافَ أقطارها متجاورةٌ لا متطابقة.
+  // ونقرأ نصفَ القطر من العنصر نفسِه، فزيادةُ حلقةٍ في الرسم لا تحتاج تعديلًا هنا.
+  [].forEach.call(g.querySelectorAll('.iq-band'), function(el){
+    var r = parseFloat(el.getAttribute('data-r')) || 82;
+    el.setAttribute('stroke-dashoffset', String(2 * Math.PI * r * (1 - p)));
   });
   var a = (-90 + p * 360) * Math.PI / 180;
   var hx = (200 + 82 * Math.cos(a)).toFixed(1), hy = (200 + 82 * Math.sin(a)).toFixed(1);
-  ['iqama-head','iqama-head-glow'].forEach(function(id){
-    var el = document.getElementById(id);
-    if(el){ el.setAttribute('cx', hx); el.setAttribute('cy', hy); }
-  });
+  var _hd = document.getElementById('iqama-head-glow');
+  if(_hd){ _hd.setAttribute('cx', hx); _hd.setAttribute('cy', hy); }
   // البيان: «الإقامة بعد ٩ د» — يقول ما هو، ويعدّ ما بقي
   var t1 = (function(){ try{ return ZahimI18n.t('الإقامة بعد'); }catch(e){ return 'الإقامة بعد'; } })();
   var t2 = (function(){ try{ return ZahimI18n.t('د'); }catch(e){ return 'د'; } })();
@@ -13418,7 +13609,7 @@ function showToast(msg){
   </div>
 
   <div class="zq-deck">
-    <div class="zq-row"><span id="zqState">ابحث عن القبلة</span><span class="zq-chip" id="zqSrc">الحسّاس متوقّف</span></div>
+    <div class="zq-row"><span id="zqState">ابحث عن القبلة</span><span class="zq-chip" id="zqPose">—</span><span class="zq-chip" id="zqSrc">الحسّاس متوقّف</span></div>
     <div class="zq-btns">
       <button type="button" id="zqSensor" onclick="zqStartSensor()">تشغيل الحسّاس</button>
       <button type="button" id="zqCal" onclick="zqCalibrate()">عايِر: أواجه القبلة الآن</button>
@@ -13606,10 +13797,6 @@ function showToast(msg){
       <div class="zx-size" data-lvl="2" onclick="setTextLevel(2)"><b class="s2" data-sacred>ع</b><span>متوسط</span></div>
       <div class="zx-size" data-lvl="3" onclick="setTextLevel(3)"><b class="s3" data-sacred>ع</b><span>كبير</span></div>
     </div>
-    <div class="zx-row" onclick="zxTasbihShapeToggle()">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6 19.2 8v8L12 20.4 4.8 16V8z"/><circle cx="12" cy="12" r="2.6"/></svg></span><span class="zx-row-label">شكل التسبيح<i>قوسُ الإبهام في متناول اليد، وبَكَرةُ الخطّ تُري الذكرَ كبيرًا</i></span><span class="zx-row-value" id="zxTsbShape">قوس الإبهام</span>
-    </div>
-
     <div class="zx-group-head" style="margin-top:16px">وضع اللون</div>
     <p class="zx-hint">النهاريُّ عاجيٌّ دافئ، والليليُّ أخضرُ عميقٌ يقلّ فيه الوهجُ قبل النوم.</p>
     <div class="zx-modes" id="zxModes">
@@ -13697,6 +13884,9 @@ function showToast(msg){
     </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(openInsightsScreen, 300);">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.2h15"/><path d="M7.6 19.2v-6.4M12 19.2V6.6M16.4 19.2v-9"/></svg></span><span class="zx-row-label">ميدان الطاعة<i>قَلِيلٌ دَائِمٌ خَيْرٌ مِنْ كَثِيرٍ مُنْقَطِعٍ</i></span><span class="zx-row-chev">←</span>
+    </div>
+    <div class="zx-row" onclick="zxTasbihShapeToggle()">
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6 19.2 8v8L12 20.4 4.8 16V8z"/><circle cx="12" cy="12" r="2.6"/></svg></span><span class="zx-row-label">شكل التسبيح<i>قوسُ الإبهام في متناول اليد، وعجلةُ الأذكار تُدار بالإبهام</i></span><span class="zx-row-value" id="zxTsbShape">قوس الإبهام</span>
     </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(openFeedbackScreen, 300);">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12.6a7.4 7.4 0 0 1-7.4 7.4H7.2L4 22.4v-4.9A7.4 7.4 0 0 1 4 12.6 7.4 7.4 0 0 1 11.4 5.2h1.2A7.4 7.4 0 0 1 20 12.6z"/></svg></span><span class="zx-row-label">تواصل مع مطوري زاحِم<i>ملاحظةٌ أو تصحيحٌ في نصّ</i></span><span class="zx-row-chev">←</span>
@@ -16233,7 +16423,9 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   ZahimI18n.load('en', {
     'شكل التسبيح': 'Tasbih layout',
     'قوس الإبهام': 'Thumb arc',
-    'بَكَرة الخطّ': 'Calligraphy reel',
+    'عجلة الأذكار': 'Dhikr wheel',
+    'الصلاةُ قائمة': 'Time to pray',
+    'مسطَّح': 'Flat', 'قائم': 'Upright', 'مائل': 'Tilted',
     'أتممتُ الوِرد': 'I completed the wird',
     'من': 'of',
     'دورة': 'round',
@@ -16294,7 +16486,9 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   ZahimI18n.load('id', {
     'شكل التسبيح': 'Tata letak tasbih',
     'قوس الإبهام': 'Busur ibu jari',
-    'بَكَرة الخطّ': 'Gulungan kaligrafi',
+    'عجلة الأذكار': 'Roda zikir',
+    'الصلاةُ قائمة': 'Sekarang waktu salat',
+    'مسطَّح': 'Mendatar', 'قائم': 'Tegak', 'مائل': 'Miring',
     'أتممتُ الوِرد': 'Saya menyelesaikan wirid',
     'من': 'dari',
     'دورة': 'putaran',
@@ -16355,7 +16549,9 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   ZahimI18n.load('ms', {
     'شكل التسبيح': 'Susun atur tasbih',
     'قوس الإبهام': 'Lengkung ibu jari',
-    'بَكَرة الخطّ': 'Gulungan khat',
+    'عجلة الأذكار': 'Roda zikir',
+    'الصلاةُ قائمة': 'Kini waktu solat',
+    'مسطَّح': 'Mendatar', 'قائم': 'Tegak', 'مائل': 'Condong',
     'أتممتُ الوِرد': 'Saya menyelesaikan wirid',
     'من': 'daripada',
     'دورة': 'pusingan',
@@ -16578,15 +16774,60 @@ function paint(){
 function applyRaw(raw){ Q.raw=((raw%360)+360)%360; Q.heading=(Q.raw+Q.offset)%360; paint(); }
 
 /* ── الحسّاس ── */
+/* استواءٌ تامٌّ = ١، قيامٌ تامٌّ = ٠. وما بينهما يُمزج مزجًا خطّيًّا. */
+var POSE_FLAT=0.82, POSE_UP=0.57, _poseTxt=null;
+
+/* الاتّجاهُ من الزوايا الثلاث. تُرجع الدالّةُ الزاويةَ ووزنَ الاستواء،
+   أو null إن نقص من الحدث ما لا يُغني عنه شيء. */
+function headingFrom(a, b, g){
+  if(a==null || b==null || g==null) return null;
+  var A=a*RAD, B=b*RAD, G=g*RAD;
+  var cA=Math.cos(A), sA=Math.sin(A), cB=Math.cos(B),
+      sB=Math.sin(B), cG=Math.cos(G), sG=Math.sin(G);
+  /* أعلى الجهاز (+Y) مسقطًا على الأفق — مرجعُ الوضع المسطَّح */
+  var tE=-cB*sA, tN=cA*cB;
+  /* ظهرُ الجهاز (−Z) مسقطًا على الأفق — مرجعُ الوضع القائم */
+  var kE=-(cA*sG + cG*sA*sB), kN=-(sA*sG - cA*cG*sB);
+  var tm=Math.sqrt(tE*tE+tN*tN), km=Math.sqrt(kE*kE+kN*kN);
+  /* المركّبةُ الرأسيّةُ لعموديّ الشاشة: مقياسُ الاستواء */
+  var w=(Math.abs(cB*cG)-POSE_UP)/(POSE_FLAT-POSE_UP);
+  w=Math.max(0,Math.min(1,w));
+  if(tm<1e-6) w=0;
+  if(km<1e-6) w=1;
+  if(tm<1e-6 && km<1e-6) return null;
+  /* يُوحَّد طولُ كلٍّ منهما لئلّا يغلب أحدُهما بمقدار ميله وحده */
+  var E=w*(tm?tE/tm:0)+(1-w)*(km?kE/km:0);
+  var N=w*(tm?tN/tm:0)+(1-w)*(km?kN/km:0);
+  if(Math.sqrt(E*E+N*N)<1e-4) return null;   /* المحوران متعاكسان: قراءةٌ لا تُفيد */
+  return { h:(Math.atan2(E,N)*DEG+360)%360, w:w };
+}
+
+function poseNote(w){
+  var t = w>=0.85 ? 'مسطَّح' : (w<=0.15 ? 'قائم' : 'مائل');
+  if(t===_poseTxt) return;
+  _poseTxt=t;
+  var el=$('zqPose');
+  if(el){ el.textContent=T(t); el.className='zq-chip zq-on'; }
+}
+
 function onOri(e){
-  var h=null;
-  if(typeof e.webkitCompassHeading==='number') h=e.webkitCompassHeading;
-  else if(e.absolute&&typeof e.alpha==='number') h=360-e.alpha;
-  if(h===null) return;
+  var a=(typeof e.alpha==='number')?e.alpha:null;
+  /* في آيفون القراءةُ الحقيقيّةُ للشمال هنا، فنُصحّح بها ألفا ونبقي دقّتَها */
+  if(typeof e.webkitCompassHeading==='number') a=(360-e.webkitCompassHeading)%360;
+  else if(!(e.absolute && a!==null)) return;
+
+  var r=headingFrom(a, (typeof e.beta==='number')?e.beta:null,
+                       (typeof e.gamma==='number')?e.gamma:null);
+  var h;
+  if(r){ h=r.h; poseNote(r.w); }
+  else if(a!==null){ h=(360-a)%360; }   /* جهازٌ لا يعطي الميل: نرجع إلى المسطَّح */
+  else return;
+
   if(!Q.sensor){ Q.sensor=true;
     var c=$('zqSrc'); if(c){ c.textContent=T('الحسّاس يعمل'); c.className='zq-chip zq-on'; } }
   applyRaw(h);
 }
+global.zqHeadingFrom=headingFrom;   /* مكشوفةٌ للفحص وحده */
 function startMag(){
   if(typeof Magnetometer==='undefined') return;
   try{
@@ -17031,21 +17272,40 @@ window.zxBackToGrid = function(){
     return T('بعد') + ' ' + hh(h) + ' ' + T('و') + mm(m);
   }
 
+  /* نافذةُ القيام: من الأذان إلى انقضائها الصلاةُ قائمة، فلا تُذكر القادمة.
+     والفجرُ أطولُ لأنّ ما بين أذانه وإقامته وسنّته وأذكاره أطول. */
+  var ZX_STAND_WIN = { fajr:40, dhuhr:30, asr:30, maghrib:30, isha:30 };
+  var ZX_ORDER = ['fajr','dhuhr','asr','maghrib','isha'];
+
+  /* دالّةٌ صافيةٌ تُختبر وحدها: تُعطى المواقيتَ والدقيقةَ فتقول ما يُعرض */
+  window.zxNextLine = function(Tm, n){
+    var i, k, t, w;
+    for(i = 0; i < ZX_ORDER.length; i++){
+      k = ZX_ORDER[i]; t = Tm[k];
+      if(t == null) continue;
+      w = ZX_STAND_WIN[k] || 30;
+      /* عشاءٌ متأخّرٌ قد تعبر نافذتُه منتصفَ الليل، فنقيس باليومين */
+      if((n >= t && n < t + w) || (n + 1440 >= t && n + 1440 < t + w))
+        return { mode:'standing', key:k };
+    }
+    for(i = 0; i < ZX_ORDER.length; i++){
+      k = ZX_ORDER[i]; t = Tm[k];
+      if(t != null && t > n) return { mode:'upcoming', key:k, mins:t - n };
+    }
+    return { mode:'upcoming', key:'fajr', mins:Tm.fajr + 1440 - n };  /* بعد العشاء: فجرُ الغد */
+  };
+
   function paint(){
     var el = document.getElementById('cc2-next');
     if(!el) return;
     try{
       var d = new Date(), n = d.getHours() * 60 + d.getMinutes();
       var Tm = ZahimDay.times(d);
-      var order = ['fajr','dhuhr','asr','maghrib','isha'];
-      var key = null, t = null;
-      for(var i = 0; i < order.length; i++){
-        if(Tm[order[i]] != null && Tm[order[i]] > n){ key = order[i]; t = Tm[order[i]]; break; }
-      }
-      if(key === null){ key = 'fajr'; t = Tm.fajr + 1440; }   /* بعد العشاء: فجرُ الغد */
-      var name = ZahimDay.PRAYER_NAMES[key] || key;
-      try{ if(key === 'dhuhr' && typeof zxIsJumua === 'function' && zxIsJumua()) name = 'الجُمُعة'; }catch(e){}
-      el.innerHTML = '<b>' + T(name) + '</b> ' + phrase(t - n);
+      var r = window.zxNextLine(Tm, n);
+      var name = ZahimDay.PRAYER_NAMES[r.key] || r.key;
+      try{ if(r.key === 'dhuhr' && typeof zxIsJumua === 'function' && zxIsJumua()) name = 'الجُمُعة'; }catch(e){}
+      el.innerHTML = '<b>' + T(name) + '</b>' +
+        (r.mode === 'standing' ? ' · ' + T('الصلاةُ قائمة') : ' ' + phrase(r.mins));
     }catch(e){ el.textContent = ''; }
   }
   function boot(){
@@ -17064,7 +17324,7 @@ window.zxBackToGrid = function(){
 </script>
 
 <script>
-/* شكلُ شاشة التسبيح: قوسُ الإبهام أو بَكَرةُ الخطّ */
+/* شكلُ شاشة التسبيح: قوسُ الإبهام أو عجلةُ الأذكار */
 window.zxTasbihShapeToggle = function(){
   var cur = 'arc';
   try{ cur = localStorage.getItem('zahim_tasbih_shape') === 'reel' ? 'reel' : 'arc'; }catch(e){}
@@ -17073,14 +17333,14 @@ window.zxTasbihShapeToggle = function(){
        else localStorage.setItem('zahim_tasbih_shape', next); }catch(e){}
   zxPaintTsbShape();
   try{ if(typeof showToast === 'function')
-        showToast(next === 'arc' ? 'قوس الإبهام' : 'بَكَرة الخطّ'); }catch(e){}
+        showToast(next === 'arc' ? 'قوس الإبهام' : 'عجلة الأذكار'); }catch(e){}
 };
 window.zxPaintTsbShape = function(){
   var el = document.getElementById('zxTsbShape');
   if(!el) return;
   var cur = 'arc';
   try{ cur = localStorage.getItem('zahim_tasbih_shape') === 'reel' ? 'reel' : 'arc'; }catch(e){}
-  var t = cur === 'arc' ? 'قوس الإبهام' : 'بَكَرة الخطّ';
+  var t = cur === 'arc' ? 'قوس الإبهام' : 'عجلة الأذكار';
   try{ if(window.ZahimI18n && ZahimI18n.t) t = ZahimI18n.t(t); }catch(e){}
   el.textContent = t;
 };
