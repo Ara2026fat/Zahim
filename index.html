@@ -1536,17 +1536,9 @@ body.tsb-wheel-on .tsb-arc{display:none;}
 }
 #zxIqamaLine.on{opacity:1;max-height:26px;margin:2px 16px 4px;}
 
-/* ═══ التبويباتُ الفرعيّة ═══
-   لوحُ المواقيت كان ستّةَ صفوفٍ لا تسع شاشةً بلا تمرير. فقسمناه ثلاثةً:
-   الموقعُ والقبلة، والأذان، والحساب. الشاشةُ لا تتغيّر، والانتقالُ في مكانه. */
-.zx-sub{display:flex;gap:6px;margin:2px 0 10px;}
-.zx-sub-btn{
-  flex:1;min-height:32px;padding:7px 6px;border-radius:999px;cursor:pointer;font:inherit;
-  font-size:11.5px;font-weight:700;color:var(--muted);
-  border:1px solid var(--line);background:var(--cream);
-  transition:background .2s,color .2s,border-color .2s;
-}
-.zx-sub-btn.on{background:var(--green);color:#fff;border-color:var(--green);}
+/* ═══ جسمُ الصفحة ═══
+   لم تبقَ تبويباتٌ فرعيّة: كلُّ بلاطةٍ صفحتُها، وفيها فكرتُها لا غير.
+   وبقي صنفُ الظهور لأنّ الحركةَ عند الفتح تنفع، فالصفحةُ تصعد صعودًا خفيفًا. */
 .zx-subpane{display:none;animation:zxSubIn .3s cubic-bezier(.22,1,.36,1) both;}
 .zx-subpane.on{display:block;}
 @keyframes zxSubIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -13781,12 +13773,6 @@ function showToast(msg){
     <span>الإعدادات</span> ‹
   </button>
 
-  <div class="zx-tabs" role="tablist" id="zxTabsRow" hidden>
-    <button class="zx-tab" data-tab="read"   onclick="zxTab('read')"   role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2 2 0 0 1 6 4h5v16H6a2 2 0 0 0-2 2z"/><path d="M20 5.5A2 2 0 0 0 18 4h-5v16h5a2 2 0 0 1 2 2z"/></svg><span>القراءة</span></button>
-    <button class="zx-tab" data-tab="prayer" onclick="zxTab('prayer')" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2c3 2.6 4.6 5.4 4.6 8.3V20H7.4v-8.5c0-2.9 1.6-5.7 4.6-8.3z"/><path d="M4.6 20h14.8"/></svg><span>المواقيت</span></button>
-    <button class="zx-tab" data-tab="lang"   onclick="zxTab('lang')"   role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M3.6 12h16.8"/><path d="M12 3.4c2.1 2.3 3.2 5.1 3.2 8.6s-1.1 6.3-3.2 8.6c-2.1-2.3-3.2-5.1-3.2-8.6S9.9 5.7 12 3.4z"/></svg><span>اللغة</span></button>
-    <button class="zx-tab" data-tab="about"  onclick="zxTab('about')"  role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M12 11v5.4"/><circle cx="12" cy="7.9" r=".9" fill="currentColor"/></svg><span>عن زاحِم</span></button>
-  </div>
   <div class="zx-panes">
   <section class="zx-pane" id="zxPane-read">
   <div class="zx-group">
@@ -13804,15 +13790,9 @@ function showToast(msg){
   </div>
   </section>
 
-  <section class="zx-pane" id="zxPane-prayer">
+  <section class="zx-pane" id="zxPane-place">
   <div class="zx-group">
-    <div class="zx-group-head">المواقيت</div>
-    <div class="zx-sub" role="tablist">
-      <button class="zx-sub-btn on" data-sub="place"  onclick="zxSub('place')"  role="tab">الموقع</button>
-      <button class="zx-sub-btn"    data-sub="adhan"  onclick="zxSub('adhan')"  role="tab">الأذان</button>
-      <button class="zx-sub-btn"    data-sub="calc"   onclick="zxSub('calc')"   role="tab">القبلة والحساب</button>
-    </div>
-    <p class="zx-hint" id="zxSubHint">من موقعك تُحسب المواقيتُ واتّجاهُ القبلة معًا — فتغييرُه يغيّرهما.</p>
+    <p class="zx-hint">منه تُحسب المواقيتُ واتّجاهُ القبلة معًا — فتغييرُه يغيّرهما.</p>
     <div class="zx-subpane on" data-sub="place">
     <div class="zx-row" onclick="openCityPicker()">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span><span class="zx-row-label">الموقع<i>منه تُحسب المواقيتُ والقبلة</i></span><span class="zx-row-value" id="zxCity">—</span><span class="zx-row-chev">←</span>
@@ -13820,7 +13800,23 @@ function showToast(msg){
 
     </div>
 
-    <div class="zx-subpane" data-sub="adhan">
+    <div class="zx-note" id="zxPlaceNote" hidden></div>
+  </div>
+  <div class="zx-cities" id="zxCities">
+    <div class="zx-cities-head">
+      <button class="zx-back" onclick="closeCityPicker()">‹ رجوع</button>
+      <span>اختر المدينة</span>
+    </div>
+    <button class="zx-locate-btn" onclick="zxLocate()">تحديد موقعي تلقائياً</button>
+    <input type="text" class="zx-city-search" id="zxCitySearch" placeholder="اكتب اسم المدينة…" oninput="renderCityList(this.value)">
+    <div class="zx-city-list" id="zxCityList"></div>
+  </div>
+  </section>
+
+  <section class="zx-pane" id="zxPane-adhan">
+  <div class="zx-group">
+    <p class="zx-hint">الأذانُ يُرفع والتطبيقُ مفتوح. والفجرُ له أذانُه بالتثويب، فلا يتبدّل باختيار الصوت.</p>
+    <div class="zx-subpane on" data-sub="adhan">
     <div class="zx-row" onclick="zaToggle()">
       <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11.4 5.2 7.2 8.8H4.2v6.4h3l4.2 3.6z"/><path d="M15.6 9.4a3.4 3.4 0 0 1 0 5.2"/><path d="M18.2 6.6a7 7 0 0 1 0 10.8"/></svg></span><span class="zx-row-label">الأذان<i>يُرفع والتطبيقُ مفتوح، ويهدأ إن كنتَ في المصحف</i></span><span class="zx-row-value" id="zaState">يعمل</span>
     </div>
@@ -13829,7 +13825,13 @@ function showToast(msg){
     </div>
     </div>
 
-    <div class="zx-subpane" data-sub="calc">
+  </div>
+  </section>
+
+  <section class="zx-pane" id="zxPane-calc">
+  <div class="zx-group">
+    <p class="zx-hint">القبلةُ تُحسب من موقعك، فإن بدّلتَه تبدّلت الزاوية.</p>
+    <div class="zx-subpane on" data-sub="calc">
     <div class="zx-row zx-only-place" onclick="closeSettings(); setTimeout(openQibla, 180);">
       <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M15.4 8.6 10.7 10.7 8.6 15.4l4.7-2.1z"/></svg></span><span class="zx-row-label">اتجاه القبلة<i>الزاويةُ من الشمال الحقيقي</i></span><span class="zx-row-chev">←</span>
     </div>
@@ -13842,19 +13844,9 @@ function showToast(msg){
     </div>
     <div class="zx-note" id="zxNote">طرق الحساب تختلف اصطلاحاً — اتبع ما عليه مسجد بلدك.</div>
   </div>
-
-  <div class="zx-cities" id="zxCities">
-    <div class="zx-cities-head">
-      <button class="zx-back" onclick="closeCityPicker()">‹ رجوع</button>
-      <span>اختر المدينة</span>
-    </div>
-    <button class="zx-locate-btn" onclick="zxLocate()">تحديد موقعي تلقائياً</button>
-    <input type="text" class="zx-city-search" id="zxCitySearch" placeholder="اكتب اسم المدينة…" oninput="renderCityList(this.value)">
-    <div class="zx-city-list" id="zxCityList"></div>
-  </div>
   </section>
 
-  <section class="zx-pane" id="zxPane-lang">
+<section class="zx-pane" id="zxPane-lang">
   <div class="zx-group">
     <div class="zx-group-head">لغةُ الواجهة</div>
     <p class="zx-hint">النصُّ الشرعيُّ لا يُترجَم — يبقى القرآنُ والحديثُ بالعربيّة، وتُترجَم الواجهةُ ومعاني الأحاديث.</p>
@@ -14036,10 +14028,13 @@ function zxLocate(){
     // سبب الإخفاق يُقال في سطر الملاحظة، ولا يُمحى به اسمُ المدينة —
     // فالمستخدم يحتاج أن يظلّ يرى على أيّ بلدٍ تُحسب مواقيته.
     cell.textContent = prev;
-    var note = document.getElementById('zxNote');
-    if(note) note.textContent = (location.protocol === 'file:' || location.protocol === 'content:')
-      ? 'تحديد الموقع يعمل داخل التطبيق، لا على ملفٍ محفوظ.'
-      : 'تعذّر الوصول إلى الموقع.';
+    var note = document.getElementById('zxPlaceNote');
+    if(note){
+      note.hidden = false;
+      note.textContent = (location.protocol === 'file:' || location.protocol === 'content:')
+        ? 'تحديد الموقع يعمل داخل التطبيق، لا على ملفٍ محفوظ.'
+        : 'تعذّر الوصول إلى الموقع.';
+    }
   });
 }
 function zxCycleMethod(){
@@ -15658,21 +15653,18 @@ window.addEventListener('popstate', function(){
     ZahimI18n.refresh();
   };
 
-  /* ═══ التبويبات ═══ الحالةُ محفوظة، فمن فتح «المواقيت» وجدها في المرّة القادمة */
-  var ZX_TABS = ['read','prayer','lang','about'];
+  /* ═══ الصفحات ═══ ستٌّ لا رابعَ لها: كلُّ بلاطةٍ صفحتُها وحدَها */
+  var ZX_TABS = ['read','place','adhan','calc','lang','about'];
   window.zxTab = function(name){
     if(ZX_TABS.indexOf(name) < 0) name = 'read';
     ZX_TABS.forEach(function(t){
       var pane = document.getElementById('zxPane-' + t);
-      var tab  = document.querySelector('.zx-tab[data-tab="' + t + '"]');
       if(pane) pane.classList.toggle('on', t === name);
-      if(tab)  tab.setAttribute('aria-selected', t === name ? 'true' : 'false');
     });
-    try{ localStorage.setItem('zahim_settings_tab', name); }catch(e){}
     var sheet = document.getElementById('zxSheet');
     if(sheet) sheet.scrollTop = 0;
-    // المدنُ لوحٌ داخل تبويب المواقيت — إن بدّل التبويب أُغلق
-    if(name !== 'prayer'){ try{ closeCityPicker(); }catch(e){} }
+    // لوحُ المدن يعيش في صفحة الموقع — إن غادرتها أُغلق
+    if(name !== 'place'){ try{ closeCityPicker(); }catch(e){} }
   };
 
   /* اللغةُ صارت اختيارًا لا تدويرًا: أربعةُ أسطرٍ يُرى فيها المختار */
@@ -17178,51 +17170,26 @@ else boot();
 </script>
 
 <script>
-/* تبديلُ التبويبات الفرعيّة في لوح المواقيت */
-window.zxSub = function(key){
-  var HINTS = {
-    place: 'منه تُحسب المواقيتُ واتّجاهُ القبلة معًا — فتغييرُه يغيّرهما.',
-    adhan: 'الأذانُ يُرفع والتطبيقُ مفتوح. والفجرُ له أذانُه بالتثويب، فلا يتبدّل باختيار الصوت.',
-    calc:  'القبلةُ تُحسب من موقعك، وطرقُ التوقيت تختلف اصطلاحًا — اتّبعْ ما عليه مسجدُ بلدك.'
-  };
-  document.querySelectorAll('.zx-sub-btn').forEach(function(b){
-    b.classList.toggle('on', b.getAttribute('data-sub') === key);
-  });
-  document.querySelectorAll('.zx-subpane').forEach(function(p){
-    p.classList.remove('on');
-  });
-  var pane = document.querySelector('.zx-subpane[data-sub="' + key + '"]');
-  if(pane){ requestAnimationFrame(function(){ pane.classList.add('on'); }); }
-  var h = document.getElementById('zxSubHint');
-  if(h){
-    var t = HINTS[key] || '';
-    try{ if(window.ZahimI18n && ZahimI18n.t) t = ZahimI18n.t(t); }catch(e){}
-    h.textContent = t;
-  }
-  var n = document.getElementById('zxNote');
-  if(n) n.style.display = (key === 'calc') ? '' : 'none';
-};
-</script>
-
-<script>
 /* ═══ التنقّل في دار الإعدادات ═══
    البلاطةُ تفتح لوحَها، والرجوعُ يعيد الدار. والتبويباتُ القديمة تبقى
    في الشيفرة يخدمها هذا الغلاف، فلا يُكسر شيءٌ ممّا يعمل. */
+var ZX_TITLES = { read:'القراءة', place:'الموقع', adhan:'الأذان',
+                  calc:'القبلة والحساب', lang:'اللغة', about:'عن زاحِم' };
+function zxSetTitle(t){
+  var el = document.querySelector('#zxSheet .zx-title');
+  if(!el) return;
+  try{ if(window.ZahimI18n && ZahimI18n.t) t = ZahimI18n.t(t); }catch(e){}
+  el.textContent = t;
+}
+
 window.zxTile = function(key){
   var grid = document.getElementById('zxGrid');
   var back = document.getElementById('zxBack');
-  var tabs = document.getElementById('zxTabsRow');
   if(grid) grid.hidden = true;
   if(back) back.hidden = false;
-  /* الدارُ تكفي للتنقّل، فلا نُظهر شريطَ التبويبات القديم:
-     إظهارُه يأكل من ارتفاع اللوح فيضطرّ المحتوى إلى التمرير. */
-  if(tabs) tabs.hidden = true;
-
-  var PANE = { read:'read', lang:'lang', about:'about',
-               place:'prayer', adhan:'prayer', calc:'prayer' };
-  try{ zxTab(PANE[key] || 'read'); }catch(e){}
-  if(PANE[key] === 'prayer'){ try{ zxSub(key); }catch(e){} }
-
+  try{ zxTab(key); }catch(e){}
+  /* العنوانُ يقول أين أنت، فلا يحتاج المرءُ أن يتذكّر أيَّ بلاطةٍ ضغط */
+  zxSetTitle(ZX_TITLES[key] || 'الإعدادات');
   var sheet = document.getElementById('zxSheet');
   if(sheet) sheet.scrollTop = 0;
 };
@@ -17230,11 +17197,11 @@ window.zxTile = function(key){
 window.zxBackToGrid = function(){
   var grid = document.getElementById('zxGrid');
   var back = document.getElementById('zxBack');
-  var tabs = document.getElementById('zxTabsRow');
   if(grid) grid.hidden = false;
   if(back) back.hidden = true;
-  if(tabs) tabs.hidden = true;
   document.querySelectorAll('.zx-pane').forEach(function(p){ p.classList.remove('on'); });
+  try{ closeCityPicker(); }catch(e){}
+  zxSetTitle('الإعدادات');
   var sheet = document.getElementById('zxSheet');
   if(sheet) sheet.scrollTop = 0;
 };
