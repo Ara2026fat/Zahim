@@ -1,0 +1,26 @@
+# ══ زاحِم — ترويساتُ التخزين ══
+# القاعدة: ما يتبدّل مع كلّ رفعٍ لا يُخزَّن، وما لا يتبدّل يُخزَّن طويلًا.
+# وهذا ما ينهي سؤالَ «رفعتُ الملفَّ ولم يتغيّر شيء».
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# الصفحةُ وعاملُ الخدمة: يُسألُ عنهما في كلّ زيارة.
+# no-cache لا تعني «لا تخزّن» بل «لا تستعمل المخزَّنَ قبل أن تسأل».
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
+/sw.js
+  Cache-Control: no-cache
+/manifest.webmanifest
+  Cache-Control: no-cache
+
+# الأيقوناتُ والأصوات: لا تتبدّل، فتُخزَّن سنة.
+/icons/*
+  Cache-Control: public, max-age=31536000, immutable
+/*.mp3
+  Cache-Control: public, max-age=31536000, immutable
+/*.png
+  Cache-Control: public, max-age=2592000

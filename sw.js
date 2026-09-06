@@ -1,24 +1,31 @@
-/* ═══════════════════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    زاحِم — عاملُ الخدمة
-
-   ═══════════════════════════════════════════════════════════════════════════
+   ═══════════════════════════════════════════════════════════════
    قاعدةُ التحديث
-   ═══════════════════════════════════════════════════════════════════════════
-   المتصفّح لا يُعيد تنزيل ما هو مخزَّن. فما دام اسمُ المخزن ثابتًا، يُقدَّم
-   ما حُفظ أوّل مرّة: الصفحة، والمانيفست، والأيقونات.
+   ───────────────────────────────────────────────────────────────
+   صفحاتُ التصفّح تُطلب من الشبكة أوّلًا، والذاكرةُ احتياطٌ عند
+   الانقطاع — فلا تعلق على نسخةٍ قديمةٍ ولو نسيتَ رفعَ الرقم.
 
-   فلكلّ رفعةٍ: **غيّر الرقم في السطر التالي.** رقمٌ واحدٌ يُبطل القديم كلَّه.
-   ولن تظهر أيُّ نسخةٍ جديدة قبل ذلك.
+   ومع ذلك: **غيّر التاريخَ في السطر التالي مع كلّ نشرة.**
+   رقمٌ واحدٌ يُبطل القديمَ كلَّه ويُنظّف مخازنَه.
 
-   وصفحاتُ التصفّح هنا تُطلب من الشبكة أوّلًا والذاكرةُ احتياطٌ عند الانقطاع،
-   فلا تعلق على نسخةٍ قديمة ولو نسيتَ رفع الرقم.
-   ═══════════════════════════════════════════════════════════════════════════ */
+   وخطوطُ المصحف في مخزنٍ اسمُه ثابتٌ لا يتبدّل مع الإصدارات،
+   فرفعُ الرقم لا يُسقطها ولا يُعيد تنزيلَ ميغاباتٍ بلا حاجة.
+   ═══════════════════════════════════════════════════════════════ */
 
-const VERSION    = 'zahim-v233';          // ← ارفعه مع كلّ نشرة
-const SHELL      = VERSION + '-shell';
-const RUNTIME    = VERSION + '-runtime';
+const VERSION = 'zahim-2026-09-06';        // ← ارفعه مع كلّ نشرة
+const SHELL   = VERSION + '-shell';
+const RUNTIME = VERSION + '-runtime';
 
-/* ما يُحفظ عند التثبيت. أبقِ القائمة قصيرة: كلُّ إخفاقٍ هنا يُفشل التثبيت كلَّه. */
+/* مخزنُ المصحف والخطوط: اسمُه ثابتٌ عمدًا فلا يُمحى مع تبديل
+   الإصدار. ارفع رقمَه وحدَه إن تبدّل مصدرُ الخطوط أو الرسم. */
+const QURAN = 'zahim-quran-v1';
+
+/* ما يبقى بعد التفعيل — وما سواه يُمحى */
+const KEEP = [SHELL, RUNTIME, QURAN];
+
+/* ما يُحفظ عند التثبيت. أبقِ القائمة قصيرة: كلُّ إخفاقٍ هنا
+   يُفشل التثبيت كلَّه. */
 const SHELL_URLS = [
   './',
   './index.html',
@@ -40,12 +47,12 @@ self.addEventListener('install', event => {
   })());
 });
 
-/* ═══ التفعيل: تُمحى مخازنُ الإصدارات السابقة ═══ */
+/* ═══ التفعيل: تُمحى مخازنُ الإصدارات السابقة، ويبقى المصحف ═══ */
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
     await Promise.all(
-      keys.filter(k => k !== SHELL && k !== RUNTIME).map(k => caches.delete(k))
+      keys.filter(k => !KEEP.includes(k)).map(k => caches.delete(k))
     );
     await self.clients.claim();
   })());
@@ -58,9 +65,9 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(req.url);
 
-  /* ١) صفحاتُ التصفّح: الشبكةُ أوّلًا.
-        وهذا هو الفرق الحاسم — لو كانت الذاكرةُ أوّلًا لبقيتَ على القديم
-        حتى بعد تغيير الإصدار. */
+  /* ١. صفحاتُ التصفّح: الشبكةُ أوّلًا.
+        وهذا هو الفرقُ الحاسم — لو كانت الذاكرةُ أوّلًا لبقيت على
+        القديم حتى بعد تغيير الإصدار. */
   if (req.mode === 'navigate') {
     event.respondWith((async () => {
       try {
@@ -75,7 +82,8 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  /* ٢) المصحفُ وخطوطُه: الذاكرةُ أوّلًا. لا تتبدّل، وحجمُها كبير. */
+  /* ٢. المصحفُ وخطوطُه: الذاكرةُ أوّلًا. لا تتبدّل، وحجمُها كبير.
+        ومخزنُها مستقلٌّ عن الإصدار فتنجو من كلّ نشرة. */
   const isQuran =
     url.hostname.includes('githubusercontent.com') ||
     url.hostname.includes('jsdelivr.net') ||
@@ -83,23 +91,24 @@ self.addEventListener('fetch', event => {
 
   if (isQuran) {
     event.respondWith((async () => {
-      const hit = await caches.match(req);
+      const hit = await caches.match(req, { cacheName: QURAN });
       if (hit) return hit;
       try {
         const res = await fetch(req);
         if (res && res.status === 200) {
-          const cache = await caches.open(RUNTIME);
+          const cache = await caches.open(QURAN);
           cache.put(req, res.clone());
         }
         return res;
       } catch (e) {
-        return Response.error();
+        /* قد تكون محفوظةً في مخزنٍ قديمٍ قبل هذا التقسيم */
+        return (await caches.match(req)) || Response.error();
       }
     })());
     return;
   }
 
-  /* ٣) ما بقي من أصولنا: الذاكرةُ أوّلًا مع تحديثٍ صامتٍ في الخلفيّة،
+  /* ٣. ما بقي من أصولنا: الذاكرةُ أوّلًا مع تحديثٍ صامتٍ في الخلفيّة،
         فيُعرض السريعُ ويُحدَّث للمرّة القادمة. */
   if (url.origin === self.location.origin) {
     event.respondWith((async () => {
@@ -116,7 +125,7 @@ self.addEventListener('fetch', event => {
 });
 
 /* ═══ للطوارئ: تفريغُ كلّ المخازن من وحدة التحكّم ═══
-   navigator.serviceWorker.controller.postMessage('zahim-purge');            */
+     navigator.serviceWorker.controller.postMessage('zahim-purge');   */
 self.addEventListener('message', event => {
   if (event.data === 'zahim-purge') {
     event.waitUntil(
