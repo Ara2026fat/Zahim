@@ -10490,6 +10490,16 @@ function zxWirdOpen(key){
 
 function getCompassActiveIndex(doneMap){
   const timeIdx = getTimeBandIndex(new Date());
+  /* ما دامت الصلاةُ قائمةً — من الأذان إلى انقضاء نافذة القيام — فالإشارةُ
+     إليها، ولو لم تُفتح بعدُ نافذةُ أذكارِ ما بعدها. الصلاةُ أولى من كلّ وِرد،
+     ولا يليق أن يُشار إلى القرآن والمؤذّنُ يدعو. */
+  try{
+    if(!doneMap.prayer && typeof zxNextLine === 'function'){
+      const _d = new Date();
+      const _r = zxNextLine(ZahimDay.times(_d), _d.getHours() * 60 + _d.getMinutes());
+      if(_r && _r.mode === 'standing') return 0;
+    }
+  }catch(e){}
   /* كانت الإشارةُ تمضي إلى الأمام فتقف عند أوّل وِردٍ غيرِ مُتَمّ، ولو لم يدخل
      وقتُه — فتُشير إلى «النوم» والساعةُ سبعٌ مساءً. الآن: ما لم يُفتح بابُه
      لا يُختار. */
@@ -10497,14 +10507,19 @@ function getCompassActiveIndex(doneMap){
     for(let j = 0; j < COMPASS_STAGES.length; j++){
       const st = COMPASS_STAGES[(timeIdx + j) % COMPASS_STAGES.length];
       const i  = (timeIdx + j) % COMPASS_STAGES.length;
+      /* محطّةُ الصلاة لا تُختار إلّا والصلاةُ قائمة، وقد فُحص ذلك أعلاه.
+         فمتى انقضت نافذةُ القيام — نصفُ ساعةٍ وأربعون في الفجر — انتقلت
+         الإشارةُ إلى الوِرد الذي يليها مباشرةً، ولم تبقَ معلّقةً بها
+         نافذةَ أذكارِ ما بعدها. والأذكارُ تُنال بلمس محطّتها متى شاء. */
+      if(st.key === 'prayer') continue;
       if(doneMap[st.key]) continue;
       if(typeof zxWirdOpen === 'function' && WIRD_WIN && WIRD_WIN[st.key]
          && !zxWirdOpen(st.key)) continue;
       return i;
     }
     /* لم يُفتح بابٌ بعد: نُشير إلى محطّة الوقت الذي نحن فيه، لا إلى وِردٍ
-       لم يحن. */
-    return timeIdx;
+       لم يحن. وإن كانت محطّةُ الوقت هي الصلاةَ وليست قائمةً، فالصباحُ يليها. */
+    return timeIdx === 0 ? 1 : timeIdx;
   }catch(e){}
   /* حين يُؤذَّن، الصلاةُ أولى من كلّ وِرد. كانت الإشارةُ تمضي من نطاق الوقت
      إلى الأمام فحسب، فتبقى عند القرآن والأذانُ قائم. */
@@ -13862,6 +13877,9 @@ function showToast(msg){
     <div class="zx-row" onclick="zxEditWho()">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="3.4"/><path d="M5 19.4c0-3.3 3.1-5.4 7-5.4s7 2.1 7 5.4"/></svg></span><span class="zx-row-label">اسمك ودولتك<i>يظهران في التحيّة وحدها</i></span><span class="zx-row-value" id="zxWho">—</span>
     </div>
+    <div class="zx-row" onclick="window.open('https://zahim.app/intro','_blank','noopener')">
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 5.2h5.2a2.2 2.2 0 0 1 2.2 2.2v11.4a1.7 1.7 0 0 0-1.7-1.7H4.6z"/><path d="M19.4 5.2h-5.2a2.2 2.2 0 0 0-2.2 2.2v11.4a1.7 1.7 0 0 1 1.7-1.7h5.7z"/></svg></span><span class="zx-row-label">كيف تستخدم زاحِم<i>شرحٌ بالصور لكلّ شاشة</i></span><span class="zx-row-chev">←</span>
+    </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(ztOpen, 260);">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.7-.9 1.3v.4"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg></span><span class="zx-row-label">جولة تعريفية<i>شاشاتٌ تشرح البوصلة ومحطّاتها</i></span><span class="zx-row-chev">←</span>
     </div>
@@ -16417,6 +16435,8 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
     'قوس الإبهام': 'Thumb arc',
     'عجلة الأذكار': 'Dhikr wheel',
     'الصلاةُ قائمة': 'Time to pray',
+    'كيف تستخدم زاحِم': 'How to use Zahim',
+    'شرحٌ بالصور لكلّ شاشة': 'A picture guide to every screen',
     'مسطَّح': 'Flat', 'قائم': 'Upright', 'مائل': 'Tilted',
     'أتممتُ الوِرد': 'I completed the wird',
     'من': 'of',
@@ -16480,6 +16500,8 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
     'قوس الإبهام': 'Busur ibu jari',
     'عجلة الأذكار': 'Roda zikir',
     'الصلاةُ قائمة': 'Sekarang waktu salat',
+    'كيف تستخدم زاحِم': 'Cara menggunakan Zahim',
+    'شرحٌ بالصور لكلّ شاشة': 'Panduan bergambar untuk tiap layar',
     'مسطَّح': 'Mendatar', 'قائم': 'Tegak', 'مائل': 'Miring',
     'أتممتُ الوِرد': 'Saya menyelesaikan wirid',
     'من': 'dari',
@@ -16543,6 +16565,8 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
     'قوس الإبهام': 'Lengkung ibu jari',
     'عجلة الأذكار': 'Roda zikir',
     'الصلاةُ قائمة': 'Kini waktu solat',
+    'كيف تستخدم زاحِم': 'Cara menggunakan Zahim',
+    'شرحٌ بالصور لكلّ شاشة': 'Panduan bergambar bagi setiap skrin',
     'مسطَّح': 'Mendatar', 'قائم': 'Tegak', 'مائل': 'Condong',
     'أتممتُ الوِرد': 'Saya menyelesaikan wirid',
     'من': 'daripada',

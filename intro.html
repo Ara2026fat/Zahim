@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>زاحِم — رفيقٌ يوميٌّ يُهيّئ القلبَ للعبادة</title>
+<meta name="description" content="زاحِم: بوصلةٌ تدلّك على وِردك، ومواقيتُ وقبلةٌ ومصحفٌ ورياضُ السنّة وتسبيح. بلا حساب ولا إعلان.">
+<meta name="theme-color" content="#14432E">
+<link rel="icon" href="icons/icon-192.png">
+
+<meta property="og:title" content="زاحِم">
+<meta property="og:description" content="رفيقٌ يوميٌّ يُهيّئ القلبَ للعبادة.">
+<meta property="og:image" content="https://zahim.app/icons/icon-512.png">
+<meta property="og:url" content="https://zahim.app/intro">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --cream:#F6F1E7;
+  --paper:#FCF8EE;
+  --ink:#14332A;
+  --green:#14432E;
+  --green-soft:#2A805A;
+  --gold:#C9963A;
+  --gold-pale:#E4CE9B;
+  --muted:#6C7C72;
+  --rule:rgba(20,67,46,.13);
+  --shadow:0 18px 44px rgba(20,67,46,.13);
+}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--ink);
+  font-family:'Tajawal',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:16px;
+  line-height:1.85;
+  overflow-x:hidden;
+}
+body[dir=ltr]{line-height:1.75;}
+
+/* ══ الغلاف ══ */
+.wrap{max-width:940px;margin:0 auto;padding:0 20px;}
+
+/* ══ شريطُ اللغة ══ */
+.langbar{
+  position:sticky;top:0;z-index:20;
+  background:rgba(246,241,231,.92);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--rule);
+}
+.langbar .wrap{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding-top:9px;padding-bottom:9px;
+}
+.mark{
+  font-family:'Amiri',serif;font-size:23px;font-weight:700;
+  color:var(--green);line-height:1;letter-spacing:.01em;
+}
+.langs{display:flex;gap:4px;}
+.langs button{
+  font:inherit;font-size:12.5px;font-weight:500;
+  padding:5px 11px;border-radius:999px;cursor:pointer;
+  border:1px solid transparent;background:none;color:var(--muted);
+  transition:color .18s,background .18s,border-color .18s;
+}
+.langs button:hover{color:var(--green);}
+.langs button[aria-pressed=true]{
+  color:var(--green);border-color:var(--gold-pale);background:rgba(201,150,58,.09);
+}
+.langs button:focus-visible,a:focus-visible{
+  outline:2px solid var(--gold);outline-offset:3px;
+}
+
+/* ══ الافتتاح ══ */
+.hero{padding:46px 0 8px;text-align:center;}
+.hero h1{
+  font-family:'Amiri',serif;font-weight:700;
+  font-size:clamp(52px,15vw,86px);
+  line-height:1;margin:0;color:var(--green);
+}
+.hero .tag{
+  font-size:clamp(15px,4vw,18px);color:var(--muted);
+  margin:14px auto 0;max-width:30ch;
+}
+.hero .arc{display:block;width:clamp(150px,42vw,220px);height:auto;margin:20px auto 0;}
+.lead{
+  max-width:34ch;margin:22px auto 0;
+  font-size:clamp(15.5px,4.1vw,17.5px);color:var(--ink);
+}
+
+/* ══ الدعوة ══ */
+.cta{
+  display:inline-block;margin-top:26px;
+  padding:15px 40px;border-radius:999px;
+  background:linear-gradient(160deg,var(--green-soft),var(--green));
+  color:#FBF4E2;text-decoration:none;
+  font-weight:700;font-size:16.5px;letter-spacing:.01em;
+  box-shadow:0 12px 28px rgba(20,67,46,.26);
+  transition:transform .16s ease,box-shadow .2s ease;
+}
+.cta:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(20,67,46,.3);}
+.cta:active{transform:translateY(0);}
+.cta-note{display:block;margin-top:11px;font-size:12.5px;color:var(--muted);}
+
+/* ══ الأقسام ══ */
+section{padding:56px 0 8px;}
+section h2{
+  font-family:'Amiri',serif;font-weight:700;
+  font-size:clamp(27px,7vw,38px);line-height:1.35;
+  margin:0 0 6px;color:var(--green);
+}
+.rule{width:64px;height:2px;border-radius:2px;margin:0 0 20px;
+  background:linear-gradient(90deg,var(--green-soft),var(--gold));}
+section p{max-width:62ch;margin:0 0 15px;}
+body[dir=ltr] section p{max-width:66ch;}
+
+/* ══ اللقطات ══ */
+.shot{
+  width:100%;
+  aspect-ratio:560 / 1212;
+  border-radius:18px;
+  background-image:var(--sheet);
+  background-repeat:no-repeat;
+  background-size:100% 1200%;
+  background-position:0 calc(var(--f) * 100% / 11);
+  box-shadow:var(--shadow);
+  border:1px solid rgba(255,255,255,.7);
+}
+figure{margin:0;}
+figcaption{
+  margin-top:11px;font-size:13px;line-height:1.7;color:var(--muted);
+  text-align:center;max-width:26ch;margin-inline:auto;
+}
+
+.pair{display:grid;gap:26px;margin-top:30px;}
+@media (min-width:640px){ .pair{grid-template-columns:1fr 1fr;gap:30px;} }
+
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:30px;}
+.trio figcaption{font-size:11.5px;line-height:1.55;max-width:none;}
+.trio .shot{border-radius:11px;box-shadow:0 10px 22px rgba(20,67,46,.12);}
+@media (min-width:560px){ .trio{gap:18px;} .trio figcaption{font-size:13px;} }
+
+.hero-shot{max-width:290px;margin:30px auto 0;}
+
+/* ══ الإيجاز ══ */
+.brief{display:grid;gap:34px;margin-top:32px;}
+@media (min-width:620px){ .brief{grid-template-columns:1fr 1fr;gap:34px 40px;} }
+.brief .item{display:grid;grid-template-columns:104px 1fr;gap:18px;align-items:start;}
+.brief h3{
+  font-family:'Amiri',serif;font-weight:700;font-size:20px;
+  margin:0 0 3px;color:var(--green);line-height:1.4;
+}
+.brief p{font-size:14.5px;line-height:1.8;color:var(--muted);margin:0;max-width:34ch;}
+.brief .shot{border-radius:12px;box-shadow:0 10px 22px rgba(20,67,46,.12);}
+
+/* ══ الخاتمة ══ */
+.close{
+  margin:64px 0 0;padding:44px 24px 52px;text-align:center;
+  border-top:1px solid var(--rule);
+}
+.close p{max-width:38ch;margin:0 auto 4px;color:var(--muted);font-size:15px;}
+.foot{
+  padding:26px 0 40px;text-align:center;
+  font-size:12.5px;color:var(--muted);
+}
+.foot a{color:var(--green);text-decoration:none;border-bottom:1px solid var(--gold-pale);}
+
+@media (prefers-reduced-motion:reduce){
+  .cta{transition:none;}
+  .cta:hover{transform:none;}
+}
+</style>
+</head>
+<body>
+
+<header class="langbar">
+  <div class="wrap">
+    <span class="mark" id="mark">زاحِم</span>
+    <nav class="langs" id="langs" aria-label="Language"></nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <h1 id="h-title">زاحِم</h1>
+    <p class="tag" id="h-tag"></p>
+
+    <svg class="arc" viewBox="0 0 200 44" aria-hidden="true" fill="none">
+      <path d="M6 38 A 220 220 0 0 1 194 38" stroke="#E4CE9B" stroke-width="1.2"/>
+      <path d="M40 26.5 A 94 94 0 0 1 160 26.5" stroke="#2A805A" stroke-width="2.6"
+            stroke-linecap="round" opacity=".85"/>
+      <circle cx="160" cy="26.5" r="3.4" fill="#2A805A"/>
+    </svg>
+
+    <p class="lead" id="h-lead"></p>
+    <a class="cta" id="cta-top" href="https://zahim.app">افتح زاحِم</a>
+    <span class="cta-note" id="cta-note"></span>
+
+    <figure class="hero-shot">
+      <div class="shot" style="--f:0"></div>
+    </figure>
+  </div>
+
+  <section id="sec-dial">
+    <h2 id="d-title"></h2>
+    <div class="rule"></div>
+    <p id="d-p1"></p>
+    <p id="d-p2"></p>
+    <p id="d-p3"></p>
+    <div class="pair">
+      <figure><div class="shot" style="--f:0"></div><figcaption id="d-c1"></figcaption></figure>
+      <figure><div class="shot" style="--f:1"></div><figcaption id="d-c2"></figcaption></figure>
+    </div>
+  </section>
+
+  <section id="sec-qibla">
+    <h2 id="q-title"></h2>
+    <div class="rule"></div>
+    <p id="q-p1"></p>
+    <p id="q-p2"></p>
+    <p id="q-p3"></p>
+    <div class="trio">
+      <figure><div class="shot" style="--f:2"></div><figcaption id="q-c1"></figcaption></figure>
+      <figure><div class="shot" style="--f:3"></div><figcaption id="q-c2"></figcaption></figure>
+      <figure><div class="shot" style="--f:4"></div><figcaption id="q-c3"></figcaption></figure>
+    </div>
+  </section>
+
+  <section id="sec-rest">
+    <h2 id="r-title"></h2>
+    <div class="rule"></div>
+    <div class="brief" id="brief"></div>
+  </section>
+
+  <div class="close">
+    <p id="c-p1"></p>
+    <p id="c-p2"></p>
+    <a class="cta" id="cta-bottom" href="https://zahim.app">افتح زاحِم</a>
+    <span class="cta-note" id="cta-note2"></span>
+  </div>
+
+</main>
+
+<footer class="foot">
+  <a href="https://zahim.app">zahim.app</a>
+</footer>
+
+<script>
+/* ترتيبُ الإطارات في الشريط — يوافق sprite.py */
+var F = { compass:0, wird:1, qOff:2, qOn:3, qUp:4, mihrab:5,
+          settings:6, city:7, lang:8, quran:9, riyad:10, tasbih:11 };
+
+var L = {
+
+ar: {
+  name:'العربيّة', dir:'rtl', mark:'زاحِم', title:'زاحِم',
+  tag:'رفيقٌ يوميٌّ يُهيّئ القلبَ للعبادة',
+  lead:'تطبيقٌ واحدٌ يجمع أورادَ يومك: بوصلةٌ تدلّك على ما حضر وقتُه، ومواقيتُ الصلاة والقبلةُ والمصحفُ ورياضُ السنّة والتسبيح.',
+  cta:'افتح زاحِم',
+  ctaNote:'يفتح في المتصفّح — بلا تنزيل ولا حساب',
+
+  dTitle:'البوصلة، وما يدور عليها',
+  dP1:'البوصلةُ قلبُ زاحِم. ستُّ محطّاتٍ على مينائها: الصلاةُ القائمة، وأذكارُ الصباح، ووِردُ القرآن، وحديثُ اليوم، وأذكارُ المساء، وأذكارُ النوم. والإبرةُ تُشير إلى ما حضر وقتُه الآن — لا إلى ما فات، ولا إلى ما لم يحن بعد.',
+  dP2:'فإذا أُذّن للصلاة اتّجهت الإبرةُ إليها وحدَها، وسار قوسٌ أخضرُ حول الميناء يعدّ ما بين الأذان والإقامة. حتّى إذا انقضى وقتُ القيام — نصفُ ساعةٍ في الصلوات، وأربعون دقيقةً في الفجر — انتقلت إلى الوِرد الذي يليه.',
+  dP3:'وليس في زاحِم درجاتٌ ولا نسبٌ ولا سلاسلُ أيّام. من فاته وِردٌ لم يُعاقَب عليه، ومن أتمّه لم يُكافَأ برقم. العملُ لله، والتطبيقُ يُعين عليه ولا يقيسه.',
+  dC1:'الإبرةُ على الظهر، والقوسُ يعدّ إلى الإقامة',
+  dC2:'وِردُ الصباح: يُقرأ ذكرًا ذكرًا، والعدُّ ظاهرٌ بلا إلحاح',
+
+  qTitle:'القبلة',
+  qP1:'الاتّجاهُ يُحسب من موقعك، والزاويةُ مكتوبةٌ صريحةً أسفلَ الشاشة — لتقارنها برقم أيّ تطبيقٍ آخرَ وتطمئنّ.',
+  qP2:'وتعمل في وضعين: الجوّالُ مسطَّحٌ على كفّك أو على الأرض، والجوّالُ قائمٌ أمامك تنظر عبرَه إلى الجدار. وشارةٌ صغيرةٌ تقول لك أيَّ وضعٍ يقرأ الآن — مسطَّحٌ أو مائلٌ أو قائم.',
+  qP3:'وإن كان في غرفتك محرابٌ أو علامةٌ تثق بها، فوجّه إليها جوّالك واضغط «عايِر: أواجه القبلة الآن» — فتُصحَّح القراءةُ على ما تعرف.',
+  qC1:'منحرفٌ عنها: السهمُ يدلّك',
+  qC2:'أنت عليها: السجّادةُ تنبسط',
+  qC3:'والجوّالُ قائمٌ في يدك',
+
+  rTitle:'وسائرُ ما فيه',
+  items:[
+    [F.mihrab,'المواقيتُ والأذان','خمسةُ مواقيتَ في محرابٍ واحد، وأذانٌ يُرفع — وللفجر أذانُه بالتثويب.'],
+    [F.city,  'مدينتُك','اخترها من قائمةٍ أو دعِ الجهازَ يحدّدها. ومنها تُحسب المواقيتُ والقبلةُ معًا.'],
+    [F.quran, 'وِردُ القرآن','اختر ختمتَك — شهرًا أو أقلّ — فيُقسَّم عليك يومًا بيوم.'],
+    [F.riyad, 'رياضُ السنّة','مئتانِ وثلاثةٌ وعشرون درسًا في الأعمال اليسيرةِ عظيمةِ الأجر، تُقرأ حديثًا بعد حديث.'],
+    [F.tasbih,'التسبيح','عدّادٌ في متناول الإبهام: قوسٌ تلمسه، أو عجلةٌ تُديرها.'],
+    [F.lang,  'أربعُ لغات','عربيّةٌ وإنجليزيّةٌ وملايويّةٌ وإندونيسيّة. والنصُّ الشرعيُّ يبقى عربيًّا كما نزل.']
+  ],
+
+  cP1:'يعمل بلا إنترنت بعد أوّل فتح، ويُثبَّت على شاشتك كالتطبيقات.',
+  cP2:'لا حساب، ولا اشتراك، ولا إعلان، ولا بياناتٍ تُجمع.'
+},
+
+en: {
+  name:'English', dir:'ltr', mark:'Zahim', title:'Zahim',
+  tag:'A daily companion that prepares the heart for worship',
+  lead:'One app for the whole of your day: a dial that shows what is due now, plus prayer times, the qibla, the Quran, hadith and tasbih.',
+  cta:'Open Zahim',
+  ctaNote:'Opens in your browser — no download, no account',
+
+  dTitle:'The dial, and what turns on it',
+  dP1:'The dial is the heart of Zahim. Six stations sit on its face: the prayer that is standing, morning remembrance, your daily Quran, today\u2019s hadith, evening remembrance, and the words before sleep. The needle points to what is due now — not to what has passed, and not to what has not yet come.',
+  dP2:'When the adhan is called, the needle turns to the prayer alone, and a green arc runs around the face counting the minutes between the adhan and the iqama. Once that window closes — half an hour, or forty minutes for Fajr — the needle moves on to the next station.',
+  dP3:'There are no scores here, no percentages, no streaks. Miss a day and nothing punishes you. Finish one and no number rewards you. The work is for Allah; the app helps with it and does not measure it.',
+  dC1:'The needle on Dhuhr, the arc counting to the iqama',
+  dC2:'Morning remembrance, read one at a time',
+
+  qTitle:'The qibla',
+  qP1:'The direction is calculated from your location, and the bearing is written plainly at the foot of the screen — so you can check it against any other app and be at ease.',
+  qP2:'It works two ways: with the phone flat in your palm or on the floor, and with the phone upright in front of you, looking through it at the wall. A small badge tells you which reading it is using — flat, tilted, or upright.',
+  qP3:'If your room has a mihrab or a mark you already trust, face it and tap \u201CCalibrate: I\u2019m facing the qibla now.\u201D The reading corrects itself to what you know.',
+  qC1:'Turned away: the arrow guides you',
+  qC2:'Facing it: the rug lies flat',
+  qC3:'And upright in your hand',
+
+  rTitle:'And the rest',
+  items:[
+    [F.mihrab,'Prayer times and adhan','Five times in a single mihrab, with the adhan called aloud — and Fajr keeps its own call.'],
+    [F.city,  'Your city','Pick one from the list or let the device find you. Prayer times and the qibla both come from it.'],
+    [F.quran, 'Quran reading','Choose a khatmah — a month or less — and it is divided across your days.'],
+    [F.riyad, 'Riyad al-Sunnah','223 lessons on small deeds with great reward, read one hadith at a time.'],
+    [F.tasbih,'Tasbih','A counter within reach of your thumb: an arc you touch, or a wheel you turn.'],
+    [F.lang,  'Four languages','Arabic, English, Malay and Indonesian. Quran and hadith stay in Arabic, as they were revealed.']
+  ],
+
+  cP1:'Works offline after the first visit, and installs to your home screen like an app.',
+  cP2:'No account, no subscription, no ads, no data collected.'
+},
+
+ms: {
+  name:'Melayu', dir:'ltr', mark:'Zahim', title:'Zahim',
+  tag:'Teman harian yang menyiapkan hati untuk beribadah',
+  lead:'Satu aplikasi untuk sepanjang hari anda: dail yang menunjukkan apa yang tiba masanya, waktu solat, arah kiblat, al-Quran, hadis dan tasbih.',
+  cta:'Buka Zahim',
+  ctaNote:'Terus dalam pelayar — tiada muat turun, tiada akaun',
+
+  dTitle:'Dail, dan apa yang berputar padanya',
+  dP1:'Dail ialah jantung Zahim. Enam perhentian pada mukanya: solat yang sedang berdiri, zikir pagi, bacaan al-Quran harian, hadis hari ini, zikir petang, dan zikir sebelum tidur. Jarumnya menunjuk kepada apa yang tiba masanya sekarang — bukan yang telah berlalu, dan bukan yang belum tiba.',
+  dP2:'Apabila azan dilaungkan, jarum berpaling kepada solat sahaja, dan lengkung hijau bergerak mengelilingi muka dail mengira waktu antara azan dan iqamah. Setelah tempoh itu tamat — setengah jam, atau empat puluh minit bagi Subuh — jarum beralih kepada perhentian berikutnya.',
+  dP3:'Tiada markah di sini, tiada peratusan, tiada rentetan hari. Terlepas satu hari, tiada apa yang menghukum anda. Sempurnakan satu, tiada nombor yang memberi ganjaran. Amal itu untuk Allah; aplikasi ini membantu, bukan mengukur.',
+  dC1:'Jarum pada Zuhur, lengkung mengira ke iqamah',
+  dC2:'Zikir pagi, dibaca satu demi satu',
+
+  qTitle:'Kiblat',
+  qP1:'Arah dikira daripada lokasi anda, dan sudutnya ditulis dengan jelas di bawah skrin — supaya anda boleh membandingkannya dengan mana-mana aplikasi lain dan berasa tenang.',
+  qP2:'Ia berfungsi dalam dua keadaan: telefon mendatar di tapak tangan atau di lantai, dan telefon tegak di hadapan anda memandang melaluinya ke dinding. Lencana kecil memberitahu bacaan mana yang digunakan — mendatar, condong, atau tegak.',
+  qP3:'Jika di bilik anda ada mihrab atau tanda yang anda percayai, hadapkan telefon kepadanya dan tekan \u201CTentukur: saya menghadap kiblat sekarang.\u201D Bacaan akan diperbetulkan mengikut apa yang anda sudah tahu.',
+  qC1:'Berpaling: anak panah menunjukkan arah',
+  qC2:'Menghadapnya: sejadah terbentang',
+  qC3:'Dan tegak di tangan anda',
+
+  rTitle:'Selebihnya',
+  items:[
+    [F.mihrab,'Waktu solat dan azan','Lima waktu dalam satu mihrab, dengan azan dilaungkan — dan Subuh mempunyai azannya sendiri.'],
+    [F.city,  'Bandar anda','Pilih daripada senarai atau biarkan peranti mencarinya. Waktu solat dan kiblat kedua-duanya datang daripadanya.'],
+    [F.quran, 'Bacaan al-Quran','Pilih khatam — sebulan atau kurang — dan ia dibahagikan mengikut hari anda.'],
+    [F.riyad, 'Riyad al-Sunnah','223 pelajaran tentang amalan kecil berpahala besar, dibaca satu hadis pada satu masa.'],
+    [F.tasbih,'Tasbih','Pembilang dalam jangkauan ibu jari: lengkung yang anda sentuh, atau roda yang anda putar.'],
+    [F.lang,  'Empat bahasa','Arab, Inggeris, Melayu dan Indonesia. Al-Quran dan hadis kekal dalam bahasa Arab seperti diturunkan.']
+  ],
+
+  cP1:'Berfungsi tanpa internet selepas kunjungan pertama, dan boleh dipasang pada skrin utama seperti aplikasi.',
+  cP2:'Tiada akaun, tiada langganan, tiada iklan, tiada data dikumpulkan.'
+},
+
+id: {
+  name:'Indonesia', dir:'ltr', mark:'Zahim', title:'Zahim',
+  tag:'Teman harian yang menyiapkan hati untuk beribadah',
+  lead:'Satu aplikasi untuk sepanjang hari Anda: pedoman yang menunjukkan apa yang tiba waktunya, jadwal salat, arah kiblat, Al-Qur\u2019an, hadis, dan tasbih.',
+  cta:'Buka Zahim',
+  ctaNote:'Langsung di peramban — tanpa unduhan, tanpa akun',
+
+  dTitle:'Pedoman, dan apa yang berputar padanya',
+  dP1:'Pedoman adalah jantung Zahim. Enam perhentian pada wajahnya: salat yang sedang ditegakkan, zikir pagi, bacaan Al-Qur\u2019an harian, hadis hari ini, zikir petang, dan zikir sebelum tidur. Jarumnya menunjuk pada apa yang tiba waktunya sekarang — bukan yang telah lewat, dan bukan yang belum tiba.',
+  dP2:'Ketika azan berkumandang, jarum berpaling hanya kepada salat, dan busur hijau berjalan mengelilingi wajah pedoman menghitung waktu antara azan dan ikamah. Setelah tenggang itu berakhir — setengah jam, atau empat puluh menit untuk Subuh — jarum berpindah ke perhentian berikutnya.',
+  dP3:'Tidak ada skor di sini, tidak ada persentase, tidak ada rentetan hari. Terlewat satu hari, tidak ada yang menghukum Anda. Menyelesaikan satu, tidak ada angka yang memberi ganjaran. Amal itu untuk Allah; aplikasi ini membantu, bukan mengukur.',
+  dC1:'Jarum pada Zuhur, busur menghitung ke ikamah',
+  dC2:'Zikir pagi, dibaca satu per satu',
+
+  qTitle:'Kiblat',
+  qP1:'Arah dihitung dari lokasi Anda, dan sudutnya ditulis jelas di bagian bawah layar — agar Anda dapat membandingkannya dengan aplikasi mana pun dan merasa tenang.',
+  qP2:'Ia bekerja dalam dua posisi: ponsel mendatar di telapak tangan atau di lantai, dan ponsel tegak di depan Anda sambil memandang menembusnya ke dinding. Lencana kecil memberi tahu bacaan mana yang dipakai — mendatar, miring, atau tegak.',
+  qP3:'Jika di ruangan Anda ada mihrab atau tanda yang Anda percayai, hadapkan ponsel ke arahnya dan tekan \u201CKalibrasi: saya menghadap kiblat sekarang.\u201D Bacaan akan diperbaiki sesuai yang sudah Anda ketahui.',
+  qC1:'Berpaling: panah menunjukkan arah',
+  qC2:'Menghadapnya: sajadah terbentang',
+  qC3:'Dan tegak di tangan Anda',
+
+  rTitle:'Selebihnya',
+  items:[
+    [F.mihrab,'Jadwal salat dan azan','Lima waktu dalam satu mihrab, dengan azan yang dikumandangkan — dan Subuh punya azannya sendiri.'],
+    [F.city,  'Kota Anda','Pilih dari daftar atau biarkan perangkat menemukannya. Jadwal salat dan kiblat sama-sama berasal darinya.'],
+    [F.quran, 'Bacaan Al-Qur\u2019an','Pilih khatam — sebulan atau kurang — lalu dibagi ke dalam hari-hari Anda.'],
+    [F.riyad, 'Riyad as-Sunnah','223 pelajaran tentang amal kecil berpahala besar, dibaca satu hadis demi satu.'],
+    [F.tasbih,'Tasbih','Penghitung dalam jangkauan ibu jari: busur yang Anda sentuh, atau roda yang Anda putar.'],
+    [F.lang,  'Empat bahasa','Arab, Inggris, Melayu, dan Indonesia. Al-Qur\u2019an dan hadis tetap dalam bahasa Arab sebagaimana diturunkan.']
+  ],
+
+  cP1:'Bekerja tanpa internet setelah kunjungan pertama, dan dapat dipasang di layar utama seperti aplikasi.',
+  cP2:'Tanpa akun, tanpa langganan, tanpa iklan, tanpa data yang dikumpulkan.'
+}
+
+};
+
+var CODES = ['ar','en','ms','id'];
+
+function set(id, txt){ var e = document.getElementById(id); if(e) e.textContent = txt; }
+
+function apply(code){
+  var t = L[code];
+  if(!t) return;
+
+  document.documentElement.lang = code;
+  document.documentElement.dir  = t.dir;
+  document.body.dir = t.dir;
+
+  /* شريطُ اللقطات: لغةٌ واحدةٌ تُحمَّل، لا أربع */
+  document.body.style.setProperty('--sheet', 'url("shots-' + code + '.webp")');
+
+  set('mark', t.mark);
+  set('h-title', t.title);
+  set('h-tag', t.tag);
+  set('h-lead', t.lead);
+  set('cta-top', t.cta);
+  set('cta-bottom', t.cta);
+  set('cta-note', t.ctaNote);
+  set('cta-note2', t.ctaNote);
+
+  set('d-title', t.dTitle);
+  set('d-p1', t.dP1); set('d-p2', t.dP2); set('d-p3', t.dP3);
+  set('d-c1', t.dC1); set('d-c2', t.dC2);
+
+  set('q-title', t.qTitle);
+  set('q-p1', t.qP1); set('q-p2', t.qP2); set('q-p3', t.qP3);
+  set('q-c1', t.qC1); set('q-c2', t.qC2); set('q-c3', t.qC3);
+
+  set('r-title', t.rTitle);
+  var b = document.getElementById('brief');
+  b.innerHTML = '';
+  t.items.forEach(function(it){
+    var d = document.createElement('div');
+    d.className = 'item';
+    d.innerHTML = '<div class="shot" style="--f:' + it[0] + '"></div>'
+                + '<div><h3></h3><p></p></div>';
+    d.querySelector('h3').textContent = it[1];
+    d.querySelector('p').textContent  = it[2];
+    b.appendChild(d);
+  });
+
+  set('c-p1', t.cP1);
+  set('c-p2', t.cP2);
+
+  document.querySelectorAll('#langs button').forEach(function(btn){
+    btn.setAttribute('aria-pressed', btn.dataset.code === code ? 'true' : 'false');
+  });
+
+  try{ localStorage.setItem('zahim_intro_lang', code); }catch(e){}
+}
+
+/* أزرارُ اللغات */
+(function(){
+  var nav = document.getElementById('langs');
+  CODES.forEach(function(c){
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.dataset.code = c;
+    btn.textContent = L[c].name;
+    btn.lang = c;
+    btn.onclick = function(){ apply(c); };
+    nav.appendChild(btn);
+  });
+})();
+
+/* اللغةُ الأولى: ما اختاره القارئُ من قبل، ثمّ لغةُ جهازه، ثمّ العربيّة */
+(function(){
+  var pick = null;
+  try{ pick = localStorage.getItem('zahim_intro_lang'); }catch(e){}
+  if(!pick || CODES.indexOf(pick) < 0){
+    var list = navigator.languages || [navigator.language || 'ar'];
+    for(var i = 0; i < list.length && !pick; i++){
+      var code = String(list[i] || '').toLowerCase().split('-')[0];
+      if(code === 'in') code = 'id';
+      if(CODES.indexOf(code) >= 0) pick = code;
+    }
+  }
+  apply(pick || 'ar');
+})();
+</script>
+</body>
+</html>
