@@ -1876,7 +1876,7 @@ body.theme-dark .zx-lang-opt{
     radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.09), rgba(255,255,255,0) 60%),
     linear-gradient(165deg, rgba(255,255,255,.062), rgba(255,255,255,.022));
   box-shadow:0 5px 14px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.10);}
-.zx-lang-opt[aria-checked="true"]{border-color:var(--gold-ink,#7A5E22);color:var(--green);}
+.zx-lang-opt[aria-checked="true"]{border-color:var(--gold);color:var(--green);}
 .zx-lang-opt .tick{color:var(--gold-ink,#7A5E22);font-weight:900;opacity:0;}
 .zx-lang-opt[aria-checked="true"] .tick{opacity:1;}
 
@@ -2288,7 +2288,7 @@ body.theme-dark .zx-mode{
   box-shadow:0 3px 10px rgba(48,42,38,.20),0 1px 0 rgba(255,255,255,.35) inset;}
 .zx-sw i{position:absolute;right:3px;bottom:3px;width:9px;height:9px;border-radius:50%;
   box-shadow:0 0 0 1.5px rgba(255,255,255,.55);}
-.zx-mode.is-on{border-color:var(--gold-ink,#7A5E22);background:rgba(216,181,89,.14);}
+.zx-mode.is-on{border-color:var(--gold);background:rgba(216,181,89,.14);}
 .zx-mode-name{display:block;font-size:11.5px;font-weight:700;color:var(--text);}
 .zx-mode.is-on .zx-mode-name{color:var(--gold-ink,#7A5E22);}
 @media (max-width:340px){
@@ -2651,7 +2651,7 @@ body.zx-ltr .dpc-taste{ font-family:'Amiri',serif; }
   display:inline-block;position:relative;
 }
 .pt-sunnah-pill.on{background:rgba(201,150,58,0.14);border-color:rgba(201,150,58,0.5);color:var(--text);}
-.pt-sunnah-pill.on .pt-sunnah-pill-dot{background:var(--gold);border-color:var(--gold-ink,#7A5E22);}
+.pt-sunnah-pill.on .pt-sunnah-pill-dot{background:var(--gold);border-color:var(--gold);}
 .pt-sunnah-pill.on .pt-sunnah-pill-dot::after{
   content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   font-size:8.5px;color:#FFFDF9;font-weight:900;
@@ -2671,7 +2671,7 @@ body.zx-ltr .dpc-taste{ font-family:'Amiri',serif; }
   border:1.5px solid rgba(201,150,58,0.4);background:var(--card-bg);
   transition:background .25s ease,border-color .25s ease;
 }
-.voluntary-toggle.on{background:var(--gold);border-color:var(--gold-ink,#7A5E22);position:relative;}
+.voluntary-toggle.on{background:var(--gold);border-color:var(--gold);position:relative;}
 .voluntary-toggle.on::after{content:'✓';color:#FFFDF9;font-size:11px;font-weight:900;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
 .voluntary-label{font-size:13px;font-weight:700;color:var(--text);}
 
@@ -5922,10 +5922,25 @@ body.theme-dark #screen-mushaf .mus-chev{
 #screen-mushaf .mus-resume button.ghost{background:transparent;color:var(--muted);padding:7px 9px;}
 
 
-#screen-mushaf .mus-tool{background:none;border:1px solid rgba(127,127,127,.24);
-  border-radius:9px;padding:5px 9px;cursor:pointer;line-height:1;
+/* صبغةُ بطاقات الختمة: وهجٌ قطريٌّ وحافةٌ بيضاءُ وثلاثُ ظلال */
+#screen-mushaf .mus-tool{
+  border:1px solid rgba(255,255,255,.9);
+  background:
+    radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.95), rgba(255,255,255,0) 62%),
+    linear-gradient(165deg, rgba(255,255,255,.94), rgba(244,236,220,.74));
+  box-shadow:0 3px 9px rgba(20,48,79,.12),
+             inset 0 1px 0 rgba(255,255,255,.96),
+             inset 0 -3px 8px rgba(120,90,42,.06);
+  border-radius:12px;padding:7px 11px;cursor:pointer;line-height:1;
+  transition:transform .15s cubic-bezier(.22,1,.36,1), box-shadow .18s ease;
   color:var(--text);font-family:inherit;font-size:12px;}
-#screen-mushaf .mus-tool.on{background:rgba(201,150,58,.16);border-color:var(--gold-ink,#7A5E22);}
+#screen-mushaf .mus-tool:active{transform:scale(.94) translateY(1px);
+  box-shadow:0 1px 3px rgba(20,48,79,.16), inset 0 2px 6px rgba(20,48,79,.14);}
+/* المُشغَّلُ ياقوتةٌ زرقاء كالبطاقة المختارة */
+#screen-mushaf .mus-tool.on{
+  background:linear-gradient(140deg,#3F9BC9 0%,#2A6E96 46%,#14304F 100%);
+  border-color:rgba(214,169,74,.44);color:#FFFDF7;
+  box-shadow:0 5px 13px rgba(20,48,79,.28), inset 0 1px 0 rgba(255,255,255,.28);}
 #screen-mushaf .mus-tool svg{display:block;width:15px;height:15px;}
 #screen-mushaf .mus-marks{flex:0 0 auto;display:flex;gap:6px;overflow-x:auto;
   padding:0 12px 6px;scrollbar-width:none;}
@@ -6015,12 +6030,23 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
   border-radius:10px;color:#20180B;font-family:inherit;font-size:13px;font-weight:700;
   padding:9px 20px;cursor:pointer;}
 /* شريطُ الوِرد: يظهر إن كان الفتحُ من الخطّة */
-#screen-mushaf .mus-wird{flex:0 0 auto;margin:0 10px 5px;padding:7px 12px;
-  border-radius:10px;background:rgba(201,150,58,.11);
-  border:1px solid rgba(201,150,58,.26);display:flex;align-items:center;
+/* شريطُ الورد: البطاقةُ نفسُها لا لونٌ ذهبيٌّ شفيف */
+#screen-mushaf .mus-wird{flex:0 0 auto;margin:0 10px 5px;padding:9px 13px;
+  border-radius:14px;
+  background:
+    radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.95), rgba(255,255,255,0) 62%),
+    linear-gradient(165deg, rgba(255,255,255,.94), rgba(244,236,220,.74));
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 3px 9px rgba(20,48,79,.12),
+             inset 0 1px 0 rgba(255,255,255,.96),
+             inset 0 -3px 8px rgba(120,90,42,.06);
+  display:flex;align-items:center;
   justify-content:center;gap:12px;font-size:12px;color:var(--text);text-align:center;}
-#screen-mushaf .mus-wird button{background:var(--gold);border:0;border-radius:9px;
-  color:#20180B;font-family:inherit;font-size:12px;font-weight:700;
+#screen-mushaf .mus-wird button{
+  background:linear-gradient(140deg,#3F9BC9 0%,#2A6E96 46%,#14304F 100%);
+  border:1px solid rgba(214,169,74,.42);border-radius:12px;
+  box-shadow:0 4px 12px rgba(20,48,79,.24), inset 0 1px 0 rgba(255,255,255,.28);
+  color:#FFFDF7;font-family:inherit;font-size:12px;font-weight:800;
   padding:7px 14px;cursor:pointer;white-space:nowrap;}
 </style>
 
@@ -15241,7 +15267,16 @@ window.addEventListener('popstate', function(){
   var AR={'0':'٠','1':'١','2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩'};
   function toAr(s){ return String(s).replace(/[0-9]/g,function(d){return AR[d];}); }
   function pad(n){ return (n<10?'0':'')+n; }
-  function fmt(m){ return m==null ? '—' : toAr(pad(Math.floor(m/60))+':'+pad(m%60)); }
+  /* ═══ اثنتا عشرة ساعةً بلا «صباحًا» و«مساءً» ═══
+   الأربعُ والعشرون تُقرأ في الجداول لا على لوح المسجد. والصلواتُ
+   معلومةُ الوقت: لا يلتبس فجرٌ بعشاء، فلا حاجة إلى قرينةٍ تُثقل السطر.
+   والصفرُ يبقى في الدقائق ويسقط من الساعات: ٥:٣٠ لا ٠٥:٣٠. */
+function fmt(m){
+  if(m == null) return '—';
+  var h = Math.floor(m / 60) % 24, q = m % 60;
+  var h12 = h % 12; if(h12 === 0) h12 = 12;
+  return toAr(String(h12) + ':' + pad(q));
+}
 
   // مفتاح الحال من ZahimDay، وهذا الجدول لم يعد يحسب الزمن — إنما يحمل ألوان كل حال
   function currentState(nowMin){
@@ -16458,7 +16493,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-10-0455').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-10-0820').catch(function(){});
     });
   }
 })();
@@ -16656,7 +16691,7 @@ html[dir="ltr"] .zt-dots{flex-direction:row;}
   font-family:'Tajawal','Inter',system-ui,sans-serif;font-size:15px;font-weight:700;
   color:var(--text);-webkit-tap-highlight-color:transparent;
   transition:border-color .25s ease,background-color .25s ease,transform .16s ease;}
-.zt-langbtn.on{border-color:var(--gold-ink,#7A5E22);background:rgba(201,150,58,.10);}
+.zt-langbtn.on{border-color:var(--gold);background:rgba(201,150,58,.10);}
 .zt-langbtn:active{transform:scale(.97);}
 
 .zt-fields{width:100%;max-width:330px;margin:22px auto 0;}
