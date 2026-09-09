@@ -3,6 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<!-- ═══ بوّابةُ أوّل زيارة ═══
+     التعريفُ صفحةٌ قائمةٌ بذاتها، فالتحويلُ إليها يقع في أوّل سطرٍ يُقرأ:
+     لو أُخّر إلى ما بعد البناء لَلمَح الزائرُ التطبيقَ ثوانيَ ثم انتُزع منه.
+     و replace بدل href فلا يعلق الزائرُ بين صفحتين بزرّ الرجوع. -->
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('zahim_tour_seen_v1') === '1') return;   // زارَ من قبل
+    if(localStorage.getItem('zahim_intro_shown_v1') === '1') return; // رأى التعريف
+    localStorage.setItem('zahim_intro_shown_v1', '1');
+    var l = localStorage.getItem('zahim_lang_v1');
+    if(l) localStorage.setItem('zahim_intro_lang', l);   // وإلّا اهتدى التعريفُ بنفسه
+    location.replace('intro.html');
+  }catch(e){}   // تخزينٌ ممنوع (تصفّحٌ خاصّ): يمضي كما كان
+})();
+</script>
 <!-- ═══ تطبيقٌ قابل للتثبيت ═══ -->
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#14304F">
@@ -14394,9 +14410,9 @@ function showToast(msg){
     <div class="zx-row" onclick="window.open('https://zahim.app/intro','_blank','noopener')">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 5.2h5.2a2.2 2.2 0 0 1 2.2 2.2v11.4a1.7 1.7 0 0 0-1.7-1.7H4.6z"/><path d="M19.4 5.2h-5.2a2.2 2.2 0 0 0-2.2 2.2v11.4a1.7 1.7 0 0 1 1.7-1.7h5.7z"/></svg></span><span class="zx-row-label">كيف تستخدم زاحِم<i>شرحٌ بالصور لكلّ شاشة</i></span><span class="zx-row-chev">←</span>
     </div>
-    <div class="zx-row" onclick="closeSettings(); setTimeout(ztOpen, 260);">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.7-.9 1.3v.4"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg></span><span class="zx-row-label">جولة تعريفية<i>شاشاتٌ تشرح البوصلة ومحطّاتها</i></span><span class="zx-row-chev">←</span>
-    </div>
+    <!-- صفُّ «جولة تعريفية» حُذف: كان يفتح الجولةَ القديمة، وقد صار
+         التعريفُ واحدًا — صفُّ «كيف تستخدم زاحِم» يفتحه. والمدينةُ
+         واللغةُ لكلٍّ منهما لوحتُه في الإعدادات. -->
     <div class="zx-row" id="zxInstallRow" onclick="zxInstallTap()">
       <span class="zx-row-ic brass" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
@@ -16179,7 +16195,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-09-0130').catch(function(){});
     });
   }
 })();
@@ -16674,6 +16690,14 @@ body.theme-dark .zx-sw{
     render();
     try{ history.pushState({ztour:1}, ''); }catch(e){}
   };
+  /* العائدُ من التعريف الجديد قد عرف زاحِمَ، فلا يُعاد عليه شرحُه —
+     تبقى اللوحةُ الأخيرة وحدَها: مدينتُه ولغتُه. */
+  window.ztOpenSetup = function(){
+    idx = PANELS.length - 1;
+    document.getElementById('ztWrap').classList.add('open');
+    render();
+    try{ history.pushState({ztour:1}, ''); }catch(e){}
+  };
   window.ztClose = function(fromPop){
     var w = document.getElementById('ztWrap');
     w.classList.remove('open');
@@ -16713,12 +16737,17 @@ body.theme-dark .zx-sw{
     if(w && w.classList.contains('open')){ window.__zxHandled = true; ztClose(true); }
   });
 
-  // تُفتح أوّل مرة فقط
+  // العائدُ من التعريف: لوحةُ الإعداد وحدَها. ومن تعذّر عليه التخزينُ
+  // فلم يُحوَّل أصلًا — يُعرَض عليه التعريفُ القديم كاملًا كما كان.
   document.addEventListener('DOMContentLoaded', function(){
     setTimeout(function(){
-      var seen = false;
-      try{ seen = localStorage.getItem(KEY) === '1'; }catch(e){}
-      if(!seen) ztOpen();
+      var seen = false, introShown = false;
+      try{
+        seen = localStorage.getItem(KEY) === '1';
+        introShown = localStorage.getItem('zahim_intro_shown_v1') === '1';
+      }catch(e){}
+      if(seen) return;
+      if(introShown) ztOpenSetup(); else ztOpen();
     }, 1400);
   });
 })();
