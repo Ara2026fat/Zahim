@@ -3108,6 +3108,12 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
 /* ═══ شبكةُ البلاطات ═══
    الصفُّ الطويلُ يجعل اللوحةَ عمودًا يُمرَّر؛ والبلاطتان في الصفّ تجعلانها
    وجهًا يُرى دفعةً واحدة. والأيقونةُ تكبر لأنّها صارت عنوانَ البلاطة. */
+/* البلاطةُ اللبنيّةُ على بطاقةٍ بيضاءَ تضيع — وفي صفحة الختمة تجلس
+   على الكريميّ فيظهر حرفُها وظلُّها. فيُرفع البياضُ من تحتها. */
+.zx-group.zx-tiles{ background:transparent; box-shadow:none; border:0; padding:0; }
+.zx-group.zx-tiles > .zx-group-head,
+.zx-group.zx-tiles > .zx-hint{ padding-inline:2px; }
+
 /* «.zx-subpane.on» أقوى مُحدِّدًا، فيُصرَّح بالشبكة عليها أيضًا */
 .zx-tiles,
 .zx-subpane.on.zx-tiles{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
@@ -3120,20 +3126,41 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
 }
 .zx-tiles > .zx-row.zx-span .zx-row-ic{ width:34px;height:34px;margin-inline-end:11px; }
 .zx-tiles > .zx-row.zx-span .zx-row-value{ margin-top:0;padding-top:0; }
+/* الهيئةُ منقولةٌ من بطاقات هدف الختمة — أنظفُ وجهٍ في زاحِم:
+   وهجٌ قطريٌّ من أعلى اليسار فوق تدرّجٍ لبنيّ، وحافةٌ بيضاءُ لا ذهبيّة،
+   وثلاثُ ظلالٍ متراكبة: ظلٌّ يرفع البلاطة، وخيطٌ أبيضُ يُعلي حرفَها،
+   ونفَسٌ دافئٌ يُقعّر أسفلها. واللمسُ يُغوّصها كحبّة التسبيح. */
 .zx-tiles > .zx-row{
+  position:relative; overflow:hidden;
   flex-direction:column; align-items:flex-start; justify-content:flex-start;
-  gap:6px; padding:12px 11px 11px; min-height:104px;
-  border:1px solid rgba(201,150,58,.26); border-radius:15px;
-  background:linear-gradient(155deg,#FFFDF7,#F6EFE0);
-  box-shadow:0 3px 10px rgba(48,42,38,.06), inset 0 1px 0 rgba(255,255,255,.86);
-  transition:transform .14s ease, box-shadow .18s ease;
+  gap:6px; padding:14px 12px 13px; min-height:114px;
+  border:1px solid rgba(255,255,255,.92); border-radius:18px;
+  background:
+    radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.95), rgba(255,255,255,0) 62%),
+    linear-gradient(165deg, rgba(255,255,255,.94), rgba(244,236,220,.74));
+  box-shadow:
+    0 5px 14px rgba(20,48,79,.13),
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 -5px 12px rgba(120,90,42,.07);
+  transition:transform .15s cubic-bezier(.22,1,.36,1),
+             box-shadow .18s ease, background .25s ease;
 }
-.zx-tiles > .zx-row:active{ transform:translateY(2px); box-shadow:0 1px 5px rgba(48,42,38,.11); }
+.zx-tiles > .zx-row:active{
+  transform:scale(.965) translateY(1px);
+  box-shadow:0 1px 4px rgba(20,48,79,.16), inset 0 2px 6px rgba(20,48,79,.14);
+}
+/* الأيقونةُ ترتفع عن سطح البلاطة بخيطٍ أبيضَ وظلٍّ خافت */
+.zx-tiles > .zx-row .zx-row-ic{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 2px 6px rgba(20,48,79,.10);
+}
 /* الصفُّ الوحيدُ في لوحته يبقى صفًّا: بلاطةٌ يتيمةٌ نصفَ العرض مائلة */
 .zx-tiles > .zx-row:only-child{
   grid-column:1 / -1; flex-direction:row; align-items:center; min-height:0;
 }
-.zx-tiles > .zx-row.zx-owner{ grid-column:1 / -1; }
+.zx-tiles > .zx-row.zx-owner{
+  grid-column:1 / -1; min-height:0; align-items:center; text-align:center;
+  padding:13px 12px; gap:3px;
+}
 .zx-tiles > .zx-row .zx-row-ic{ width:38px;height:38px;margin-inline-end:0; }
 .zx-tiles > .zx-row:only-child .zx-row-ic{ width:34px;height:34px;margin-inline-end:11px; }
 .zx-tiles > .zx-row .zx-row-label{ font-size:12.5px;line-height:1.35; }
@@ -3143,22 +3170,32 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
 }
 /* القيمةُ تُدفع إلى القاع فتستوي البلاطاتُ على سطرٍ واحد */
 .zx-tiles > .zx-row .zx-row-value{
-  margin-top:auto;padding-top:4px;font-size:11.5px;font-weight:800;
-  color:var(--gold-deep,#9A7739);
+  margin-top:auto;padding-top:5px;font-size:11.5px;font-weight:800;
+  color:var(--gold-deep,#9A7739);letter-spacing:.1px;
 }
 .zx-tiles > .zx-row:only-child .zx-row-value{ margin-top:0;padding-top:0; }
 /* السهمُ لا معنى له في بلاطةٍ كلُّها مضغوطة */
 .zx-tiles > .zx-row:not(:only-child):not(.zx-span) .zx-row-chev{ display:none; }
 body.theme-dark .zx-tiles > .zx-row{
-  background:linear-gradient(155deg,rgba(255,255,255,.055),rgba(255,255,255,.022));
-  border-color:rgba(201,168,104,.26);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+  border-color:rgba(255,255,255,.10);
+  background:
+    radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.09), rgba(255,255,255,0) 60%),
+    linear-gradient(165deg, rgba(255,255,255,.062), rgba(255,255,255,.022));
+  box-shadow:
+    0 5px 14px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -5px 12px rgba(0,0,0,.16);
+}
+body.theme-dark .zx-tiles > .zx-row .zx-row-ic{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 2px 6px rgba(0,0,0,.28);
 }
 /* لوحةُ «عن زاحِم» كانت تخفي الشروحَ في الشاشات القصيرة —
    والبلاطةُ تتّسع لها، فتعود. */
 #zxPane-about .zx-tiles > .zx-row{ min-height:104px;padding:12px 11px 11px;margin-bottom:0; }
 #zxPane-about .zx-tiles > .zx-row .zx-row-label i{ display:block; }
 #zxPane-about .zx-tiles > .zx-row .zx-row-ic{ width:38px;height:38px; }
+/* سطرُ الحقوق ليس بلاطةً، فلا يُمدّ طولُه */
+#zxPane-about .zx-tiles > .zx-row.zx-owner{ min-height:0; }
 
 .zx-row{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:13px 4px;border-bottom:1px solid rgba(127,127,127,.14);cursor:pointer;}
@@ -12491,7 +12528,19 @@ function selectQuranDay(idx){
    المصحف — مصحف المدينة النبوية، الإصدار الرابع ١٤٤١هـ
    البياناتُ من نسخةٍ عندنا (MIT)، والخطُّ يُستدعى من مصدره ولا يُستضاف.
    ═══════════════════════════════════════════════════════════ */
-var MUS_DATA = 'https://raw.githubusercontent.com/Ara2026fat/quran-qcf4/main/pages';
+var /* jsDelivr يخزّن على الحافّة قربَ القارئ؛ و raw.githubusercontent يبقى
+   احتياطيًّا إن تعذّر. المستودعُ واحدٌ والملفّاتُ هي هي. */
+MUS_DATA     = 'https://cdn.jsdelivr.net/gh/Ara2026fat/quran-qcf4@main/pages';
+MUS_DATA_ALT = 'https://raw.githubusercontent.com/Ara2026fat/quran-qcf4/main/pages';
+function musFetchJSON(n){
+  var pad = musPad(n);
+  return fetch(MUS_DATA + '/' + pad + '.json')
+    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    .catch(function(){
+      return fetch(MUS_DATA_ALT + '/' + pad + '.json')
+        .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); });
+    });
+}
 var MUS_CDN  = 'https://cdn.jsdelivr.net/gh/MohamadHajjRabee/quran-qcf4@main/fonts-woff2';
 var MUS_KEY  = 'zahim_mushaf_page';
 
@@ -12550,7 +12599,37 @@ function musBand(inner){
    + '</svg><span class="inner">' + inner + '</span></div>';
 }
 
+/* لا تُرسم صفحةٌ حتى يجهز خطُّها.
+   حروفُ QCF في منطقة الاستعمال الخاصّ، فالاحتياطيُّ لا يملك لها رسمًا —
+   ومربّعٌ فارغٌ مكانَ آيةٍ أسوأُ من انتظارِ لحظة. والمهلةُ حارسٌ فقط:
+   إن تعذّر الخطُّ لا نُبقي القارئَ ينتظر إلى غير غاية. */
+function musFontsReady(names, cb){
+  var want = [];
+  names.forEach(function(n){ if(n && want.indexOf(n) === -1) want.push(n); });
+  if(!want.length || !document.fonts || !document.fonts.load){ cb(); return; }
+  var done = false;
+  function fin(){ if(!done){ done = true; cb(); } }
+  var t = setTimeout(fin, 4500);
+  Promise.all(want.map(function(n){
+    return document.fonts.load("16px '" + n + "'").catch(function(){});
+  })).then(function(){ clearTimeout(t); fin(); },
+           function(){ clearTimeout(t); fin(); });
+}
+
 function musRender(j){
+  var _want = [j.font];
+  (j.lines || []).forEach(function(L){
+    (L.words || []).forEach(function(w){ if(w.font) _want.push(w.font); });
+  });
+  _want.forEach(musFont);
+  var _n = _musPage;
+  musFontsReady(_want, function(){
+    if(_musPage !== _n) return;   // قلّب القارئُ قبل أن يصل الخطّ
+    musPaint(j);
+  });
+}
+
+function musPaint(j){
   var page = document.getElementById('musPage');
   var lines = j.lines || [];
   musFont(j.font);
@@ -12748,9 +12827,14 @@ function musPrefetch(n){
   if(n < 1 || n > 604) return;
   if(_musCache[n] || musDisk()[n]) return;
   if(navigator.onLine === false) return;
-  fetch(MUS_DATA + '/' + musPad(n) + '.json')
-    .then(function(r){ return r.ok ? r.json() : null; })
-    .then(function(j){ if(j){ _musCache[n] = j; musSave(n, j); } })
+  musFetchJSON(n)
+    .then(function(j){
+      if(!j) return;
+      _musCache[n] = j; musSave(n, j);
+      // وخطُّ الجارة يُطلب أيضًا، فلا ينتظره القارئُ عند التقليب
+      try{ musFont(j.font); (j.lines||[]).forEach(function(L){
+        (L.words||[]).forEach(function(w){ musFont(w.font); }); }); }catch(e){}
+    })
     .catch(function(){});
 }
 
@@ -12772,8 +12856,7 @@ function musLoad(n){
   lp.innerHTML = '<div class="mus-msg">…يُحمَّل</div>';
   if(navigator.onLine === false){ musOffline(n); return; }
 
-  fetch(MUS_DATA + '/' + musPad(n) + '.json')
-    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+  musFetchJSON(n)
     .then(function(j){
       _musCache[n] = j; musSave(n, j);
       if(_musPage === n) musRender(j);
@@ -16195,7 +16278,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-09-0130').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-09-1050').catch(function(){});
     });
   }
 })();
