@@ -852,7 +852,11 @@ body.theme-dark .qp-custom-card{color:#D6E7F6;}
   border:2px solid transparent;
 }
 .qd-pill.done{background:var(--green);box-shadow:0 4px 12px rgba(26,74,107,0.25);}
-.qd-pill.today{background:linear-gradient(135deg,#C9963A,#E8C070);box-shadow:0 4px 16px rgba(201,150,58,0.3);}
+/* يومُك كان ذهبيًّا برتقاليًّا — بقيّةٌ من عهدٍ سبق الكحليّ.
+   صار لازورديًّا حيًّا، من عائلة الأيقونة وحلقة الإقامة. */
+.qd-pill.today{background:linear-gradient(140deg,#3F9BC9 0%,#2A6E96 46%,#14304F 100%);
+  box-shadow:0 6px 18px rgba(20,48,79,.32), 0 0 0 1px rgba(214,169,74,.42),
+             inset 0 1px 0 rgba(255,255,255,.34);}
 .qd-pill.future{background:var(--cream-2);border-color:rgba(26,74,107,0.1);}
 .qd-pill.selected{border-color:var(--green-light)!important;}
 
@@ -969,11 +973,13 @@ body.theme-dark .quran-day-card .qdc-status{color:#7FC8EE;}
   transition:width .6s ease;
 }
 
+/* الزرُّ كان ذهبيًّا شفيفًا — يصير ياقوتةً زرقاءَ كزرّ «ابدأ رحلة الختمة» */
 .qdc-btn{
-  width:100%;padding:12px;border-radius:12px;
-  background:rgba(201,150,58,0.25);
-  border:1px solid rgba(201,150,58,0.4);
-  color:var(--gold-light);font-size:14px;font-weight:800;
+  width:100%;padding:13px;border-radius:14px;
+  background:linear-gradient(160deg,#3F9BC9 0%,#2A6E96 44%,#14304F 100%);
+  border:1px solid rgba(214,169,74,.42);
+  box-shadow:0 6px 18px rgba(20,48,79,.28), inset 0 1px 0 rgba(255,255,255,.34);
+  color:#FFFDF7;font-size:14px;font-weight:800;
   font-family:'Tajawal',sans-serif;cursor:pointer;
   position:relative;transition:all .2s;
 }
@@ -1815,13 +1821,34 @@ body.tsb-wheel-on .tsb-arc{display:none;}
   box-shadow:0 1px 0 rgba(255,255,255,.9) inset;}
 .zx-pane .zx-row{display:flex;align-items:center;}
 .zx-pane .zx-row .zx-row-label{flex:1;min-width:0;}
-.zx-langs{display:flex;flex-direction:column;gap:8px;}
+/* أربعُ لغاتٍ في عمودٍ واحدٍ تأكل الشاشة، وفي عمودين تُرى دفعةً واحدة */
+.zx-langs{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+/* هيئةُ بطاقات الختمة: وهجٌ قطريٌّ وحافةٌ بيضاءُ وثلاثُ ظلال */
 .zx-lang-opt{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:14px 15px;border:1px solid var(--zg-faint);border-radius:14px;
-  background:var(--card-bg);cursor:pointer;font-size:15.5px;font-weight:600;
-  color:var(--text);width:100%;text-align:start;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  position:relative;overflow:hidden;
+  padding:15px 10px;border:1px solid rgba(255,255,255,.92);border-radius:18px;
+  background:
+    radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.95), rgba(255,255,255,0) 62%),
+    linear-gradient(165deg, rgba(255,255,255,.94), rgba(244,236,220,.74));
+  box-shadow:
+    0 5px 14px rgba(20,48,79,.13),
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 -5px 12px rgba(120,90,42,.07);
+  cursor:pointer;font-size:14.5px;font-weight:700;
+  color:var(--text);width:100%;text-align:center;
+  transition:transform .15s cubic-bezier(.22,1,.36,1),
+             box-shadow .18s ease, background .25s ease;
 }
+.zx-lang-opt:active{transform:scale(.965) translateY(1px);
+  box-shadow:0 1px 4px rgba(20,48,79,.16), inset 0 2px 6px rgba(20,48,79,.14);}
+.zx-lang-opt .tick{font-size:13px;}
+body.theme-dark .zx-lang-opt{
+  border-color:rgba(255,255,255,.10);
+  background:
+    radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.09), rgba(255,255,255,0) 60%),
+    linear-gradient(165deg, rgba(255,255,255,.062), rgba(255,255,255,.022));
+  box-shadow:0 5px 14px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.10);}
 .zx-lang-opt[aria-checked="true"]{border-color:var(--gold);color:var(--green);}
 .zx-lang-opt .tick{color:var(--gold);font-weight:900;opacity:0;}
 .zx-lang-opt[aria-checked="true"] .tick{opacity:1;}
@@ -2209,19 +2236,36 @@ body.mode-night .zx-seal-mono{filter:none;}
 .zx-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 2px 2px;max-width:230px;margin:0 auto;}
 /* ═══ عيّنةُ الوضع ═══ قرصٌ صغيرٌ بحاشيةٍ نحاسيّةٍ نقطتُها في طرفه.
    كانت مستطيلاتٍ ضخمةً بألوانٍ داكنةٍ تملأ اللوح فتُثقله. */
-.zx-mode{display:flex;flex-direction:column;align-items:center;gap:7px;
-  padding:11px 6px;border-radius:16px;border:2px solid transparent;background:transparent;
-  cursor:pointer;transition:background .16s ease,border-color .16s ease;}
-.zx-mode:active{transform:scale(.96);}
-.zx-sw{position:relative;width:46px;height:46px;border-radius:50%;display:block;
+.zx-mode{display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:11px 6px;border-radius:18px;border:1px solid rgba(255,255,255,.92);
+  background:
+    radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.95), rgba(255,255,255,0) 62%),
+    linear-gradient(165deg, rgba(255,255,255,.94), rgba(244,236,220,.74));
+  box-shadow:
+    0 5px 14px rgba(20,48,79,.13),
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 -5px 12px rgba(120,90,42,.07);
+  cursor:pointer;
+  transition:transform .15s cubic-bezier(.22,1,.36,1),
+             box-shadow .18s ease, background .25s ease, border-color .16s ease;}
+body.theme-dark .zx-mode{
+  border-color:rgba(255,255,255,.10);
+  background:
+    radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.09), rgba(255,255,255,0) 60%),
+    linear-gradient(165deg, rgba(255,255,255,.062), rgba(255,255,255,.022));
+  box-shadow:0 5px 14px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.10);}
+.zx-mode:active{transform:scale(.965) translateY(1px);
+  box-shadow:0 1px 4px rgba(20,48,79,.16), inset 0 2px 6px rgba(20,48,79,.14);}
+/* القرصُ كان ٤٦ فيثقُل اللوح؛ و٣٦ تكفي للدلالة على اللون */
+.zx-sw{position:relative;width:36px;height:36px;border-radius:50%;display:block;
   box-shadow:0 3px 10px rgba(48,42,38,.20),0 1px 0 rgba(255,255,255,.35) inset;}
-.zx-sw i{position:absolute;right:5px;bottom:5px;width:11px;height:11px;border-radius:50%;
+.zx-sw i{position:absolute;right:3px;bottom:3px;width:9px;height:9px;border-radius:50%;
   box-shadow:0 0 0 1.5px rgba(255,255,255,.55);}
 .zx-mode.is-on{border-color:var(--gold);background:rgba(216,181,89,.14);}
 .zx-mode-name{display:block;font-size:11.5px;font-weight:700;color:var(--text);}
 .zx-mode.is-on .zx-mode-name{color:var(--gold);}
 @media (max-width:340px){
-  .zx-sw{height:44px}
+  .zx-sw{width:33px;height:33px}
   .zx-mode-name{font-size:11.5px}
 }
 
@@ -3204,9 +3248,17 @@ body.theme-dark .zx-tiles > .zx-row .zx-row-ic{
 .zx-row-value{font-size:12px;color:var(--muted,#6B788C);}
 .zx-row-chev{font-size:13px;color:var(--muted,#6B788C);opacity:.6;}
 .zx-sizes{display:flex;gap:8px;padding:6px 2px 2px;}
-.zx-size{flex:1;text-align:center;padding:11px 0;border-radius:12px;cursor:pointer;
+.zx-size{flex:1;text-align:center;padding:12px 0;border-radius:16px;cursor:pointer;
+  position:relative;overflow:hidden;
+  box-shadow:
+    0 4px 12px rgba(20,48,79,.11),
+    inset 0 1px 0 rgba(255,255,255,.96),
+    inset 0 -4px 10px rgba(120,90,42,.06);
+  transition:transform .15s cubic-bezier(.22,1,.36,1), box-shadow .18s ease;
   background:var(--card-bg);border:1px solid rgba(127,127,127,.20);color:var(--text);
   transition:border-color .25s ease,background-color .25s ease;-webkit-tap-highlight-color:transparent;}
+.zx-size:active{transform:scale(.965) translateY(1px);
+  box-shadow:0 1px 4px rgba(20,48,79,.16), inset 0 2px 6px rgba(20,48,79,.14);}
 .zx-size.is-on{border-color:rgba(201,150,58,.55);background:rgba(201,150,58,.10);}
 .zx-size b{display:block;font-weight:700;}
 /* عيّنةُ الحجم حرفٌ لا كلمة: «ع» عربيًّا و«Aa» إنجليزيًّا — يُقرأ بلا ترجمة */
@@ -10988,7 +11040,26 @@ const PRAYER_ICON = { fajr:'fajr', dhuhr:'fajr', asr:'fajr', maghrib:'evening_cr
    كان الاسمُ يتبع currentPrayer، وهي تُرجع inWindow:true طوال نطاق الوقت كلِّه
    — والعشاءُ نطاقُه يمتدّ إلى منتصف الليل. فيبقى مكتوبًا «العشاء» بعد الصلاة
    بساعاتٍ فيُشوّش على القارئ. فالمعتبَرُ الآن نصفُ ساعةٍ من الأذان لا غير. */
-const ZX_PRAYER_WIN = 30;
+/* ═══ نافذةُ القيام تُقاس من إقامةِ مسجدِه لا من رقمٍ ثابت ═══
+   كانت ثلاثين دقيقةً للجميع. والصوابُ ما قاله صاحبُ التطبيق: الصلاةُ
+   تنقضي بعد الإقامة بنحو عشرين دقيقة — والإقامةُ تختلف بين الفروض،
+   وهي إعدادٌ عنده أصلًا (zahim_iqama_v1). فتُقرأ منه، فلا يفترق
+   حسابُ البوصلة عن حساب المحراب.
+   فالعشاءُ: أذانٌ + عشرون إقامةً + عشرون = أربعون دقيقة، ثم يُذكر الفجر. */
+const ZX_IQAMA_FALLBACK = { fajr:25, dhuhr:20, asr:20, maghrib:15, isha:20 };
+const ZX_AFTER_IQAMA = 20;
+
+function zxStandWin(key){
+  let iq = ZX_IQAMA_FALLBACK[key];
+  if(iq == null) iq = 20;
+  try{
+    const raw = localStorage.getItem('zahim_iqama_v1');
+    if(raw){ const c = JSON.parse(raw); if(c && c[key] != null) iq = +c[key]; }
+  }catch(e){}
+  if(!isFinite(iq) || iq < 0) iq = ZX_IQAMA_FALLBACK[key] || 20;
+  return iq + ZX_AFTER_IQAMA;
+}
+window.zxStandWin = zxStandWin;
 
 function zxPrayerFresh(date){
   try{
@@ -10998,7 +11069,10 @@ function zxPrayerFresh(date){
     const order = ['fajr','dhuhr','asr','maghrib','isha'];
     for(let i = 0; i < order.length; i++){
       const t = T[order[i]];
-      if(t != null && n >= t && n < t + ZX_PRAYER_WIN)
+      if(t == null) continue;
+      const w = zxStandWin(order[i]);
+      /* عشاءٌ متأخّرٌ قد تعبر نافذتُه منتصفَ الليل، فنقيس باليومين */
+      if((n >= t && n < t + w) || (n + 1440 >= t && n + 1440 < t + w))
         return { key: order[i], name: ZahimDay.PRAYER_NAMES[order[i]] };
     }
   }catch(e){}
@@ -11014,13 +11088,14 @@ function refreshPrayerStation(){
       if(PRAYER_ICON[fresh.key]) COMPASS_STAGES[0].icon = PRAYER_ICON[fresh.key];
       return;
     }
-    /* انقضت النافذة: نُسمّي الوقتَ الذي نحن فيه — كما يقول المحراب —
-       ونذكر القادمةَ في السطر تحته. فلا يختلف اسمان على شاشتين. */
-    const cur = ZahimDay.currentPrayer(new Date());
-    const np  = ZahimDay.nextPrayer(new Date());
-    COMPASS_STAGES[0].label = cur.name;
-    COMPASS_STAGES[0].stageName = 'أنت في وقت ' + cur.name + ' · القادمة ' + np.name;
-    if(PRAYER_ICON[cur.key]) COMPASS_STAGES[0].icon = PRAYER_ICON[cur.key];
+    /* انقضت النافذة: تُسمّى القادمةُ لا الماضية.
+       كان يُكتب اسمُ الوقت الذي نحن فيه، ونطاقُ العشاء يمتدّ إلى الفجر —
+       فيبقى «العشاء» على الميناء الليلَ كلَّه، والسطرُ تحته يقول «الفجر».
+       اسمان على شاشةٍ واحدة. فصارا واحدًا: القادمة. */
+    const np = ZahimDay.nextPrayer(new Date());
+    COMPASS_STAGES[0].label = np.name;
+    COMPASS_STAGES[0].stageName = 'القادمة ' + np.name;
+    if(PRAYER_ICON[np.key]) COMPASS_STAGES[0].icon = PRAYER_ICON[np.key];
   }catch(e){}
 }
 
@@ -12822,6 +12897,8 @@ function musOffline(n){
     + '<br><button type="button" onclick="musLoad(' + n + ')">أعِد المحاولة</button></div>';
 }
 
+/* جارتان في كلّ اتّجاه: الإصبعُ أسرعُ من جارةٍ واحدة */
+function musAhead(n){ musPrefetch(n+1); musPrefetch(n-1); musPrefetch(n+2); musPrefetch(n-2); }
 /* جلبٌ صامتٌ للصفحات المجاورة */
 function musPrefetch(n){
   if(n < 1 || n > 604) return;
@@ -12838,8 +12915,10 @@ function musPrefetch(n){
     .catch(function(){});
 }
 
+var _musWaitT = null;
 function musLoad(n){
   n = Math.max(1, Math.min(604, n | 0));
+  clearTimeout(_musWaitT);
   _musPage = n;
   musSaveResume(n);
   document.getElementById('musJump').value = n;
@@ -12847,14 +12926,21 @@ function musLoad(n){
   musWird();
   try{ musDrawMarks(); }catch(e){}
 
-  if(_musCache[n]){ musRender(_musCache[n]); musPrefetch(n+1); musPrefetch(n-1); return; }
+  if(_musCache[n]){ musRender(_musCache[n]); musAhead(n); return; }
   var saved = musDisk()[n];
-  if(saved){ _musCache[n] = saved; musRender(saved); musPrefetch(n+1); musPrefetch(n-1); return; }
+  if(saved){ _musCache[n] = saved; musRender(saved); musAhead(n); return; }
 
-  var lp = document.getElementById('musPage');
-  lp.classList.add('settled');
-  lp.innerHTML = '<div class="mus-msg">…يُحمَّل</div>';
+  /* التقليبُ السريعُ كان يُري «يُحمَّل» في كلّ ومضة، والصفحةُ تصل بعدها
+     بأجزاءٍ من الثانية. فلا تُعرض الرسالةُ إلّا إن طال الانتظارُ حقًّا. */
   if(navigator.onLine === false){ musOffline(n); return; }
+  clearTimeout(_musWaitT);
+  _musWaitT = setTimeout(function(){
+    if(_musPage !== n) return;
+    var lp = document.getElementById('musPage');
+    if(!lp) return;
+    lp.classList.add('settled');
+    lp.innerHTML = '<div class="mus-msg">…يُحمَّل</div>';
+  }, 420);
 
   musFetchJSON(n)
     .then(function(j){
@@ -16278,7 +16364,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-09-1050').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-09-1725').catch(function(){});
     });
   }
 })();
@@ -17008,7 +17094,10 @@ var MODE_FALLBACK = { teal:'calm', olive:'calm', sea:'calm', lapis:'calm', obsid
 .home-tagline{
   font-family:'Reem Kufi','Tajawal',sans-serif;
   font-size:23px; font-weight:600;
-  color:var(--gold);
+  /* كان ذهبيًّا بتباين 2.38:1 — دون العتبة (3:1) قياسًا لا ذوقًا.
+     والكحليُّ 12:1، وهو لونُ الخاتم والمحطّةِ حين تُضاء والأيقونة.
+     والشرطتان تبقيان ذهبيّتين: كحليٌّ يحفّه ذهب، كالبوصلة نفسِها. */
+  color:#14304F;
   letter-spacing:0; line-height:1.9;
   display:flex; align-items:center; justify-content:center; gap:10px;
   margin:4px 16px 14px;
@@ -17960,7 +18049,13 @@ window.zxBackToGrid = function(){
 
   /* نافذةُ القيام: من الأذان إلى انقضائها الصلاةُ قائمة، فلا تُذكر القادمة.
      والفجرُ أطولُ لأنّ ما بين أذانه وإقامته وسنّته وأذكاره أطول. */
-  var ZX_STAND_WIN = { fajr:40, dhuhr:30, asr:30, maghrib:30, isha:30 };
+  /* النافذةُ نفسُها التي تقرؤها البوصلة — إقامةُ مسجده + عشرون دقيقة.
+     مرجعان للنافذة يعني شاشتين تختلفان، وهذا ما بُنيت الوحدة لمنعه. */
+  var ZX_STAND_FALLBACK = { fajr:45, dhuhr:40, asr:40, maghrib:35, isha:40 };
+  function ZX_WIN(k){
+    try{ if(typeof zxStandWin === 'function') return zxStandWin(k); }catch(e){}
+    return ZX_STAND_FALLBACK[k] || 40;
+  }
   var ZX_ORDER = ['fajr','dhuhr','asr','maghrib','isha'];
 
   /* دالّةٌ صافيةٌ تُختبر وحدها: تُعطى المواقيتَ والدقيقةَ فتقول ما يُعرض */
@@ -17969,7 +18064,7 @@ window.zxBackToGrid = function(){
     for(i = 0; i < ZX_ORDER.length; i++){
       k = ZX_ORDER[i]; t = Tm[k];
       if(t == null) continue;
-      w = ZX_STAND_WIN[k] || 30;
+      w = ZX_WIN(k);
       /* عشاءٌ متأخّرٌ قد تعبر نافذتُه منتصفَ الليل، فنقيس باليومين */
       if((n >= t && n < t + w) || (n + 1440 >= t && n + 1440 < t + w))
         return { mode:'standing', key:k };
