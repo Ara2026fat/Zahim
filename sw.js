@@ -13,7 +13,13 @@
    فرفعُ الرقم لا يُسقطها ولا يُعيد تنزيلَ ميغاباتٍ بلا حاجة.
    ═══════════════════════════════════════════════════════════════ */
 
-const VERSION = 'zahim-2026-09-08-1820';   // يُختم آليًّا عند البناء — لا يُحرَّر بيد
+/* الختمُ يُقرأ من رابط التسجيل: sw.js?v=<الختم> في index.html.
+   فتبدّلُ الرابط وحدَه يُلزم المتصفّحَ بجلبِ نسخةٍ جديدةٍ وتفعيلها،
+   ولا يحتاج هذا الملفُّ إلى تحرير ولا إلى رفعٍ بعد اليوم. */
+const VERSION = (function(){
+  try{ return new URL(self.location.href).searchParams.get('v') || 'zahim-dev'; }
+  catch(e){ return 'zahim-dev'; }
+})();
 const SHELL   = VERSION + '-shell';
 const RUNTIME = VERSION + '-runtime';
 
