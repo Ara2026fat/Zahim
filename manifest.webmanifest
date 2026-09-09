@@ -1,15 +1,15 @@
 {
   "name": "زاحِم — Zahim",
   "short_name": "زاحِم",
-  "description": "A calm daily companion for Muslim worship — prayer times, remembrance, Quran and Sunnah. رفيقٌ هادئ يرافق المسلم في يومه.",
+  "description": "A calm daily companion for prayer, Quran, hadith and dhikr.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#FFFFFF",
-  "theme_color": "#14432E",
+  "background_color": "#F7F2E6",
+  "theme_color": "#14304F",
   "categories": [
     "lifestyle",
     "education"
