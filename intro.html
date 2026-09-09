@@ -21,15 +21,15 @@
 
 <style>
 :root{
-  /* الأرضيّةُ غامقةٌ من عائلة زاحِمَ نفسِها: أخضرُ عميقٌ لا أسود.
-     واللمعانُ على الغامق يُرى، وعلى الفاتح يضيع. */
-  --bg:#0E2A1E;
-  --bg-hi:#173A2A;
+  /* الأرضيّةُ من عائلة زاحِمَ نفسِها: كحليٌّ مضيءٌ لا فحميّ.
+     الغامقُ الباهتُ يبتلع الذهبَ والعاج، والمضيءُ يُظهرهما. */
+  --bg:#102A5C;
+  --bg-hi:#1B3F80;
   --ink:#EDE4D1;
-  --muted:#9DB3A5;
+  --muted:#A3B8DA;
   --head:#EBDCB2;
-  --green-soft:#4FC79B;
-  --green-lit:#6FDCB4;
+  --green-soft:#5AA8F5;
+  --green-lit:#8CC5FF;
   --gold:#D6AC63;
   --gold-pale:#E4CE9B;
   --lang:0;
@@ -44,7 +44,7 @@ body{
   background-color:var(--bg);
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84'%3E%3Cg fill='none' stroke='%23D6AC63' stroke-width='0.9' opacity='0.13'%3E%3Cpath d='M42 10 L74 42 L42 74 L10 42 Z'/%3E%3Cpath d='M19 19 H65 V65 H19 Z'/%3E%3C/g%3E%3C/svg%3E"),
-    radial-gradient(130% 70% at 50% -12%, #1D4835 0%, rgba(29,72,53,0) 64%);
+    radial-gradient(130% 70% at 50% -12%, #244F9E 0%, rgba(36,79,158,0) 64%);
   background-attachment:fixed;
 }
 
@@ -130,7 +130,7 @@ body[dir=ltr] .slide p{max-width:29ch;}
 .arch::before{
   content:'';position:absolute;inset:-9% -18% -6%;
   background:radial-gradient(62% 48% at 50% 34%,
-    rgba(79,199,155,.26), rgba(79,199,155,0) 70%);
+    rgba(90,168,245,.26), rgba(90,168,245,0) 70%);
   pointer-events:none;
 }
 .shot{
@@ -189,15 +189,15 @@ body[dir=ltr] .slide p{max-width:29ch;}
 .lv-nd{fill:url(#lvNeedle);
   transition:transform .55s cubic-bezier(.65,0,.35,1);transform-origin:100px 100px;}
 .lv-ring{transition:transform .18s linear;transform-origin:100px 100px;}
-.lv-tick{stroke:rgba(20,67,46,.30);stroke-width:1.4;}
-.lv-tick.big{stroke:rgba(20,67,46,.5);stroke-width:2;}
+.lv-tick{stroke:rgba(18,53,102,.30);stroke-width:1.4;}
+.lv-tick.big{stroke:rgba(18,53,102,.5);stroke-width:2;}
 .lv-n{font-family:'Tajawal',sans-serif;font-size:12px;font-weight:800;
   fill:#B8442F;text-anchor:middle;}
-.lv-kb{fill:#14432E;stroke:var(--gold);stroke-width:1.6;}
+.lv-kb{fill:#123566;stroke:var(--gold);stroke-width:1.6;}
 .lv-rug{fill:rgba(255,255,255,.72);stroke:var(--gold);stroke-width:1.8;
   transition:fill .3s ease,stroke .3s ease,filter .3s ease;}
 .lv-rug.hit{fill:url(#lvRug);stroke:var(--gold);stroke-width:2.4;
-  filter:drop-shadow(0 0 14px rgba(63,163,122,.85));}
+  filter:drop-shadow(0 0 14px rgba(74,140,230,.85));}
 .lv-kb{transition:fill .3s ease;}
 .lv-kb.hit{fill:var(--green-soft);}
 .lv-arrow{fill:var(--gold);transition:opacity .25s ease;}
@@ -222,14 +222,20 @@ body[dir=ltr] .slide p{max-width:29ch;}
 .turnb:active{background:rgba(214,172,99,.24);}
 .turnlb{font-size:clamp(12.5px,1.8vh,15px);color:var(--muted);font-weight:500;}
 
-/* ══ دوائرُ اللغات ══ لا يحتاج ذكرُ اللغات لقطةَ هاتف: علمٌ واسم */
+/* ══ حلقاتُ اللغات ══ اسمٌ بلا علم: العلمُ يقول دولةً، واللغةُ ليست دولة */
 .flags{
   display:grid;grid-template-columns:repeat(2,1fr);
   justify-items:center;align-items:start;
   gap:clamp(16px,4vh,26px) clamp(20px,7vw,44px);
-  width:min(100%,270px);margin-top:22px;
+  width:min(100%,320px);margin-top:22px;
 }
-.flag{display:flex;flex-direction:column;align-items:center;gap:9px;width:clamp(66px,20vw,88px);}
+.flag{
+  display:flex;align-items:center;justify-content:center;width:100%;
+  padding:clamp(11px,1.7vh,15px) 12px;border-radius:999px;
+  background:linear-gradient(165deg,rgba(253,250,242,.11),rgba(253,250,242,.035));
+  border:1px solid rgba(201,150,58,.46);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 6px 16px rgba(0,0,0,.20);
+}
 .flag .disc{box-shadow:0 10px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.95);
   width:clamp(56px,17vw,76px);height:clamp(56px,17vw,76px);border-radius:50%;
   display:grid;place-items:center;
@@ -238,9 +244,10 @@ body[dir=ltr] .slide p{max-width:29ch;}
     radial-gradient(120% 88% at 30% 8%, rgba(255,255,255,.95), rgba(255,255,255,.25) 52%, rgba(255,255,255,0) 78%),
     linear-gradient(165deg,#FDFAF2,#EFE6D3);
   border:1px solid rgba(201,150,58,.55);
-  box-shadow:0 10px 22px rgba(20,67,46,.16), inset 0 1px 0 rgba(255,255,255,.95);
+  box-shadow:0 10px 22px rgba(18,53,102,.16), inset 0 1px 0 rgba(255,255,255,.95);
 }
-.flag b{font-size:clamp(13px,1.9vh,16px);font-weight:700;color:var(--ink);}
+.flag b{font-size:clamp(14px,2.1vh,17.5px);font-weight:700;color:var(--ink);
+        letter-spacing:normal;line-height:1.25;}
 
 /* ══ الغلاف ══ */
 .slide.cover{justify-content:center;}
@@ -266,7 +273,7 @@ body[dir=ltr] .slide p{max-width:29ch;}
 /* بريقٌ يمرّ على الاسم */
 .shine{
   background:linear-gradient(100deg,
-    var(--ink) 0%, var(--ink) 38%, #FFF6DE 46%, #BFE9D2 52%, var(--ink) 60%, var(--ink) 100%);
+    var(--ink) 0%, var(--ink) 38%, #FFF6DE 46%, #C6DBF7 52%, var(--ink) 60%, var(--ink) 100%);
   background-size:280% 100%;
   -webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent;color:transparent;
@@ -298,7 +305,7 @@ body[dir=ltr] .slide p{max-width:29ch;}
   display:inline-block;margin-top:18px;
   padding:18px 56px;border-radius:999px;
   background:linear-gradient(162deg,#F2DCA4 0%,var(--gold) 46%,#A87C2E 100%);
-  color:#0E2A1E;text-decoration:none;
+  color:#102A5C;text-decoration:none;
   font-weight:700;font-size:clamp(20px,2.8vh,26px);
   box-shadow:0 18px 38px rgba(0,0,0,.45),
     inset 0 1px 0 rgba(255,255,255,.55), inset 0 -6px 16px rgba(0,0,0,.22);
@@ -418,14 +425,14 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
       <stop offset="0%" stop-color="#FBF3E0"/><stop offset="100%" stop-color="#E6D3A8"/>
     </linearGradient>
     <linearGradient id="lvBeadOn" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#7FD8B2"/><stop offset="100%" stop-color="#1E6E4C"/>
+      <stop offset="0%" stop-color="#8CC5FF"/><stop offset="100%" stop-color="#205CB0"/>
     </linearGradient>
     <linearGradient id="lvRug" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#2F8F65"/><stop offset="100%" stop-color="#123D2A"/>
+      <stop offset="0%" stop-color="#3A7FE6"/><stop offset="100%" stop-color="#14387A"/>
     </linearGradient>
     <linearGradient id="lvNeedle" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#5FC79C"/><stop offset="60%" stop-color="#2A805A"/>
-      <stop offset="100%" stop-color="#14432E"/>
+      <stop offset="0%" stop-color="#5AA8F5"/><stop offset="60%" stop-color="#2A6BCC"/>
+      <stop offset="100%" stop-color="#123566"/>
     </linearGradient>
   </defs>
 </svg>
@@ -451,7 +458,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
     <g id="dialTicks"></g>
     <path class="needle" id="dialNeedle" d="M37 15 L40.1 37 L37 41.4 L33.9 37 Z"/>
     <circle class="hub" cx="37" cy="37" r="3.2"/>
-    <circle cx="37" cy="37" r="1.2" fill="#0F3927"/>
+    <circle cx="37" cy="37" r="1.2" fill="#12336B"/>
   </svg>
 
   <button class="arrow" id="next" type="button">
@@ -480,10 +487,10 @@ ar: {
          onQibla:'أنت على القبلة', turn:'أدِر', right:'يمينًا', left:'يسارًا' },
   slides:[
     { h:'أربعُ لغات', f:F.lang, flags:true,
-      p:['والنصُّ الشرعيُّ يبقى عربيًّا كما نزل.'] },
+      p:[] },
     { h:'البوصلة', f:F.compass, live:'dial',
       p:['في البوصلة جُمعت أورادُ يومك: الأذكارُ والصلاةُ والقرآنُ والحديث — كلٌّ في وقته.',
-         'والإبرةُ تدلّ على ما حضر وقتُه.'] },
+         'والبوصلةُ تدلّ على ما حضر وقتُه، فإن حان وقتُ الصلاة دلّت عليه.'] },
     { h:'الصلاةُ والمحراب', f:F.mihrab, arch:true,
       p:['فإذا حان وقتُ الصلاة صعدت الإبرةُ إليها.',
          'تفتحها فتجد المحراب، وفيه مواقيتُ يومك.'] },
@@ -493,11 +500,11 @@ ar: {
     { h:'وِردُ القرآن', f:F.quran,
       p:['مصحفُ المدينة بين يديك.',
          'وخططٌ للختمة تختار منها، أو تضعُ خطّتَك بنفسك.'] },
-    { h:'رياضُ السنّة', f:F.riyad,
-      p:['مئتانِ وثلاثةٌ وعشرون درسًا في الأعمال اليسيرةِ عظيمةِ الأجر.',
+    { h:'الحديث', f:F.riyad,
+      p:['رياضُ السنّة: مئتانِ وثلاثةٌ وعشرون درسًا في الأعمال اليسيرةِ عظيمةِ الأجر.',
          'من محاضرة الشيخ خالد السبت: «أيُّكم يعجز عن هذا؟»'] }
   ],
-  endH:'وتسبيح', endF:F.tasbih,
+  endH:'سبِّح واستغفر', endF:F.tasbih,
   endP:['عدّادٌ في متناول الإبهام.']
 },
 
@@ -513,10 +520,10 @@ en: {
          onQibla:'You are facing the qibla', turn:'Turn', right:'right', left:'left' },
   slides:[
     { h:'Four languages', f:F.lang, flags:true,
-      p:['Quran and hadith stay in Arabic, as they were revealed.'] },
+      p:[] },
     { h:'The dial', f:F.compass, live:'dial',
       p:['The dial gathers your day: adhkar, prayer, Quran and hadith — each in its time.',
-         'The needle points to what is due now.'] },
+         'The compass points to what is due now; when a prayer comes in, it points to it.'] },
     { h:'Prayer and the mihrab', f:F.mihrab, arch:true,
       p:['When a prayer is due, the needle rises to it.',
          'Open it and you find the mihrab, with the times of your day.'] },
@@ -526,11 +533,11 @@ en: {
     { h:'Quran reading', f:F.quran,
       p:['The Madinah Mushaf, in your hands.',
          'Choose a ready khatmah plan, or set your own.'] },
-    { h:'Riyad al-Sunnah', f:F.riyad,
-      p:['223 lessons on small deeds of great reward.',
+    { h:'Hadith', f:F.riyad,
+      p:['Riyad al-Sunnah: 223 lessons on small deeds of great reward.',
          'From the lecture of Shaykh Kh\u0101lid al-Sabt: \u201CWhich of you is unable to do this?\u201D'] }
   ],
-  endH:'And tasbih', endF:F.tasbih,
+  endH:'Glorify and seek forgiveness', endF:F.tasbih,
   endP:['A counter within reach of your thumb.']
 },
 
@@ -546,10 +553,10 @@ ms: {
          onQibla:'Anda mengadap kiblat', turn:'Putar', right:'ke kanan', left:'ke kiri' },
   slides:[
     { h:'Empat bahasa', f:F.lang, flags:true,
-      p:['Al-Quran dan hadis kekal dalam bahasa Arab.'] },
+      p:[] },
     { h:'Dail', f:F.compass, live:'dial',
       p:['Dail menghimpun hari anda: zikir, solat, al-Quran dan hadis — masing-masing pada waktunya.',
-         'Jarumnya menunjuk kepada apa yang tiba masanya.'] },
+         'Dail menunjuk kepada apa yang tiba masanya; apabila tiba waktu solat, ia menunjuk kepadanya.'] },
     { h:'Solat dan mihrab', f:F.mihrab, arch:true,
       p:['Apabila tiba waktu solat, jarum naik kepadanya.',
          'Bukalah, dan anda temui mihrab dengan waktu-waktu hari anda.'] },
@@ -559,11 +566,11 @@ ms: {
     { h:'Bacaan al-Quran', f:F.quran,
       p:['Mushaf Madinah di tangan anda.',
          'Pilih pelan khatam yang sedia, atau tetapkan pelan anda sendiri.'] },
-    { h:'Riyad al-Sunnah', f:F.riyad,
-      p:['223 pelajaran tentang amalan kecil yang besar pahalanya.',
+    { h:'Hadis', f:F.riyad,
+      p:['Riyad al-Sunnah: 223 pelajaran tentang amalan kecil yang besar pahalanya.',
          'Daripada kuliah Syeikh Khalid al-Sabt: \u201CSiapakah antara kamu yang tidak mampu melakukannya?\u201D'] }
   ],
-  endH:'Dan tasbih', endF:F.tasbih,
+  endH:'Bertasbih dan beristighfar', endF:F.tasbih,
   endP:['Pembilang dalam jangkauan ibu jari.']
 },
 
@@ -579,10 +586,10 @@ id: {
          onQibla:'Anda menghadap kiblat', turn:'Putar', right:'ke kanan', left:'ke kiri' },
   slides:[
     { h:'Empat bahasa', f:F.lang, flags:true,
-      p:['Al-Qur\u2019an dan hadis tetap dalam bahasa Arab.'] },
+      p:[] },
     { h:'Pedoman', f:F.compass, live:'dial',
       p:['Pedoman menghimpun hari Anda: zikir, salat, Al-Qur\u2019an, dan hadis — masing-masing pada waktunya.',
-         'Jarumnya menunjuk pada apa yang tiba waktunya.'] },
+         'Pedoman menunjuk pada apa yang tiba waktunya; ketika waktu salat tiba, ia menunjuk kepadanya.'] },
     { h:'Salat dan mihrab', f:F.mihrab, arch:true,
       p:['Ketika waktu salat tiba, jarum naik kepadanya.',
          'Bukalah, dan Anda temui mihrab dengan waktu-waktu hari Anda.'] },
@@ -592,11 +599,11 @@ id: {
     { h:'Bacaan Al-Qur\u2019an', f:F.quran,
       p:['Mushaf Madinah di tangan Anda.',
          'Pilih rencana khatam yang tersedia, atau tetapkan rencana Anda sendiri.'] },
-    { h:'Riyad as-Sunnah', f:F.riyad,
-      p:['223 pelajaran tentang amal kecil yang besar pahalanya.',
+    { h:'Hadis', f:F.riyad,
+      p:['Riyad as-Sunnah: 223 pelajaran tentang amal kecil yang besar pahalanya.',
          'Dari kajian Syekh Khalid as-Sabt: \u201CSiapa di antara kalian yang tidak mampu melakukannya?\u201D'] }
   ],
-  endH:'Dan tasbih', endF:F.tasbih,
+  endH:'Bertasbih dan beristigfar', endF:F.tasbih,
   endP:['Penghitung dalam jangkauan ibu jari.']
 }
 
@@ -637,14 +644,12 @@ function sep(){
 /* اللقطةُ داخل قوس المحراب، وعلى حرفه خيطُ ذهب */
 var ARCH_D = 'M0,1 L0,0.30 Q0,0.085 0.5,0 Q1,0.085 1,0.30 L1,1 Z';
 /* لقطةٌ في إطارٍ مستديرٍ — وهو الأصلُ في الصفحات */
-/* دوائرُ اللغات الأربع */
-var FLAGS = [['\uD83C\uDDF8\uD83C\uDDE6','العربيّة'], ['\uD83C\uDDEC\uD83C\uDDE7','English'],
-             ['\uD83C\uDDF2\uD83C\uDDFE','Melayu'], ['\uD83C\uDDEE\uD83C\uDDE9','Indonesia']];
+/* اللغاتُ الأربع بأسمائها في لسانها — بلا أعلام */
+var FLAGS = [['','العربيّة'], ['','English'], ['','Melayu'], ['','Indonesia']];
 function flagsOf(){
   var w = el('div', 'flags');
   FLAGS.forEach(function(f){
     var d = el('div', 'flag');
-    d.appendChild(el('div', 'disc', f[0]));
     d.appendChild(el('b', null, f[1]));
     w.appendChild(d);
   });
@@ -707,7 +712,7 @@ function liveDial(t){
     d:'M100 44 L104.6 100 L100 110 L95.4 100 Z' });
   svgEl.appendChild(nd);
   svgEl.appendChild(sv('circle', { cx:100, cy:100, r:6, fill:'#C9963A' }));
-  svgEl.appendChild(sv('circle', { cx:100, cy:100, r:2.4, fill:'#0F3927' }));
+  svgEl.appendChild(sv('circle', { cx:100, cy:100, r:2.4, fill:'#12336B' }));
 
   wrap.appendChild(svgEl);
   var say = el('div', 'say');
@@ -908,10 +913,10 @@ function build(code){
   c.appendChild(cs);
   c.appendChild(el('p', 'tag', t.tag));
   c.appendChild(el('p', 'lead', t.lead));
+  // لا كلمةَ «اسحب»: السهمان أسفلَ الشاشة يقولانها، والسهمُ هنا يكفي
   var sw = el('div', 'swipe');
-  sw.appendChild(el('span', null, t.swipe));
   var ar = svgIcon('0 0 40 16',
-    '<path d="M2 8h34M29 2l7 6-7 6" stroke="#6E7C73" stroke-width="1.6"'
+    '<path d="M2 8h34M29 2l7 6-7 6" stroke="#8496B4" stroke-width="1.6"'
     + ' stroke-linecap="round" stroke-linejoin="round"/>');
   if(rtl) ar.style.transform = 'scaleX(-1)';
   sw.appendChild(ar);
