@@ -1843,11 +1843,13 @@ body.theme-dark .zx-tile b{color:#EDEAE2;}
 #zaVoiceRow{ grid-column:1 / -1 !important; min-height:0 !important;
   flex-direction:column !important; align-items:stretch !important; }
 #zaVoiceRow > .zx-row-label{ padding:0 2px; }
-.za-picks{display:grid;gap:7px;}
+/* ثلاثٌ في صفّ، مربّعةٌ بنسبةٍ واحدة — كبطاقات هدف الختمة */
+.za-picks{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
 /* هيئةُ بطاقات الختمة: وهجٌ قطريٌّ وحافةٌ بيضاءُ وثلاثُ ظلال */
 .za-pick{
-  display:block;width:100%;text-align:start;font:inherit;cursor:pointer;
-  padding:11px 13px;border-radius:15px;
+  display:grid;place-items:center;width:100%;aspect-ratio:1/1;
+  text-align:center;font:inherit;cursor:pointer;
+  padding:8px 6px;border-radius:16px;
   border:1px solid rgba(255,255,255,.92);
   background:
     radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.95), rgba(255,255,255,0) 62%),
@@ -1859,16 +1861,14 @@ body.theme-dark .zx-tile b{color:#EDEAE2;}
 }
 .za-pick:active{transform:scale(.975) translateY(1px);
   box-shadow:0 1px 4px rgba(20,48,79,.16), inset 0 2px 6px rgba(20,48,79,.14);}
-.za-pick b{display:block;font-size:13.5px;font-weight:800;color:#2C2620;}
-.za-pick i{display:block;font-style:normal;font-size:10.5px;font-weight:600;
-  color:var(--muted,#6E6152);margin-top:2px;line-height:1.5;}
+.za-pick b{display:block;font-size:13px;font-weight:800;color:#2C2620;line-height:1.4;}
 /* المختارُ ياقوتةٌ زرقاءُ كالبطاقة المختارة في صفحة الختمة */
 .za-pick.on{
   background:linear-gradient(150deg,#3F9BC9 0%,#2A6E96 46%,#14304F 100%);
   border-color:rgba(214,169,74,.44);
   box-shadow:0 6px 16px rgba(20,48,79,.30), inset 0 1px 0 rgba(255,255,255,.30);}
 .za-pick.on b{color:#FFFDF7;}
-.za-pick.on i{color:rgba(255,253,247,.86);}
+
 body.theme-dark .za-pick{
   border-color:rgba(255,255,255,.10);
   background:linear-gradient(165deg, rgba(255,255,255,.06), rgba(255,255,255,.02));}
@@ -3136,6 +3136,24 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
   margin:10px auto 0;letter-spacing:.3px;line-height:1.7;
   position:relative;padding-top:11px;max-width:22ch;
 }
+/* بابُ الرواتب: بطاقةٌ صغيرةٌ بصبغة بطاقات الختمة، تحت السطر */
+#screen-mihrab .state-door{
+  display:block;margin:13px auto 0;font:inherit;cursor:pointer;
+  padding:9px 17px;border-radius:14px;
+  font-size:12.5px;font-weight:800;color:#14304F;
+  border:1px solid rgba(255,255,255,.9);
+  background:
+    radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.96), rgba(255,255,255,0) 62%),
+    linear-gradient(165deg, rgba(255,255,255,.95), rgba(244,236,220,.80));
+  box-shadow:0 4px 12px rgba(20,48,79,.18),
+             inset 0 1px 0 rgba(255,255,255,.96),
+             inset 0 -3px 8px rgba(120,90,42,.06);
+  transition:transform .15s cubic-bezier(.22,1,.36,1), box-shadow .18s ease;
+}
+#screen-mihrab .state-door:active{transform:scale(.96) translateY(1px);
+  box-shadow:0 1px 4px rgba(20,48,79,.20), inset 0 2px 6px rgba(20,48,79,.14);}
+#screen-mihrab .state-door[hidden]{display:none;}
+
 #screen-mihrab .state-sub::before{
   content:'';position:absolute;top:0;right:50%;transform:translateX(50%);
   width:44px;height:1px;
@@ -11164,7 +11182,21 @@ function getTimeBandIndex(date){
    · النوم: يبدأ بعد العشاء بساعتين ويمتدّ إلى الفجر.
    · أذكارُ ما بعد الصلاة: بعد الإقامة بعشر دقائق — أي بعد فراغ المصلّي
      من صلاته، لا مع الأذان. */
+/* نافذةُ القراءة: من الفجر إلى بدء أذكار النوم — أي «من بعد الفجر
+   إلى قبل النوم». وهي للقرآن والحديث معًا: بابُ نهارٍ واحد.
+   ويجوز للمرء أن يُعدّلها، فهي محفوظةٌ لا مُقحَمة. */
+function readOpen(T, n){
+  /* تُحسب من مواقيت يومه هو، لا من ساعةٍ مقدَّرة — ففجرُه فجرُه
+     وعشاؤه عشاؤه. ولذلك لم يُفرد لها إعدادٌ يدويّ: لا شيءَ يضبطه
+     المرءُ هنا أدقُّ ممّا يحسبه التطبيقُ من موقعه. */
+  var from = T.fajr;
+  var to   = (T.isha != null ? T.isha + 120 : 22 * 60);   /* بدءُ أذكار النوم */
+  if(to >= 1440) to -= 1440;
+  return from <= to ? (n >= from && n < to) : (n >= from || n < to);
+}
 var WIRD_WIN = {
+  quran:   function(T,n){ return readOpen(T,n); },
+  hadith:  function(T,n){ return readOpen(T,n); },
   morning: function(T,n){ return n >= T.fajr && n < T.fajr + 120; },
   evening: function(T,n){ return n >= T.asr  && n < T.maghrib; },
   night:   function(T,n){ var st = T.isha + 120; return (n >= st) || (n < T.fajr); },
@@ -11184,7 +11216,7 @@ var WIRD_WIN = {
 
 function zxWirdOpen(key){
   var f = WIRD_WIN[key];
-  if(!f) return true;                        // القرآن والحديث بلا نافذة
+  if(!f) return true;                        // ما لا نافذةَ له فبابُه مفتوح
   try{
     var T = ZahimDay.times();
     var d = new Date(), n = d.getHours() * 60 + d.getMinutes();
@@ -14623,6 +14655,8 @@ function showToast(msg){
       <p class="lead" id="stateLead">أنت الآن في</p>
       <h1 class="state" id="stateName"></h1>
       <div class="state-sub" id="stateSub"></div>
+      <!-- بابُ الرواتب والأذكار: يُسمّى باسم صلاته ويفتح لوحَها بلمسة -->
+      <button type="button" class="state-door" id="stateDoor" hidden></button>
       <div class="hadith empty" id="hadith" role="button" tabindex="0"></div>
     </div>
     <div class="layer hidden" id="layerHadith"><div class="h-detail">
@@ -14727,14 +14761,11 @@ function showToast(msg){
            صار ثلاثةَ خيارات، ولمسةُ كلٍّ تختاره وتُسمعه — فيُعاين ما شاء
            متى شاء، ويرجع إلى المناوبة بلمسة. -->
       <div class="zx-row zx-span" id="zaVoiceRow" style="flex-direction:column;align-items:stretch;gap:8px">
-        <span class="zx-row-label" style="padding:0">صوت الأذان<i>الفجرُ له أذانُه بالتثويب، فلا يتبدّل</i></span>
+        <span class="zx-row-label" style="padding:0">صوت الأذان<i>مسجد الشيخ عبد العزيز بن باز · جامع العلا — الجبيل الصناعية. والمناوبةُ: ابن باز للعصر والعشاء، والعلا للظهر والمغرب</i></span>
         <div class="za-picks" id="zaPicks">
-          <button type="button" class="za-pick" data-v="auto" onclick="zaPick('auto')">
-            <b>مناوبة</b><i>ابن باز للعصر والعشاء · العلا للظهر والمغرب</i></button>
-          <button type="button" class="za-pick" data-v="1" onclick="zaPick('1')">
-            <b>مسجد الشيخ عبد العزيز بن باز</b><i>الجبيل الصناعية</i></button>
-          <button type="button" class="za-pick" data-v="2" onclick="zaPick('2')">
-            <b>جامع العلا</b><i>الجبيل الصناعية</i></button>
+          <button type="button" class="za-pick" data-v="auto" onclick="zaPick('auto')"><b>مناوبة</b></button>
+          <button type="button" class="za-pick" data-v="1" onclick="zaPick('1')"><b>ابن باز</b></button>
+          <button type="button" class="za-pick" data-v="2" onclick="zaPick('2')"><b>العلا</b></button>
         </div>
       </div>
     <div class="zx-row" onclick="zaPreviewFajr()">
@@ -15823,6 +15854,13 @@ function hex2rgb(h){
       if(lead) lead.textContent = h.lead;
       if(el.name) el.name.textContent = h.name;
       if(sub)  sub.textContent  = h.sub;
+      /* البابُ يُسمّى باسم صلاته، ويفتح لوحَها بلمسةٍ واحدة */
+      var door = document.getElementById('stateDoor');
+      if(door && h.key){
+        door.textContent = h.name + ' \u2014 ' + _t('\u0631\u0627\u062a\u0628\u062a\u064f\u0647\u0627 \u0648\u0623\u0630\u0643\u0627\u0631\u064f\u0647\u0627') + ' \u2190';
+        door.onclick = function(){ try{ openPrayerSheet(h.key); }catch(e){} };
+        door.hidden = false;
+      } else if(door){ door.hidden = true; }
     }catch(e){}
   }
 
@@ -16612,7 +16650,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-11-1610').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-11-2140').catch(function(){});
     });
   }
 })();
@@ -17415,6 +17453,10 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
 
   /* ── شروحُ صفوف الإعدادات ── */
   ZahimI18n.load('en', {
+    'ابن باز': 'Bin Baz',
+    'العلا': 'Al-Ula',
+    'مسجد الشيخ عبد العزيز بن باز · جامع العلا — الجبيل الصناعية. والمناوبةُ: ابن باز للعصر والعشاء، والعلا للظهر والمغرب': 'Sheikh Abdulaziz bin Baz Mosque · Al-Ula Grand Mosque — Jubail Industrial City. Alternating: Bin Baz for Asr and Isha, Al-Ula for Dhuhr and Maghrib',
+    'راتبتُها وأذكارُها': 'its sunnah and adhkar',
     'مسجد الشيخ عبد العزيز بن باز': 'Sheikh Abdulaziz bin Baz Mosque',
     'جامع العلا': 'Al-Ula Grand Mosque',
     'الجبيل الصناعية': 'Jubail Industrial City',
@@ -17505,6 +17547,10 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('id', {
+    'ابن باز': 'Bin Baz',
+    'العلا': 'Al-Ula',
+    'مسجد الشيخ عبد العزيز بن باز · جامع العلا — الجبيل الصناعية. والمناوبةُ: ابن باز للعصر والعشاء، والعلا للظهر والمغرب': 'Masjid Syekh Abdulaziz bin Baz · Masjid Jami Al-Ula — Jubail. Bergantian: Bin Baz untuk Asar dan Isya, Al-Ula untuk Zuhur dan Magrib',
+    'راتبتُها وأذكارُها': 'sunah dan zikirnya',
     'مسجد الشيخ عبد العزيز بن باز': 'Masjid Syekh Abdulaziz bin Baz',
     'جامع العلا': 'Masjid Jami Al-Ula',
     'الجبيل الصناعية': 'Jubail Industrial City',
@@ -17582,6 +17628,10 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('ms', {
+    'ابن باز': 'Bin Baz',
+    'العلا': 'Al-Ula',
+    'مسجد الشيخ عبد العزيز بن باز · جامع العلا — الجبيل الصناعية. والمناوبةُ: ابن باز للعصر والعشاء، والعلا للظهر والمغرب': 'Masjid Syeikh Abdulaziz bin Baz · Masjid Jamek Al-Ula — Jubail. Berselang: Bin Baz untuk Asar dan Isyak, Al-Ula untuk Zuhur dan Maghrib',
+    'راتبتُها وأذكارُها': 'sunat dan zikirnya',
     'مسجد الشيخ عبد العزيز بن باز': 'Masjid Syeikh Abdulaziz bin Baz',
     'جامع العلا': 'Masjid Jamek Al-Ula',
     'الجبيل الصناعية': 'Jubail Industrial City',
@@ -18485,12 +18535,12 @@ window.zxBackToGrid = function(){
     try{ isJum = (r.key === 'dhuhr' && typeof zxIsJumua === 'function' && zxIsJumua()); }catch(e){}
     if(isJum) name = 'الجُمُعة';
     if(r.mode === 'standing'){
-      return { mode:'standing',
+      return { mode:'standing', key: r.key,
                lead: T('أنت الآن في'),
                name: T(isJum ? 'وقت الجمعة' : (ZX_TIMEOF[r.key] || name)),
                sub:  T('الصلاةُ قائمة') };
     }
-    return { mode:'upcoming',
+    return { mode:'upcoming', key: r.key,
              lead: T('الصلاة القادمة'),
              name: T(name),
              sub:  phrase(r.mins) };
