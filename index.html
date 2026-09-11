@@ -16564,7 +16564,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-11-0110').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-11-1420').catch(function(){});
     });
   }
 })();
@@ -17367,6 +17367,9 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
 
   /* ── شروحُ صفوف الإعدادات ── */
   ZahimI18n.load('en', {
+    'مناوبة': 'Alternating',
+    'مؤذّن ١': 'Muezzin 1',
+    'مؤذّن ٢': 'Muezzin 2',
     'الصلاة القادمة': 'Next prayer',
     'منه تُحسب المواقيتُ والقبلة': 'Prayer times and qibla are computed from it',
     'يُرفع والتطبيقُ مفتوح، ويهدأ إن كنتَ في المصحف': 'Sounds while the app is open; quiet while you are reading',
@@ -17449,6 +17452,9 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('id', {
+    'مناوبة': 'Bergantian',
+    'مؤذّن ١': 'Muazin 1',
+    'مؤذّن ٢': 'Muazin 2',
     'الصلاة القادمة': 'Salat berikutnya',
     'شكل التسبيح': 'Tata letak tasbih',
     'قوس الإبهام': 'Busur ibu jari',
@@ -17518,6 +17524,9 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('ms', {
+    'مناوبة': 'Berselang',
+    'مؤذّن ١': 'Muazin 1',
+    'مؤذّن ٢': 'Muazin 2',
     'الصلاة القادمة': 'Solat seterusnya',
     'شكل التسبيح': 'Susun atur tasbih',
     'قوس الإبهام': 'Lengkung ibu jari',
@@ -17949,10 +17958,35 @@ function markFired(k){
 }
 function T(k){ try{ if(global.ZahimI18n && ZahimI18n.t) return ZahimI18n.t(k); }catch(e){} return k; }
 
-function voice(){
-  try{ return localStorage.getItem(KEY_VOICE)==='2' ? 2 : 1; }catch(e){ return 1; }
+/* ═══ المناوبة ═══
+   'auto' هو الأصل: الثاني للظهر والمغرب، والأوّل للعصر والعشاء.
+   و'1' و'2' يُلزمان صوتًا واحدًا لكلّ الصلوات.
+   والفجرُ خارجَ هذا كلِّه: له أذانُه بالتثويب. */
+var VOICE_ROTA = { dhuhr:2, maghrib:2, asr:1, isha:1 };
+function mode(){
+  try{
+    var v = localStorage.getItem(KEY_VOICE);
+    return (v === '1' || v === '2') ? v : 'auto';
+  }catch(e){ return 'auto'; }
 }
-function srcFor(key){ return key==='fajr' ? SRC_FAJR : (VOICES[voice()] || VOICES[1]); }
+function voice(key){
+  var m = mode();
+  if(m === '1') return 1;
+  if(m === '2') return 2;
+  return VOICE_ROTA[key] || 1;
+}
+function srcFor(key){
+  if(key === 'fajr') return SRC_FAJR;
+  return VOICES[voice(key)] || VOICES[1];
+}
+/* أيُّ صلاةٍ تلي الآن — لتُسمَع في المعاينة نفسُ نبرةِ ما سيأتي */
+function nextKey(){
+  try{
+    var n = global.ZahimDay && ZahimDay.nextPrayer && ZahimDay.nextPrayer(new Date());
+    if(n && n.key && n.key !== 'fajr') return n.key;
+  }catch(e){}
+  return 'dhuhr';
+}
 
 function el(){
   if(audio) return audio;
@@ -17962,7 +17996,8 @@ function el(){
   audio.addEventListener('error', function(){
     /* لو غاب ملفُّ المؤذّن الثاني رجعنا إلى الأوّل بدل أن نصمت */
     if(audio.getAttribute('data-src') === VOICES[2]){
-      try{ localStorage.setItem(KEY_VOICE,'1'); }catch(e){}
+      /* لا نمسح اختيارَه: نرجع إلى الأوّل لهذه المرّة فحسب.
+         فلو كان الملفُّ غائبًا لحظةً، عاد الاختيارُ كما تركه. */
       audio.setAttribute('data-src', VOICES[1]);
       audio.src = VOICES[1];
       try{ audio.load(); audio.play(); }catch(e){ hide(); }
@@ -18120,13 +18155,26 @@ function zaLabel(){
   var v=document.getElementById('zaState');
   if(v) v.textContent = on() ? T('يعمل') : T('صامت');
   var w=document.getElementById('zaVoice');
-  if(w) w.textContent = (voice()===1 ? T('مؤذّن ١') : T('مؤذّن ٢'));
+  if(w){
+    var m = mode();
+    w.textContent = m === 'auto' ? T('مناوبة')
+                  : m === '1'    ? T('مؤذّن ١')
+                                 : T('مؤذّن ٢');
+  }
 }
+/* ثلاثةُ أوضاعٍ تدور: مناوبة ← مؤذّن ١ ← مؤذّن ٢ ← مناوبة */
 global.zaVoiceToggle=function(){
-  var next = voice()===1 ? '2' : '1';
-  try{ localStorage.setItem(KEY_VOICE,next); }catch(e){}
+  var m = mode();
+  var next = m === 'auto' ? '1' : (m === '1' ? '2' : 'auto');
+  try{ localStorage.setItem(KEY_VOICE, next); }catch(e){}
   zaLabel();
-  if(on()){ unlock(); setTimeout(function(){ global.zaPreview(12); }, 200); }
+  if(on()){
+    unlock();
+    /* في المناوبة تُسمَع نبرةُ الصلاة القادمة، لا نبرةٌ اعتباطيّة */
+    setTimeout(function(){
+      global.zaPreview(12, next === 'auto' ? nextKey() : null);
+    }, 200);
+  }
 };
 /* معاينةُ الفجر: تُمرَّر المفتاحُ صراحةً، وإلّا وقعت على أذان الصلوات */
 global.zaPreviewFajr=function(){
@@ -18134,6 +18182,9 @@ global.zaPreviewFajr=function(){
   setTimeout(function(){ global.zaPreview(14, 'fajr'); }, 200);
 };
 global.zaRefreshLabel=zaLabel;
+/* للفحص: أيُّ ملفٍّ لأيّ صلاةٍ في الوضع الحاليّ */
+global.zaSrcFor=function(k){ return srcFor(k); };
+global.zaMode=mode;
 /* للتجربة اليدويّة من أيّ مكان */
 global.zaTest=function(){ unlock(); setTimeout(function(){ global.zaPreview(200); }, 200); };
 
