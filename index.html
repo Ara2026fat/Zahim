@@ -1835,7 +1835,44 @@ body.theme-dark .zx-tile b{color:#EDEAE2;}
   opacity:.92;line-height:1.5;
 }
 .zx-pane .zx-row{min-height:60px;}
-.zx-pane .zx-row-value{font-weight:800;color:var(--gold-ink,#7A5E22);}
+.zx-pane .zx-row-value{font-weight:800;color:var(--gold);}
+
+/* ═══ اختيارُ المؤذّن ═══ */
+/* لوحُ الاختيار ثلاثُ بطاقاتٍ تحت بعضها، فلا يُحشر في عمودٍ من عمودين.
+   والمعرّفُ لا الصنف: zxTileify تُعيد كتابة أصناف الصفوف. */
+#zaVoiceRow{ grid-column:1 / -1 !important; min-height:0 !important;
+  flex-direction:column !important; align-items:stretch !important; }
+#zaVoiceRow > .zx-row-label{ padding:0 2px; }
+.za-picks{display:grid;gap:7px;}
+/* هيئةُ بطاقات الختمة: وهجٌ قطريٌّ وحافةٌ بيضاءُ وثلاثُ ظلال */
+.za-pick{
+  display:block;width:100%;text-align:start;font:inherit;cursor:pointer;
+  padding:11px 13px;border-radius:15px;
+  border:1px solid rgba(255,255,255,.92);
+  background:
+    radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.95), rgba(255,255,255,0) 62%),
+    linear-gradient(165deg, rgba(255,255,255,.94), rgba(244,236,220,.74));
+  box-shadow:0 4px 12px rgba(20,48,79,.12),
+             inset 0 1px 0 rgba(255,255,255,.96),
+             inset 0 -4px 10px rgba(120,90,42,.06);
+  transition:transform .15s cubic-bezier(.22,1,.36,1), box-shadow .18s ease, background .25s ease;
+}
+.za-pick:active{transform:scale(.975) translateY(1px);
+  box-shadow:0 1px 4px rgba(20,48,79,.16), inset 0 2px 6px rgba(20,48,79,.14);}
+.za-pick b{display:block;font-size:13.5px;font-weight:800;color:#2C2620;}
+.za-pick i{display:block;font-style:normal;font-size:10.5px;font-weight:600;
+  color:var(--muted,#6E6152);margin-top:2px;line-height:1.5;}
+/* المختارُ ياقوتةٌ زرقاءُ كالبطاقة المختارة في صفحة الختمة */
+.za-pick.on{
+  background:linear-gradient(150deg,#3F9BC9 0%,#2A6E96 46%,#14304F 100%);
+  border-color:rgba(214,169,74,.44);
+  box-shadow:0 6px 16px rgba(20,48,79,.30), inset 0 1px 0 rgba(255,255,255,.30);}
+.za-pick.on b{color:#FFFDF7;}
+.za-pick.on i{color:rgba(255,253,247,.86);}
+body.theme-dark .za-pick{
+  border-color:rgba(255,255,255,.10);
+  background:linear-gradient(165deg, rgba(255,255,255,.06), rgba(255,255,255,.02));}
+body.theme-dark .za-pick b{color:#EDEAE2;}
 
 /* ═══ تبويباتُ الإعدادات ═══
    اللوح كان شريطًا واحدًا طويلًا يُنزَل فيه; صار أربعةَ أبوابٍ لا يُفتح منها إلا واحد. */
@@ -14686,9 +14723,20 @@ function showToast(msg){
     <div class="zx-row" onclick="zaToggle()">
       <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11.4 5.2 7.2 8.8H4.2v6.4h3l4.2 3.6z"/><path d="M15.6 9.4a3.4 3.4 0 0 1 0 5.2"/><path d="M18.2 6.6a7 7 0 0 1 0 10.8"/></svg></span><span class="zx-row-label">الأذان<i>يُرفع والتطبيقُ مفتوح، ويهدأ إن كنتَ في المصحف</i></span><span class="zx-row-value" id="zaState">يعمل</span>
     </div>
-    <div class="zx-row" onclick="zaVoiceToggle()">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4a3 3 0 0 1 3 3v5.2a3 3 0 0 1-6 0V6.4a3 3 0 0 1 3-3z"/><path d="M6.2 11.2a5.8 5.8 0 0 0 11.6 0"/><path d="M12 17v3.6"/></svg></span><span class="zx-row-label">صوت الأذان<i>مؤذّنان للصلوات؛ والفجرُ له أذانُه بالتثويب</i></span><span class="zx-row-value" id="zaVoice">مؤذّن ١</span>
-    </div>
+    <!-- صوتُ الأذان: كان صفًّا يدور، فلا يُعاين إلّا ما وقع عليه الدور.
+           صار ثلاثةَ خيارات، ولمسةُ كلٍّ تختاره وتُسمعه — فيُعاين ما شاء
+           متى شاء، ويرجع إلى المناوبة بلمسة. -->
+      <div class="zx-row zx-span" id="zaVoiceRow" style="flex-direction:column;align-items:stretch;gap:8px">
+        <span class="zx-row-label" style="padding:0">صوت الأذان<i>الفجرُ له أذانُه بالتثويب، فلا يتبدّل</i></span>
+        <div class="za-picks" id="zaPicks">
+          <button type="button" class="za-pick" data-v="auto" onclick="zaPick('auto')">
+            <b>مناوبة</b><i>ابن باز للعصر والعشاء · العلا للظهر والمغرب</i></button>
+          <button type="button" class="za-pick" data-v="1" onclick="zaPick('1')">
+            <b>مسجد الشيخ عبد العزيز بن باز</b><i>الجبيل الصناعية</i></button>
+          <button type="button" class="za-pick" data-v="2" onclick="zaPick('2')">
+            <b>جامع العلا</b><i>الجبيل الصناعية</i></button>
+        </div>
+      </div>
     <div class="zx-row" onclick="zaPreviewFajr()">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15.4h16"/><path d="M7.2 15.4a4.8 4.8 0 0 1 9.6 0"/><path d="M12 5.6v1.8M5.4 8.4l1.3 1.3M18.6 8.4l-1.3 1.3"/><path d="M6 19.2h12"/></svg></span><span class="zx-row-label">اسمع أذان الفجر<i>لا يتبع اختيار الصوت — له أذانُه وحدَه</i></span><span class="zx-row-value">استمع</span>
     </div>
@@ -16564,7 +16612,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-11-1420').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-11-1610').catch(function(){});
     });
   }
 })();
@@ -17367,6 +17415,11 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
 
   /* ── شروحُ صفوف الإعدادات ── */
   ZahimI18n.load('en', {
+    'مسجد الشيخ عبد العزيز بن باز': 'Sheikh Abdulaziz bin Baz Mosque',
+    'جامع العلا': 'Al-Ula Grand Mosque',
+    'الجبيل الصناعية': 'Jubail Industrial City',
+    'ابن باز للعصر والعشاء · العلا للظهر والمغرب': 'Bin Baz for Asr and Isha · Al-Ula for Dhuhr and Maghrib',
+    'الفجرُ له أذانُه بالتثويب، فلا يتبدّل': 'Fajr keeps its own adhan with the tathwib',
     'مناوبة': 'Alternating',
     'مؤذّن ١': 'Muezzin 1',
     'مؤذّن ٢': 'Muezzin 2',
@@ -17452,6 +17505,11 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('id', {
+    'مسجد الشيخ عبد العزيز بن باز': 'Masjid Syekh Abdulaziz bin Baz',
+    'جامع العلا': 'Masjid Jami Al-Ula',
+    'الجبيل الصناعية': 'Jubail Industrial City',
+    'ابن باز للعصر والعشاء · العلا للظهر والمغرب': 'Bin Baz untuk Asar dan Isya · Al-Ula untuk Zuhur dan Magrib',
+    'الفجرُ له أذانُه بالتثويب، فلا يتبدّل': 'Subuh tetap dengan azannya yang bertatswib',
     'مناوبة': 'Bergantian',
     'مؤذّن ١': 'Muazin 1',
     'مؤذّن ٢': 'Muazin 2',
@@ -17524,6 +17582,11 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('ms', {
+    'مسجد الشيخ عبد العزيز بن باز': 'Masjid Syeikh Abdulaziz bin Baz',
+    'جامع العلا': 'Masjid Jamek Al-Ula',
+    'الجبيل الصناعية': 'Jubail Industrial City',
+    'ابن باز للعصر والعشاء · العلا للظهر والمغرب': 'Bin Baz untuk Asar dan Isyak · Al-Ula untuk Zuhur dan Maghrib',
+    'الفجرُ له أذانُه بالتثويب، فلا يتبدّل': 'Subuh mengekalkan azannya dengan tathwib',
     'مناوبة': 'Berselang',
     'مؤذّن ١': 'Muazin 1',
     'مؤذّن ٢': 'Muazin 2',
@@ -18154,27 +18217,40 @@ global.zaToggle=function(){
 function zaLabel(){
   var v=document.getElementById('zaState');
   if(v) v.textContent = on() ? T('يعمل') : T('صامت');
+  var m = mode();
   var w=document.getElementById('zaVoice');
   if(w){
-    var m = mode();
     w.textContent = m === 'auto' ? T('مناوبة')
-                  : m === '1'    ? T('مؤذّن ١')
-                                 : T('مؤذّن ٢');
+                  : m === '1'    ? T('مسجد الشيخ عبد العزيز بن باز')
+                                 : T('جامع العلا');
   }
+  /* البطاقةُ المختارةُ تُضاء، فيُعرف الوضعُ بالنظر لا بالقراءة */
+  try{
+    var ps = document.querySelectorAll('#zaPicks .za-pick');
+    for(var i = 0; i < ps.length; i++)
+      ps[i].classList.toggle('on', ps[i].getAttribute('data-v') === m);
+  }catch(e){}
 }
-/* ثلاثةُ أوضاعٍ تدور: مناوبة ← مؤذّن ١ ← مؤذّن ٢ ← مناوبة */
-global.zaVoiceToggle=function(){
-  var m = mode();
-  var next = m === 'auto' ? '1' : (m === '1' ? '2' : 'auto');
-  try{ localStorage.setItem(KEY_VOICE, next); }catch(e){}
+/* ═══ اختيارٌ ومعاينةٌ في لمسةٍ واحدة ═══
+   كان الصفُّ يدور، فلا يُسمَع إلّا ما وقع عليه الدور. وصارت ثلاثةَ
+   خياراتٍ ظاهرة: لمسةُ كلٍّ تختاره وتُسمعه — فيُعاين ما شاء متى شاء.
+   ولمسُ المختار مرّةً أخرى يُعيده فحسب، فلا يُحبَس من أراد التكرار. */
+global.zaPick=function(v){
+  if(v !== 'auto' && v !== '1' && v !== '2') v = 'auto';
+  try{ localStorage.setItem(KEY_VOICE, v); }catch(e){}
   zaLabel();
   if(on()){
     unlock();
-    /* في المناوبة تُسمَع نبرةُ الصلاة القادمة، لا نبرةٌ اعتباطيّة */
+    /* في المناوبة تُسمَع نبرةُ الصلاة القادمة — وهي ما سيُرفع فعلًا */
     setTimeout(function(){
-      global.zaPreview(12, next === 'auto' ? nextKey() : null);
+      global.zaPreview(12, v === 'auto' ? nextKey() : (v === '2' ? 'dhuhr' : 'asr'));
     }, 200);
   }
+};
+/* يبقى للتوافق مع أيّ نداءٍ قديم */
+global.zaVoiceToggle=function(){
+  var m = mode();
+  global.zaPick(m === 'auto' ? '1' : (m === '1' ? '2' : 'auto'));
 };
 /* معاينةُ الفجر: تُمرَّر المفتاحُ صراحةً، وإلّا وقعت على أذان الصلوات */
 global.zaPreviewFajr=function(){
