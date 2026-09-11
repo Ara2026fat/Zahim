@@ -3137,21 +3137,20 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
   position:relative;padding-top:11px;max-width:22ch;
 }
 /* بابُ الرواتب: بطاقةٌ صغيرةٌ بصبغة بطاقات الختمة، تحت السطر */
+/* البابُ من لون المحراب لا بطاقةً غريبةً عنه: حرفٌ ذهبيٌّ رفيع
+   وخلفيّةٌ شفيفةٌ تكشف القوسَ من تحتها. ولا بدّ من pointer-events:auto
+   لأنّ .content الحاويةَ تمنع اللمسَ عن كلّ ما فيها. */
 #screen-mihrab .state-door{
-  display:block;margin:13px auto 0;font:inherit;cursor:pointer;
-  padding:9px 17px;border-radius:14px;
-  font-size:12.5px;font-weight:800;color:#14304F;
-  border:1px solid rgba(255,255,255,.9);
-  background:
-    radial-gradient(120% 66% at 30% 4%, rgba(255,255,255,.96), rgba(255,255,255,0) 62%),
-    linear-gradient(165deg, rgba(255,255,255,.95), rgba(244,236,220,.80));
-  box-shadow:0 4px 12px rgba(20,48,79,.18),
-             inset 0 1px 0 rgba(255,255,255,.96),
-             inset 0 -3px 8px rgba(120,90,42,.06);
-  transition:transform .15s cubic-bezier(.22,1,.36,1), box-shadow .18s ease;
+  display:block;margin:20px auto 0;font:inherit;cursor:pointer;
+  pointer-events:auto;
+  padding:8px 15px;border-radius:13px;
+  font-size:11.5px;font-weight:700;letter-spacing:.2px;
+  color:var(--ink);opacity:.92;
+  border:1px solid var(--hair);
+  background:transparent;
+  transition:transform .15s cubic-bezier(.22,1,.36,1), opacity .2s ease;
 }
-#screen-mihrab .state-door:active{transform:scale(.96) translateY(1px);
-  box-shadow:0 1px 4px rgba(20,48,79,.20), inset 0 2px 6px rgba(20,48,79,.14);}
+#screen-mihrab .state-door:active{transform:scale(.955);opacity:.7;}
 #screen-mihrab .state-door[hidden]{display:none;}
 
 #screen-mihrab .state-sub::before{
@@ -14655,9 +14654,9 @@ function showToast(msg){
       <p class="lead" id="stateLead">أنت الآن في</p>
       <h1 class="state" id="stateName"></h1>
       <div class="state-sub" id="stateSub"></div>
-      <!-- بابُ الرواتب والأذكار: يُسمّى باسم صلاته ويفتح لوحَها بلمسة -->
-      <button type="button" class="state-door" id="stateDoor" hidden></button>
       <div class="hadith empty" id="hadith" role="button" tabindex="0"></div>
+      <!-- بابُ الرواتب والأذكار: أسفلَ القوس، فلا يقطع خلاءَه -->
+      <button type="button" class="state-door" id="stateDoor" hidden></button>
     </div>
     <div class="layer hidden" id="layerHadith"><div class="h-detail">
       <p class="matn" id="hdMatn"></p><p class="who" id="hdWho"></p>
@@ -14761,7 +14760,7 @@ function showToast(msg){
            صار ثلاثةَ خيارات، ولمسةُ كلٍّ تختاره وتُسمعه — فيُعاين ما شاء
            متى شاء، ويرجع إلى المناوبة بلمسة. -->
       <div class="zx-row zx-span" id="zaVoiceRow" style="flex-direction:column;align-items:stretch;gap:8px">
-        <span class="zx-row-label" style="padding:0">صوت الأذان<i>مسجد الشيخ عبد العزيز بن باز · جامع العلا — الجبيل الصناعية. والمناوبةُ: ابن باز للعصر والعشاء، والعلا للظهر والمغرب</i></span>
+        <span class="zx-row-label" style="padding:0">صوت الأذان<i>مسجد الشيخ عبد العزيز بن باز · جامع العلا — الجبيل الصناعية</i></span>
         <div class="za-picks" id="zaPicks">
           <button type="button" class="za-pick" data-v="auto" onclick="zaPick('auto')"><b>مناوبة</b></button>
           <button type="button" class="za-pick" data-v="1" onclick="zaPick('1')"><b>ابن باز</b></button>
@@ -14769,7 +14768,7 @@ function showToast(msg){
         </div>
       </div>
     <div class="zx-row" onclick="zaPreviewFajr()">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15.4h16"/><path d="M7.2 15.4a4.8 4.8 0 0 1 9.6 0"/><path d="M12 5.6v1.8M5.4 8.4l1.3 1.3M18.6 8.4l-1.3 1.3"/><path d="M6 19.2h12"/></svg></span><span class="zx-row-label">اسمع أذان الفجر<i>لا يتبع اختيار الصوت — له أذانُه وحدَه</i></span><span class="zx-row-value">استمع</span>
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15.4h16"/><path d="M7.2 15.4a4.8 4.8 0 0 1 9.6 0"/><path d="M12 5.6v1.8M5.4 8.4l1.3 1.3M18.6 8.4l-1.3 1.3"/><path d="M6 19.2h12"/></svg></span><span class="zx-row-label">اسمع أذان الفجر<i>ثابتٌ لا يتغيّر — مسجد الشيخ عبد العزيز بن باز</i></span><span class="zx-row-value">استمع</span>
     </div>
     </div>
 
@@ -16650,7 +16649,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-11-2140').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-11-2320').catch(function(){});
     });
   }
 })();
