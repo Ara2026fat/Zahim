@@ -10,13 +10,27 @@
 <script>
 (function(){
   try{
+    /* المثبِّتُ رأى التطبيقَ ولا بدّ — وهذا حارسٌ لا يزول بمحو التخزين.
+       وهو أوّلُ ما يُسأل: التخزينُ يُمحى، وصفةُ التشغيل لا تُمحى. */
+    if((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+       window.navigator.standalone === true ||
+       (window.matchMedia && window.matchMedia('(display-mode: fullscreen)').matches) ||
+       (window.matchMedia && window.matchMedia('(display-mode: minimal-ui)').matches)) return;
     if(localStorage.getItem('zahim_tour_seen_v1') === '1') return;   // زارَ من قبل
     if(localStorage.getItem('zahim_intro_shown_v1') === '1') return; // رأى التعريف
     localStorage.setItem('zahim_intro_shown_v1', '1');
     var l = localStorage.getItem('zahim_lang_v1');
     if(l) localStorage.setItem('zahim_intro_lang', l);   // وإلّا اهتدى التعريفُ بنفسه
-    location.replace('intro.html');
+    location.replace('intro.html?g=1');   // علامةُ المجيء من البوّابة
   }catch(e){}   // تخزينٌ ممنوع (تصفّحٌ خاصّ): يمضي كما كان
+})();
+/* ديمومةُ التخزين: تُقلّل محوَ النظام لبياناتنا عند ضيق المساحة.
+   طلبٌ لا أمر — إن رُفض مضى كلُّ شيءٍ كما كان. */
+(function(){
+  try{
+    if(navigator.storage && navigator.storage.persist)
+      navigator.storage.persist()['catch'](function(){});
+  }catch(e){}
 })();
 </script>
 <!-- ═══ تطبيقٌ قابل للتثبيت ═══ -->
@@ -1599,6 +1613,54 @@ body.tsb-wheel-on .tsb-arc{display:none;}
 }
 /* البلاطةُ هي المسدَّسُ نفسُه: البطاقةُ المستديرةُ حولَه كانت تُزاحم جارتَها
    في عنقودٍ دائريّ. وهذا هو شكلُ قوس التسبيح نفسِه — حجرٌ واسمٌ تحته. */
+/* ═══ وِردُ الجمعة ═══
+   لوحٌ يظهر يومَ الجمعة وحدَه فوق وِرد الختمة — لا بدلَه.
+   بطاقتان بصبغة بطاقات الختمة، والمقروءةُ تُضاء كحليّةً. */
+.jum-wrap{
+  margin:7px 14px 2px;padding:12px 13px 13px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.92);
+  background:
+    radial-gradient(120% 62% at 30% 3%, rgba(255,255,255,.95), rgba(255,255,255,0) 60%),
+    linear-gradient(165deg, rgba(255,255,255,.94), rgba(244,236,220,.76));
+  box-shadow:0 5px 14px rgba(20,48,79,.13),
+             inset 0 1px 0 rgba(255,255,255,.97),
+             inset 0 -5px 12px rgba(120,90,42,.07);
+}
+.jum-head{font-size:11.5px;font-weight:800;color:var(--gold-ink,#7A5E22);
+  margin-bottom:9px;letter-spacing:.2px;}
+.jum-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.jum-card{
+  display:block;width:100%;text-align:start;font:inherit;cursor:pointer;
+  padding:11px 12px;border-radius:14px;min-height:66px;
+  border:1px solid rgba(255,255,255,.9);
+  background:linear-gradient(165deg, rgba(255,255,255,.96), rgba(244,236,220,.70));
+  box-shadow:0 3px 9px rgba(20,48,79,.11), inset 0 1px 0 rgba(255,255,255,.96);
+  transition:transform .15s cubic-bezier(.22,1,.36,1), box-shadow .18s ease;
+}
+.jum-card:active{transform:scale(.97) translateY(1px);
+  box-shadow:0 1px 4px rgba(20,48,79,.16), inset 0 2px 6px rgba(20,48,79,.14);}
+.jum-card b{display:block;font-size:13px;font-weight:800;color:#14304F;}
+.jum-card i{display:block;font-style:normal;font-size:10.5px;font-weight:600;
+  color:var(--muted,#6E6152);margin-top:3px;line-height:1.5;}
+.jum-card.done{
+  background:linear-gradient(150deg,#3F9BC9 0%,#2A6E96 46%,#14304F 100%);
+  border-color:rgba(214,169,74,.44);
+  box-shadow:0 5px 14px rgba(20,48,79,.28), inset 0 1px 0 rgba(255,255,255,.30);}
+.jum-card.done b{color:#FFFDF7;}
+.jum-card.done i{color:rgba(255,253,247,.88);}
+.jum-mark{
+  display:block;width:100%;margin-top:8px;font:inherit;cursor:pointer;
+  padding:11px;border-radius:13px;font-size:13px;font-weight:800;color:#FFFDF7;
+  background:linear-gradient(160deg,#3F9BC9 0%,#2A6E96 44%,#14304F 100%);
+  border:1px solid rgba(214,169,74,.42);
+  box-shadow:0 5px 14px rgba(20,48,79,.26), inset 0 1px 0 rgba(255,255,255,.30);}
+.jum-mark:active{transform:scale(.985);}
+body.theme-dark .jum-wrap,
+body.theme-dark .jum-card{
+  border-color:rgba(255,255,255,.10);
+  background:linear-gradient(165deg, rgba(255,255,255,.06), rgba(255,255,255,.02));}
+body.theme-dark .jum-card b{color:#E6C784;}
+
 /* ═══ وردةُ الإعدادات ═══
    المقاسُ والموضعُ يأتيان من zxLayoutComb (عرضٌ وارتفاعٌ وtransform)،
    فلا يُصرَّح بهما هنا. والحدُّ طبقتان: خارجيّةٌ ذهبيّةٌ هي الحرف،
@@ -3137,20 +3199,56 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
   position:relative;padding-top:11px;max-width:22ch;
 }
 /* بابُ الرواتب: بطاقةٌ صغيرةٌ بصبغة بطاقات الختمة، تحت السطر */
-/* البابُ من لون المحراب لا بطاقةً غريبةً عنه: حرفٌ ذهبيٌّ رفيع
-   وخلفيّةٌ شفيفةٌ تكشف القوسَ من تحتها. ولا بدّ من pointer-events:auto
-   لأنّ .content الحاويةَ تمنع اللمسَ عن كلّ ما فيها. */
+/* ═══ بطاقةٌ زجاجيّة ═══
+   لوحٌ شفيفٌ يُضبِّب ما تحته (backdrop-filter) بحرفٍ من ضوء: خيطٌ
+   أبيضُ يعلو الحافّةَ العليا وظلٌّ يُقعّر السفلى، فيُرى سُمكُ الزجاج.
+   وتعبرها لمعةٌ كلَّ تسع ثوانٍ — مرّةً لا تتكرّر بسرعةٍ فتُلهي.
+   وموضعُها أسفلُ الشاشة لا وسطُ القوس، فلا تقطع خلاءَه.
+   و pointer-events:auto لازمٌ: .content الحاويةُ تمنع اللمس. */
 #screen-mihrab .state-door{
-  display:block;margin:20px auto 0;font:inherit;cursor:pointer;
-  pointer-events:auto;
-  padding:8px 15px;border-radius:13px;
-  font-size:11.5px;font-weight:700;letter-spacing:.2px;
-  color:var(--ink);opacity:.92;
-  border:1px solid var(--hair);
-  background:transparent;
-  transition:transform .15s cubic-bezier(.22,1,.36,1), opacity .2s ease;
+  position:absolute;left:50%;bottom:96px;transform:translateX(-50%);z-index:4;
+  font:inherit;cursor:pointer;pointer-events:auto;white-space:nowrap;
+  padding:11px 22px;border-radius:16px;overflow:hidden;
+  font-size:12px;font-weight:800;letter-spacing:.2px;
+  color:var(--ink);
+  border:1px solid var(--card-edge, rgba(255,255,255,.28));
+  background:var(--glass, rgba(255,255,255,.13));
+  -webkit-backdrop-filter:blur(13px) saturate(150%);
+  backdrop-filter:blur(13px) saturate(150%);
+  box-shadow:0 8px 22px rgba(0,0,0,.22),
+             inset 0 1px 0 var(--glass-top, rgba(255,255,255,.45)),
+             inset 0 -6px 14px var(--glass-bot, rgba(0,0,0,.10));
+  transition:transform .16s cubic-bezier(.22,1,.36,1), box-shadow .2s ease;
 }
-#screen-mihrab .state-door:active{transform:scale(.955);opacity:.7;}
+/* اللمعةُ تعبر الزجاج */
+#screen-mihrab .state-door::after{
+  content:'';position:absolute;top:0;bottom:0;width:42%;
+  left:-55%;pointer-events:none;
+  background:linear-gradient(105deg, transparent,
+    var(--glass-shine, rgba(255,255,255,.42)) 48%, transparent);
+  transform:skewX(-18deg);
+  animation:doorGlint 9s cubic-bezier(.3,0,.2,1) infinite;
+}
+@keyframes doorGlint{
+  0%,72%{ left:-55%; }
+  88%,100%{ left:115%; }
+}
+@media (prefers-reduced-motion:reduce){
+  #screen-mihrab .state-door::after{ animation:none; opacity:0; }
+}
+/* على الأرضيّة الفاتحة يُقلب الزجاج: الحرفُ ظلٌّ لا ضوء */
+#screen-mihrab:not(.dark) .state-door{
+  --glass:rgba(255,255,255,.52);
+  --card-edge:rgba(255,255,255,.85);
+  --glass-top:rgba(255,255,255,.95);
+  --glass-bot:rgba(120,90,42,.10);
+  --glass-shine:rgba(255,255,255,.75);
+  box-shadow:0 7px 18px rgba(20,48,79,.14),
+             inset 0 1px 0 rgba(255,255,255,.95),
+             inset 0 -6px 14px rgba(120,90,42,.08);
+}
+#screen-mihrab .state-door:active{transform:translateX(-50%) scale(.96);
+  box-shadow:0 2px 8px rgba(0,0,0,.22), inset 0 2px 7px rgba(0,0,0,.16);}
 #screen-mihrab .state-door[hidden]{display:none;}
 
 #screen-mihrab .state-sub::before{
@@ -11288,12 +11386,16 @@ const ZX_AFTER_IQAMA = 20;
 function zxStandWin(key){
   let iq = ZX_IQAMA_FALLBACK[key];
   if(iq == null) iq = 20;
+  /* الجمعةُ خطبتان ثمّ صلاة، فهي أطولُ من الظهر بعشر دقائق.
+     ولا تُقاس على غيرها: من خرج من الجمعة لم يخرج في وقت الظهر. */
+  let extra = 0;
+  try{ if(key === 'dhuhr' && typeof zxIsJumua === 'function' && zxIsJumua()) extra = 10; }catch(e){}
   try{
     const raw = localStorage.getItem('zahim_iqama_v1');
     if(raw){ const c = JSON.parse(raw); if(c && c[key] != null) iq = +c[key]; }
   }catch(e){}
   if(!isFinite(iq) || iq < 0) iq = ZX_IQAMA_FALLBACK[key] || 20;
-  return iq + ZX_AFTER_IQAMA;
+  return iq + ZX_AFTER_IQAMA + extra;
 }
 window.zxStandWin = zxStandWin;
 
@@ -12605,6 +12707,61 @@ function closeQuranScreen(){
   buildWirdCircles();
 }
 
+/* ═══ وِردُ الجمعة ═══ */
+var KAHF_FROM = 293, KAHF_TO = 304;      /* سورةُ الكهف في مصحف المدينة */
+var JUM_KEY = 'zahim_jumua_v1';
+
+function jumDay(d){
+  d = d || new Date();
+  return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+}
+function jumRead(){
+  try{ return JSON.parse(localStorage.getItem(JUM_KEY) || '{}') || {}; }catch(e){ return {}; }
+}
+function jumDone(what){
+  var o = jumRead();
+  return o.day === jumDay() && !!o[what];
+}
+function jumMark(what){
+  var o = jumRead();
+  if(o.day !== jumDay()) o = { day: jumDay() };   /* جمعةٌ جديدة: صفحةٌ بيضاء */
+  o[what] = true;
+  try{ localStorage.setItem(JUM_KEY, JSON.stringify(o)); }catch(e){}
+  try{ renderQuranScreen(); }catch(e){}
+}
+window.jumKahf = function(){
+  /* يفتح المصحفَ على مدى الكهف، ويعود إلى حيث وقف داخله */
+  try{ openMushaf(KAHF_FROM, KAHF_TO); }catch(e){}
+};
+window.jumKahfDone = function(){
+  jumMark('kahf');
+  try{ showToast('تقبّل الله — سورةُ الكهف'); }catch(e){}
+};
+window.jumSalawat = function(){
+  /* التسبيحُ يُفتح على صيغة الصلاة على النبيّ لا على التسبيح */
+  try{ tsbPick('slw'); }catch(e){}
+  try{ openTasbih(); }catch(e){}
+};
+function jumuaCard(){
+  if(typeof zxIsJumua !== 'function' || !zxIsJumua()) return '';
+  var kahf = jumDone('kahf');
+  return ''
+   + '<div class="jum-wrap">'
+   +   '<div class="jum-head"><span>وِردُ الجمعة</span></div>'
+   +   '<div class="jum-grid">'
+   +     '<button type="button" class="jum-card' + (kahf ? ' done' : '') + '" onclick="jumKahf()">'
+   +       '<b>سورة الكهف</b>'
+   +       '<i>' + (kahf ? '\u2713 قرأتَها اليوم' : 'من صفحة ٢٩٣ إلى ٣٠٤') + '</i>'
+   +     '</button>'
+   +     '<button type="button" class="jum-card" onclick="jumSalawat()">'
+   +       '<b>الصلاة على النبيّ</b>'
+   +       '<i>أكثِرْ منها في يومها</i>'
+   +     '</button>'
+   +   '</div>'
+   +   (kahf ? '' : '<button type="button" class="jum-mark" onclick="jumKahfDone()">سجّل إتمام سورة الكهف</button>')
+   + '</div>';
+}
+
 function renderQuranScreen(){
   try {
     const wrap = document.getElementById('quran-content');
@@ -12658,7 +12815,7 @@ function renderQuranSetup(wrap){
       </div>`;
   }
 
-  wrap.innerHTML = `
+  wrap.innerHTML = jumuaCard() + `
     <div class="quran-plan-wrap">
       <div class="qp-label">اختر هدف الختمة</div>
       <div class="qp-options">${opts}${customCard}</div>
@@ -12819,7 +12976,7 @@ function renderQuranProgress(wrap){
       <div class="qdc-reset" onclick="resetQuranPlan()">إعادة ضبط الجدول</div>
     </div>`;
 
-  wrap.innerHTML = journeyHTML + pillsHTML + cardHTML;
+  wrap.innerHTML = jumuaCard() + journeyHTML + pillsHTML + cardHTML;
   try{ fillDaySpan(); }catch(e){}
 
   // تمرير لليوم الحالي
@@ -14655,8 +14812,6 @@ function showToast(msg){
       <h1 class="state" id="stateName"></h1>
       <div class="state-sub" id="stateSub"></div>
       <div class="hadith empty" id="hadith" role="button" tabindex="0"></div>
-      <!-- بابُ الرواتب والأذكار: أسفلَ القوس، فلا يقطع خلاءَه -->
-      <button type="button" class="state-door" id="stateDoor" hidden></button>
     </div>
     <div class="layer hidden" id="layerHadith"><div class="h-detail">
       <p class="matn" id="hdMatn"></p><p class="who" id="hdWho"></p>
@@ -14664,6 +14819,9 @@ function showToast(msg){
     </div></div>
       </div>
 
+  <!-- بابُ الرواتب: أسفلَ الشاشة لا داخلَ .content —
+       فتلك صندوقٌ صغيرٌ موسَّط، والبطاقةُ فيه تقع فوق الحديث. -->
+  <button type="button" class="state-door" id="stateDoor" hidden></button>
   <!-- شريط المواقيت: في قاع الإطار، أفقيّ كلوحات المساجد -->
   <div class="strip" id="strip">
     <div class="strip-cols" id="stripCols"></div>
@@ -15296,11 +15454,14 @@ window.addEventListener('popstate', function(){
     lightIn:'rgba(250,192,130,.58)', lightOut:'rgba(67,50,42,0)', lx:88, ly:648, lr:490,
       wallOp:.19, dimOp:.105, litOp:.52, edgeOp:.62, edgeCol:'#C9963A' },
     { key:'isha', dark:true, station:'isha', from:T.isha, to:MIDNIGHT, inWindow:true, next:'الفجر', title:'وقت العشاء',
-      wall:'#33261E', niche:'#42332A', ink:'#FBF6EF', soft:'rgba(251,246,239,.88)', hair:'rgba(247,241,232,.19)',
+      /* الليلُ كان فحمًا يبتلع الزخرفة. رُفعت الأرضيّةُ درجتين وأُدفئ
+     المحرابُ فوقها، فيُرى النقشُ ويبقى الليلُ ليلًا. */
+    wall:'#463527', niche:'#5C4736', ink:'#FFF8EF', soft:'rgba(255,248,239,.90)', hair:'rgba(247,241,232,.28)',
       lightIn:'rgba(252,228,180,.94)', lightOut:'rgba(49,61,73,0)', lx:195, ly:556, lr:470,
       wallOp:.21, dimOp:.11, litOp:.56, edgeOp:.60, edgeCol:'#C9963A' },
     { key:'night', dark:true, station:null, from:MIDNIGHT, to:T.fajr+1440, inWindow:false, next:'الفجر', title:'جوف الليل',
-      wall:'#14100B', niche:'#201913', ink:'#FAF6F0', soft:'rgba(250,246,240,.86)', hair:'rgba(245,239,231,.18)',
+      /* جوفُ الليل: أهدأُ الأحوال، لكنّه كان أسودَ لا داكنًا */
+    wall:'#241B12', niche:'#33271B', ink:'#FDF8F1', soft:'rgba(253,248,241,.88)', hair:'rgba(245,239,231,.26)',
       lightIn:'rgba(244,220,178,.90)', lightOut:'rgba(43,57,65,0)', lx:195, ly:580, lr:450,
       wallOp:.23, dimOp:.11, litOp:.56, edgeOp:.60, edgeCol:'#C9963A' },
     ];
@@ -15856,7 +16017,7 @@ function hex2rgb(h){
       /* البابُ يُسمّى باسم صلاته، ويفتح لوحَها بلمسةٍ واحدة */
       var door = document.getElementById('stateDoor');
       if(door && h.key){
-        door.textContent = h.name + ' \u2014 ' + _t('\u0631\u0627\u062a\u0628\u062a\u064f\u0647\u0627 \u0648\u0623\u0630\u0643\u0627\u0631\u064f\u0647\u0627') + ' \u2190';
+        door.textContent = (h.pname || h.name) + ' \u00b7 ' + _t('\u0627\u0644\u0631\u0627\u062a\u0628\u0629 \u0648\u0627\u0644\u0623\u0630\u0643\u0627\u0631');
         door.onclick = function(){ try{ openPrayerSheet(h.key); }catch(e){} };
         door.hidden = false;
       } else if(door){ door.hidden = true; }
@@ -16649,7 +16810,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-11-2320').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-12-0715').catch(function(){});
     });
   }
 })();
@@ -17452,6 +17613,7 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
 
   /* ── شروحُ صفوف الإعدادات ── */
   ZahimI18n.load('en', {
+    'الراتبة والأذكار': 'Sunnah & adhkar',
     'ابن باز': 'Bin Baz',
     'العلا': 'Al-Ula',
     'مسجد الشيخ عبد العزيز بن باز · جامع العلا — الجبيل الصناعية. والمناوبةُ: ابن باز للعصر والعشاء، والعلا للظهر والمغرب': 'Sheikh Abdulaziz bin Baz Mosque · Al-Ula Grand Mosque — Jubail Industrial City. Alternating: Bin Baz for Asr and Isha, Al-Ula for Dhuhr and Maghrib',
@@ -17546,6 +17708,7 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('id', {
+    'الراتبة والأذكار': 'Sunah & zikir',
     'ابن باز': 'Bin Baz',
     'العلا': 'Al-Ula',
     'مسجد الشيخ عبد العزيز بن باز · جامع العلا — الجبيل الصناعية. والمناوبةُ: ابن باز للعصر والعشاء، والعلا للظهر والمغرب': 'Masjid Syekh Abdulaziz bin Baz · Masjid Jami Al-Ula — Jubail. Bergantian: Bin Baz untuk Asar dan Isya, Al-Ula untuk Zuhur dan Magrib',
@@ -17627,6 +17790,7 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('ms', {
+    'الراتبة والأذكار': 'Sunat & zikir',
     'ابن باز': 'Bin Baz',
     'العلا': 'Al-Ula',
     'مسجد الشيخ عبد العزيز بن باز · جامع العلا — الجبيل الصناعية. والمناوبةُ: ابن باز للعصر والعشاء، والعلا للظهر والمغرب': 'Masjid Syeikh Abdulaziz bin Baz · Masjid Jamek Al-Ula — Jubail. Berselang: Bin Baz untuk Asar dan Isyak, Al-Ula untuk Zuhur dan Maghrib',
@@ -18534,12 +18698,13 @@ window.zxBackToGrid = function(){
     try{ isJum = (r.key === 'dhuhr' && typeof zxIsJumua === 'function' && zxIsJumua()); }catch(e){}
     if(isJum) name = 'الجُمُعة';
     if(r.mode === 'standing'){
-      return { mode:'standing', key: r.key,
+      /* pname: الاسمُ مجرَّدًا للباب — «العصر» لا «وقت العصر» */
+      return { mode:'standing', key: r.key, pname: T(name),
                lead: T('أنت الآن في'),
                name: T(isJum ? 'وقت الجمعة' : (ZX_TIMEOF[r.key] || name)),
                sub:  T('الصلاةُ قائمة') };
     }
-    return { mode:'upcoming', key: r.key,
+    return { mode:'upcoming', key: r.key, pname: T(name),
              lead: T('الصلاة القادمة'),
              name: T(name),
              sub:  phrase(r.mins) };
