@@ -1616,6 +1616,59 @@ body.tsb-wheel-on .tsb-arc{display:none;}
 /* ═══ وِردُ الجمعة ═══
    لوحٌ يظهر يومَ الجمعة وحدَه فوق وِرد الختمة — لا بدلَه.
    بطاقتان بصبغة بطاقات الختمة، والمقروءةُ تُضاء كحليّةً. */
+/* ═══ مسارُ الصلاة ═══
+   خرزاتٌ على خيطٍ واحد: راتبةٌ ثمّ فريضةٌ ثمّ راتبةٌ ثمّ ذكر.
+   الخيطُ خلفَ الخرز لا بينها، فيبدو متّصلًا ولو تفاوتت الارتفاعات. */
+.ps-path{position:relative;padding:6px 2px 4px;}
+.ps-path::before{
+  content:'';position:absolute;top:26px;bottom:26px;
+  inset-inline-start:25px;width:2px;border-radius:2px;
+  background:linear-gradient(180deg,
+    rgba(201,150,58,.10), rgba(201,150,58,.34) 18%,
+    rgba(201,150,58,.34) 82%, rgba(201,150,58,.10));
+}
+.ps-step{
+  position:relative;display:flex;align-items:center;gap:12px;
+  width:100%;text-align:start;font:inherit;
+  padding:9px 4px;background:none;border:0;
+}
+button.ps-step{cursor:pointer;}
+.ps-bead{
+  flex:0 0 auto;width:46px;height:46px;border-radius:15px;
+  display:grid;place-items:center;position:relative;z-index:2;
+  font-size:17px;font-weight:800;color:#14304F;
+  border:1px solid rgba(255,255,255,.92);
+  background:
+    radial-gradient(120% 62% at 30% 4%, rgba(255,255,255,.96), rgba(255,255,255,0) 60%),
+    linear-gradient(165deg, rgba(255,255,255,.96), rgba(240,230,210,.88));
+  box-shadow:0 3px 9px rgba(20,48,79,.13), inset 0 1px 0 rgba(255,255,255,.97);
+}
+/* الفريضةُ خرزةُ المسار الكبرى: ياقوتةٌ زرقاء */
+.ps-step.fard .ps-bead{
+  width:54px;height:54px;border-radius:17px;font-size:20px;color:#FFFDF7;
+  background:linear-gradient(150deg,#3F9BC9 0%,#2A6E96 46%,#14304F 100%);
+  border-color:rgba(214,169,74,.46);
+  box-shadow:0 6px 16px rgba(20,48,79,.30), inset 0 1px 0 rgba(255,255,255,.30);
+}
+.ps-bead.ring{
+  font-family:'Amiri',serif;font-size:20px;
+  background:linear-gradient(165deg, rgba(201,150,58,.16), rgba(201,150,58,.06));
+  border-color:rgba(201,150,58,.40);color:var(--gold-ink,#7A5E22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
+}
+.ps-lines{flex:1 1 auto;min-width:0;}
+.ps-lines b{display:block;font-size:14.5px;font-weight:800;color:var(--text);line-height:1.35;}
+.ps-lines i{display:block;font-style:normal;font-size:11px;font-weight:600;
+  color:var(--muted);margin-top:2px;}
+.ps-step.fard .ps-lines b{font-size:16px;color:#14304F;}
+.ps-chev{flex:0 0 auto;color:var(--gold-ink,#7A5E22);font-size:15px;opacity:.7;}
+button.ps-step:active{transform:scale(.985);}
+button.ps-step:active .ps-bead{box-shadow:inset 0 2px 6px rgba(20,48,79,.16);}
+body.theme-dark .ps-bead{
+  border-color:rgba(255,255,255,.10);color:#E6C784;
+  background:linear-gradient(165deg, rgba(255,255,255,.07), rgba(255,255,255,.02));}
+body.theme-dark .ps-lines b{color:#EDEAE2;}
+
 .jum-wrap{
   margin:7px 14px 2px;padding:12px 13px 13px;border-radius:18px;
   border:1px solid rgba(255,255,255,.92);
@@ -3211,21 +3264,29 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
   padding:11px 22px;border-radius:16px;overflow:hidden;
   font-size:12px;font-weight:800;letter-spacing:.2px;
   color:var(--ink);
-  border:1px solid var(--card-edge, rgba(255,255,255,.28));
-  background:var(--glass, rgba(255,255,255,.13));
-  -webkit-backdrop-filter:blur(13px) saturate(150%);
-  backdrop-filter:blur(13px) saturate(150%);
-  box-shadow:0 8px 22px rgba(0,0,0,.22),
-             inset 0 1px 0 var(--glass-top, rgba(255,255,255,.45)),
-             inset 0 -6px 14px var(--glass-bot, rgba(0,0,0,.10));
+  /* أرضيّتُها أرضيّةُ المحراب مُظلَّلةً بسوادٍ شفيف — فهي لا تملك
+     لونًا خاصًّا بها أبدًا، بل تأخذ لونَ ما تحتها أنّى كان.
+     والظلُّ الداخليُّ من أعلى يجعلها غائرةً لا طافيةً فوق السطح. */
+  border:1px solid var(--hair);
+  background:rgba(0,0,0,.055);
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.13),
+             inset 0 -1px 0 rgba(255,255,255,.18),
+             0 1px 0 rgba(255,255,255,.14);
   transition:transform .16s cubic-bezier(.22,1,.36,1), box-shadow .2s ease;
 }
-/* اللمعةُ تعبر الزجاج */
+/* في الأحوال الداكنة يُنقَش بالضوء لا بالظلّ */
+#screen-mihrab.dark .state-door{
+  background:rgba(255,255,255,.07);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.30),
+             inset 0 -1px 0 rgba(255,255,255,.10),
+             0 1px 0 rgba(255,255,255,.07);
+}
+/* لمعةٌ خفيفةٌ تمرّ على الحرف المنقوش — كضوءٍ يزحف على الحجر */
 #screen-mihrab .state-door::after{
-  content:'';position:absolute;top:0;bottom:0;width:42%;
-  left:-55%;pointer-events:none;
+  content:'';position:absolute;top:0;bottom:0;width:38%;
+  left:-50%;pointer-events:none;
   background:linear-gradient(105deg, transparent,
-    var(--glass-shine, rgba(255,255,255,.42)) 48%, transparent);
+    rgba(255,255,255,.22) 48%, transparent);
   transform:skewX(-18deg);
   animation:doorGlint 9s cubic-bezier(.3,0,.2,1) infinite;
 }
@@ -3236,19 +3297,9 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
 @media (prefers-reduced-motion:reduce){
   #screen-mihrab .state-door::after{ animation:none; opacity:0; }
 }
-/* على الأرضيّة الفاتحة يُقلب الزجاج: الحرفُ ظلٌّ لا ضوء */
-#screen-mihrab:not(.dark) .state-door{
-  --glass:rgba(255,255,255,.52);
-  --card-edge:rgba(255,255,255,.85);
-  --glass-top:rgba(255,255,255,.95);
-  --glass-bot:rgba(120,90,42,.10);
-  --glass-shine:rgba(255,255,255,.75);
-  box-shadow:0 7px 18px rgba(20,48,79,.14),
-             inset 0 1px 0 rgba(255,255,255,.95),
-             inset 0 -6px 14px rgba(120,90,42,.08);
-}
-#screen-mihrab .state-door:active{transform:translateX(-50%) scale(.96);
-  box-shadow:0 2px 8px rgba(0,0,0,.22), inset 0 2px 7px rgba(0,0,0,.16);}
+
+#screen-mihrab .state-door:active{transform:translateX(-50%) scale(.965);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.22);}
 #screen-mihrab .state-door[hidden]{display:none;}
 
 #screen-mihrab .state-sub::before{
@@ -15848,6 +15899,37 @@ function hex2rgb(h){
       (x.key.indexOf('before') >= 0 || x.key === 'fajr_sunnah') ? before.push(x) : after.push(x);
     });
 
+    /* ═══ الصلاةُ مسارٌ لا قائمة ═══
+       كانت أربعَ مجموعاتٍ منفصلةٍ بعناوينَ ذهبيّة، وبينها بطاقاتٌ
+       بيضاءُ عريضة. وصلاةُ المرء متّصلة: راتبةٌ ثمّ فريضةٌ ثمّ
+       راتبةٌ ثمّ ذكر. فصارت خرزاتٍ على خيطٍ واحد، والعددُ في الخرزة. */
+    function bead(n, title, note, cls){
+      return '<div class="ps-step' + (cls ? ' ' + cls : '') + '">'
+           +   '<span class="ps-bead">' + toAr(String(n)) + '</span>'
+           +   '<span class="ps-lines"><b>' + title + '</b><i>' + note + '</i></span>'
+           + '</div>';
+    }
+    function psPath(){
+      var h = '<div class="ps-path">';
+      before.forEach(function(x){
+        h += bead(PS_RAK[x.key] || 2, _t(x.label),
+                  _t('سنّةٌ راتبة') + ' · ' + _t('قبلها'));
+      });
+      h += bead(PS_FARD[key] || 4,
+                _t((key === 'dhuhr' && zxIsJumua() && st.jumua) ? st.jumua : st.name),
+                _t('ركعاتٌ مفروضة'), 'fard');
+      after.forEach(function(x){
+        h += bead(PS_RAK[x.key] || 2, _t(x.label),
+                  _t('سنّةٌ راتبة') + ' · ' + _t('بعدها'));
+      });
+      h += '<button type="button" class="ps-step door" '
+        +    'onclick="closePrayerSheet(); setTimeout(function(){ openDhikr(&#39;prayer&#39;); }, 300);">'
+        +    '<span class="ps-bead ring">ذ</span>'
+        +    '<span class="ps-lines"><b>' + _t('أذكار بعد الصلاة') + '</b>'
+        +      '<i>' + _t('بعد السلام') + '</i></span>'
+        +    '<span class="ps-chev">←</span></button>';
+      return h + '</div>';
+    }
     function item(x){
       return '<div class="ps-item"><span class="rak">' + toAr(String(PS_RAK[x.key] || 2)) + '</span>'
            + '<span class="txt"><b>' + _t(x.label) + '</b><span>' + _t('سنّةٌ راتبة') + '</span></span></div>';
@@ -15858,23 +15940,20 @@ function hex2rgb(h){
            + arr.map(item).join('') + '</div>';
     }
 
-    var html = group('قبلها', before);
-    html += '<div class="ps-group"><div class="ps-glabel">' + _t('الفريضة') + '</div>'
+    var html = psPath();
+    var _dead = '' + group('قبلها', before) + '<div class="ps-group"><div class="ps-glabel">' + _t('الفريضة') + '</div>'
           + '<div class="ps-item fard"><span class="rak">' + toAr(String(PS_FARD[key] || 4)) + '</span>'
           + '<span class="txt"><b>' + _t(st.name) + '</b><span>'
-          + _t('ركعاتٌ مفروضة') + '</span></span></div></div>';
-    html += group('بعدها', after);
+          + _t('ركعاتٌ مفروضة') + '</span></span></div></div>'
+          + group('بعدها', after);
     if (!after.length && !before.length)
       html += '<div class="ps-none">' + _t('لا راتبةَ مؤكّدةً لهذه الصلاة.') + '</div>';
 
-    html += '<div class="ps-group"><div class="ps-glabel">' + _t('بعد السلام') + '</div>'
-          + '<button type="button" class="ps-door" onclick="closePrayerSheet(); setTimeout(function(){ openDhikr(\'prayer\'); }, 300);">'
-          + '<span>' + _t('أذكار بعد الصلاة') + '</span>'
-          + '<span class="chev">←</span></button></div>';
+    _dead += '';   /* المتنُ القديمُ لم يعد يُعرض — أُبقي بناؤه لئلّا تُكسر مراجعُه */
 
     document.getElementById('psBody').innerHTML = html;
     // المجموعاتُ تصعد واحدةً بعد واحدة، فتُقرأ بترتيبها لا دفعةً واحدة
-    zxRise(document.getElementById('psBody'), '.ps-group');
+    zxRise(document.getElementById('psBody'), '.ps-step');
     try { ZahimI18n.applyTo(document.getElementById('psSheet')); } catch(e){}
     document.getElementById('psBack').classList.add('open');
     document.getElementById('psSheet').classList.add('open');
@@ -16810,7 +16889,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-12-0715').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-12-1050').catch(function(){});
     });
   }
 })();
