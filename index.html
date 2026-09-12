@@ -2004,7 +2004,8 @@ body.theme-dark .zx-tile b{color:#EDEAE2;}
   flex-direction:column !important; align-items:stretch !important; }
 #zaVoiceRow > .zx-row-label{ padding:0 2px; }
 /* ثلاثٌ في صفّ، مربّعةٌ بنسبةٍ واحدة — كبطاقات هدف الختمة */
-.za-picks{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+/* أربعةٌ لا ثلاثة: عمودان في صفّين، فتبقى البطاقةُ مربّعةً واسعة */
+.za-picks{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;}
 /* هيئةُ بطاقات الختمة: وهجٌ قطريٌّ وحافةٌ بيضاءُ وثلاثُ ظلال */
 .za-pick{
   display:grid;place-items:center;width:100%;aspect-ratio:1/1;
@@ -15072,11 +15073,12 @@ function showToast(msg){
            صار ثلاثةَ خيارات، ولمسةُ كلٍّ تختاره وتُسمعه — فيُعاين ما شاء
            متى شاء، ويرجع إلى المناوبة بلمسة. -->
       <div class="zx-row zx-span" id="zaVoiceRow" style="flex-direction:column;align-items:stretch;gap:8px">
-        <span class="zx-row-label" style="padding:0">صوت الأذان<i>مسجد الشيخ عبد العزيز بن باز · جامع العلا — الجبيل الصناعية</i></span>
+        <span class="zx-row-label" style="padding:0">صوت الأذان<i>مسجد الشيخ عبد العزيز بن باز · جامع العلا — الجبيل الصناعية · الشيخ ناصر القطامي</i></span>
         <div class="za-picks" id="zaPicks">
           <button type="button" class="za-pick" data-v="auto" onclick="zaPick('auto')"><b>مناوبة</b></button>
           <button type="button" class="za-pick" data-v="1" onclick="zaPick('1')"><b>ابن باز</b></button>
           <button type="button" class="za-pick" data-v="2" onclick="zaPick('2')"><b>العلا</b></button>
+          <button type="button" class="za-pick" data-v="3" onclick="zaPick('3')"><b>القطامي</b></button>
         </div>
       </div>
     <div class="zx-row" onclick="zaPreviewFajr()">
@@ -16992,7 +16994,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-12-1620').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-12-2010').catch(function(){});
     });
   }
 })();
@@ -17795,6 +17797,8 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
 
   /* ── شروحُ صفوف الإعدادات ── */
   ZahimI18n.load('en', {
+    'القطامي': 'Al-Qatami',
+    'الشيخ ناصر القطامي': 'Sheikh Nasser Al-Qatami',
     'اللهمّ صلِّ وسلِّم عليه': 'O Allah, send blessings upon him',
     'المسْ لتزيد': 'tap to add',
     'من': 'of',
@@ -17899,6 +17903,8 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('id', {
+    'القطامي': 'Al-Qatami',
+    'الشيخ ناصر القطامي': 'Syekh Nasser Al-Qatami',
     'اللهمّ صلِّ وسلِّم عليه': 'Ya Allah, limpahkanlah selawat kepadanya',
     'المسْ لتزيد': 'sentuh untuk menambah',
     'من': 'dari',
@@ -17990,6 +17996,8 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('ms', {
+    'القطامي': 'Al-Qatami',
+    'الشيخ ناصر القطامي': 'Syeikh Nasser Al-Qatami',
     'اللهمّ صلِّ وسلِّم عليه': 'Ya Allah, selawatkanlah ke atasnya',
     'المسْ لتزيد': 'sentuh untuk tambah',
     'من': 'daripada',
@@ -18423,7 +18431,7 @@ else boot();
 "use strict";
 /* ثلاثةُ ملفّات: مؤذّنان للصلوات، وأذانُ فجرٍ فيه التثويب.
    والفجرُ لا يتبع الاختيار — «الصلاةُ خيرٌ من النوم» ليست في غيره. */
-var VOICES = { 1:'./adhan.mp3', 2:'./adhan-2.mp3' };
+var VOICES = { 1:'./adhan.mp3', 2:'./adhan-2.mp3', 3:'./adhan-3.mp3' };
 var SRC_FAJR = './adhan-fajr.mp3';
 var KEY_ON='zahim_adhan_on', KEY_FIRED='zahim_adhan_fired', KEY_VOICE='zahim_adhan_voice';
 var audio=null, unlocked=false, timer=null, playing=null;
@@ -18447,17 +18455,19 @@ function T(k){ try{ if(global.ZahimI18n && ZahimI18n.t) return ZahimI18n.t(k); }
    'auto' هو الأصل: الثاني للظهر والمغرب، والأوّل للعصر والعشاء.
    و'1' و'2' يُلزمان صوتًا واحدًا لكلّ الصلوات.
    والفجرُ خارجَ هذا كلِّه: له أذانُه بالتثويب. */
-var VOICE_ROTA = { dhuhr:2, maghrib:2, asr:1, isha:1 };
+/* دورةٌ كاملة: كلُّ صوتٍ يُسمَع في يومه */
+var VOICE_ROTA = { dhuhr:1, asr:2, maghrib:3, isha:1 };
 function mode(){
   try{
     var v = localStorage.getItem(KEY_VOICE);
-    return (v === '1' || v === '2') ? v : 'auto';
+    return (v === '1' || v === '2' || v === '3') ? v : 'auto';
   }catch(e){ return 'auto'; }
 }
 function voice(key){
   var m = mode();
   if(m === '1') return 1;
   if(m === '2') return 2;
+  if(m === '3') return 3;
   return VOICE_ROTA[key] || 1;
 }
 function srcFor(key){
@@ -18644,7 +18654,8 @@ function zaLabel(){
   if(w){
     w.textContent = m === 'auto' ? T('مناوبة')
                   : m === '1'    ? T('مسجد الشيخ عبد العزيز بن باز')
-                                 : T('جامع العلا');
+                  : m === '2'    ? T('جامع العلا')
+                                 : T('الشيخ ناصر القطامي');
   }
   /* البطاقةُ المختارةُ تُضاء، فيُعرف الوضعُ بالنظر لا بالقراءة */
   try{
@@ -18658,14 +18669,17 @@ function zaLabel(){
    خياراتٍ ظاهرة: لمسةُ كلٍّ تختاره وتُسمعه — فيُعاين ما شاء متى شاء.
    ولمسُ المختار مرّةً أخرى يُعيده فحسب، فلا يُحبَس من أراد التكرار. */
 global.zaPick=function(v){
-  if(v !== 'auto' && v !== '1' && v !== '2') v = 'auto';
+  if(v !== 'auto' && v !== '1' && v !== '2' && v !== '3') v = 'auto';
   try{ localStorage.setItem(KEY_VOICE, v); }catch(e){}
   zaLabel();
   if(on()){
     unlock();
     /* في المناوبة تُسمَع نبرةُ الصلاة القادمة — وهي ما سيُرفع فعلًا */
     setTimeout(function(){
-      global.zaPreview(12, v === 'auto' ? nextKey() : (v === '2' ? 'dhuhr' : 'asr'));
+      /* معاينةُ صوتٍ بعينه: نمرّ بصلاةٍ نصيبُها ذلك الصوت */
+      var k = v === 'auto' ? nextKey()
+            : (v === '1' ? 'dhuhr' : v === '2' ? 'asr' : 'maghrib');
+      global.zaPreview(12, k);
     }, 200);
   }
 };
