@@ -1661,6 +1661,59 @@ body.theme-dark .slw-bar{
 body.theme-dark .slw-word,
 body.theme-dark .slw-nums b{color:#E6C784;}
 
+/* ═══ صفُّ الصلاة المربّع ═══
+   أربعُ بطاقاتٍ في صفّ: العددُ كبيرًا، وموضعُه، واسمُه.
+   تُلمس فتُضيء — فاللوحُ مرآةٌ لا لافتة. */
+.ps-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:14px;}
+.ps-cell{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font:inherit;cursor:pointer;padding:13px 3px 11px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.92);
+  background:
+    radial-gradient(120% 62% at 30% 4%, rgba(255,255,255,.96), rgba(255,255,255,0) 60%),
+    linear-gradient(165deg, rgba(255,255,255,.96), rgba(240,230,210,.86));
+  box-shadow:0 3px 9px rgba(20,48,79,.12), inset 0 1px 0 rgba(255,255,255,.96);
+  transition:transform .18s cubic-bezier(.22,1.35,.36,1),
+             background .25s ease, box-shadow .22s ease;
+}
+.ps-cell b{font-size:22px;font-weight:800;color:#14304F;line-height:1;}
+.ps-cell i{font-style:normal;font-size:10px;font-weight:800;color:var(--gold-ink,#7A5E22);}
+.ps-cell u{text-decoration:none;font-size:9.5px;font-weight:600;color:var(--muted);
+  line-height:1.35;text-align:center;}
+.ps-cell.dhk b{font-family:'Amiri',serif;font-size:25px;color:var(--gold-ink,#7A5E22);}
+.ps-cell:active{transform:scale(.94);}
+/* المُضاءةُ ياقوتةٌ زرقاء — وعلامةٌ صغيرةٌ تعلوها */
+.ps-cell.lit{
+  background:linear-gradient(150deg,#3F9BC9 0%,#2A6E96 46%,#14304F 100%);
+  border-color:rgba(214,169,74,.46);
+  box-shadow:0 6px 16px rgba(20,48,79,.28), inset 0 1px 0 rgba(255,255,255,.30);
+}
+.ps-cell.lit b{color:#FFFDF7;}
+.ps-cell.lit i{color:#E8C070;}
+.ps-cell.lit u{color:rgba(255,253,247,.82);}
+
+/* ═══ الرأسُ الحيّ ═══
+   الرقمان في الرأس جامدان؛ وهذا يقول أين أنت بينهما. */
+.ps-live{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-top:13px;padding:10px 13px;border-radius:14px;font-size:12.5px;
+  color:var(--muted);
+  background:rgba(63,155,201,.10);border:1px solid rgba(63,155,201,.26);
+}
+.ps-live b{font-size:13.5px;font-weight:800;color:#14304F;}
+.ps-live i{font-style:normal;margin-inline-start:auto;font-size:11px;
+  font-weight:700;color:var(--gold-ink,#7A5E22);}
+.ps-pulse{width:8px;height:8px;border-radius:50%;background:#3F9BC9;
+  box-shadow:0 0 0 4px rgba(63,155,201,.22);
+  animation:psPulse 2s ease-in-out infinite;}
+@keyframes psPulse{ 50%{ box-shadow:0 0 0 7px rgba(63,155,201,.09); } }
+@media (prefers-reduced-motion:reduce){ .ps-pulse{animation:none;} }
+body.theme-dark .ps-cell{
+  border-color:rgba(255,255,255,.10);
+  background:linear-gradient(165deg, rgba(255,255,255,.07), rgba(255,255,255,.02));}
+body.theme-dark .ps-cell b{color:#E6C784;}
+body.theme-dark .ps-live b{color:#EDEAE2;}
+
 /* ═══ مسارُ الصلاة ═══
    خرزاتٌ على خيطٍ واحد: راتبةٌ ثمّ فريضةٌ ثمّ راتبةٌ ثمّ ذكر.
    الخيطُ خلفَ الخرز لا بينها، فيبدو متّصلًا ولو تفاوتت الارتفاعات. */
@@ -15986,6 +16039,65 @@ function hex2rgb(h){
                  maghrib_sunnah:2, isha_sunnah:2 };
   var PS_FARD = { fajr:2, dhuhr:4, asr:4, maghrib:3, isha:4 };
 
+
+/* ═══ سجلُّ أداء الرواتب ═══
+   يُحفظ باليوم: ما أُضيء اليوم لا يُحسب على غده. */
+  var PS_KEY = 'zahim_rawatib_v1';
+  function psDay(d){
+    d = d || new Date();
+    return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+  }
+  function psRead(){
+    try{
+      var o = JSON.parse(localStorage.getItem(PS_KEY) || 'null');
+      if(o && o.day === psDay()) return o;
+    }catch(e){}
+    return { day: psDay() };
+  }
+  function psDone(id){ return !!psRead()[id]; }
+  window.psToggle = function(id){
+    var o = psRead();
+    o[id] = !o[id];
+    try{ localStorage.setItem(PS_KEY, JSON.stringify(o)); }catch(e){}
+    if(navigator.vibrate){ try{ navigator.vibrate(o[id] ? 14 : 8); }catch(e){} }
+    try{ openPrayerSheet(_psKey); }catch(e){}
+  };
+  var _psKey = null;
+
+  /* ═══ الرأسُ الحيّ ═══
+     موضعُك من الصلاة، لا رقمان جامدان. */
+  function psLive(key){
+    var t = T[key], iq = iqamaOf(key);
+    if(t == null) return '';
+    var d = new Date(), n = d.getHours() * 60 + d.getMinutes();
+    var mins = function(a, b){ var v = b - a; return v < 0 ? v + 1440 : v; };
+    /* صياغةُ المدّة محلّيّةٌ: phrase تعيش في نطاق البوصلة لا هنا،
+       ونداؤها من هنا يرمي فيُبتلع الخطأ ويبقى الرأسُ صامتًا. */
+    var dur = function(m){
+      var hh = Math.floor(m / 60), mm = m % 60, out = [];
+      if(hh) out.push(hh === 1 ? _t('ساعة') : hh === 2 ? _t('ساعتين')
+                    : toAr(String(hh)) + ' ' + _t('ساعات'));
+      if(mm) out.push(mm === 1 ? _t('دقيقة') : mm === 2 ? _t('دقيقتين')
+                    : toAr(String(mm)) + ' ' + _t('دقيقة'));
+      return out.join(' ' + _t('و')) || _t('أقلّ من دقيقة');
+    };
+    var now, note;
+    if(n < t && mins(n, t) < 180){
+      now  = _t('قبل الأذان');
+      note = _t('بعد') + ' ' + dur(mins(n, t));
+    } else if(iq != null && n >= t && n < iq){
+      now  = _t('الراتبةُ القبليّة');
+      note = _t('باقٍ') + ' ' + dur(mins(n, iq)) + ' ' + _t('للإقامة');
+    } else if(iq != null && mins(iq, n) < 40){
+      now  = _t('بعد السلام');
+      note = _t('وقتُ الراتبة البعديّة والأذكار');
+    } else {
+      return '';
+    }
+    return '<div class="ps-live"><span class="ps-pulse"></span>'
+         + _t('الآن') + ': <b>' + now + '</b><i>' + note + '</i></div>';
+  }
+
   window.openPrayerSheet = function(key){
     var st = null;
     for (var i=0;i<PRAYER_STRUCTURE.length;i++)
@@ -15993,6 +16105,7 @@ function hex2rgb(h){
     if (!st) return;
 
     var iq = iqamaOf(key);
+    _psKey = key;
     document.getElementById('psKicker').textContent = _t('صلاة');
     document.getElementById('psName').textContent   =
       _t((key === 'dhuhr' && zxIsJumua() && st.jumua) ? st.jumua : st.name);
@@ -16014,25 +16127,34 @@ function hex2rgb(h){
            +   '<span class="ps-lines"><b>' + title + '</b><i>' + note + '</i></span>'
            + '</div>';
     }
+    /* ═══ صفٌّ مربّعٌ لا عمودٌ طويل ═══
+       أربعُ بطاقاتٍ في صفّ: العددُ كبيرًا، وتحته موضعُه من الصلاة.
+       تُلمس فتُضيء — مرآةٌ لا لافتة. والأذكارُ تفتح لا تُضاء. */
+    function psCell(id, n, top, sub, cls){
+      var lit = cls === 'dhk' ? false : psDone(id);
+      var act = cls === 'dhk'
+        ? 'closePrayerSheet(); setTimeout(function(){ openDhikr(&#39;prayer&#39;); }, 300);'
+        : 'psToggle(&#39;' + id + '&#39;)';
+      return '<button type="button" class="ps-cell' + (cls ? ' ' + cls : '')
+           + (lit ? ' lit' : '') + '" onclick="' + act + '">'
+           +   '<b>' + (typeof n === 'number' ? toAr(String(n)) : n) + '</b>'
+           +   '<i>' + top + '</i>'
+           +   '<u>' + sub + '</u>'
+           + '</button>';
+    }
     function psPath(){
-      var h = '<div class="ps-path">';
+      var h = '<div class="ps-row">';
       before.forEach(function(x){
-        h += bead(PS_RAK[x.key] || 2, _t(x.label),
-                  _t('سنّةٌ راتبة') + ' · ' + _t('قبلها'));
+        h += psCell('b_' + x.key, PS_RAK[x.key] || 2, _t('قبلها'), _t('راتبة'));
       });
-      h += bead(PS_FARD[key] || 4,
-                _t((key === 'dhuhr' && zxIsJumua() && st.jumua) ? st.jumua : st.name),
-                _t('ركعاتٌ مفروضة'), 'fard');
+      h += psCell('fard', PS_FARD[key] || 4,
+                  _t('الفريضة'),
+                  _t((key === 'dhuhr' && zxIsJumua() && st.jumua) ? st.jumua : st.name),
+                  'fard');
       after.forEach(function(x){
-        h += bead(PS_RAK[x.key] || 2, _t(x.label),
-                  _t('سنّةٌ راتبة') + ' · ' + _t('بعدها'));
+        h += psCell('a_' + x.key, PS_RAK[x.key] || 2, _t('بعدها'), _t('راتبة'));
       });
-      h += '<button type="button" class="ps-step door" '
-        +    'onclick="closePrayerSheet(); setTimeout(function(){ openDhikr(&#39;prayer&#39;); }, 300);">'
-        +    '<span class="ps-bead ring">ذ</span>'
-        +    '<span class="ps-lines"><b>' + _t('أذكار بعد الصلاة') + '</b>'
-        +      '<i>' + _t('بعد السلام') + '</i></span>'
-        +    '<span class="ps-chev">←</span></button>';
+      h += psCell('dhk', 'ذ', _t('الأذكار'), _t('بعد السلام'), 'dhk');
       return h + '</div>';
     }
     function item(x){
@@ -16045,7 +16167,7 @@ function hex2rgb(h){
            + arr.map(item).join('') + '</div>';
     }
 
-    var html = psPath();
+    var html = psLive(key) + psPath();
     var _dead = '' + group('قبلها', before) + '<div class="ps-group"><div class="ps-glabel">' + _t('الفريضة') + '</div>'
           + '<div class="ps-item fard"><span class="rak">' + toAr(String(PS_FARD[key] || 4)) + '</span>'
           + '<span class="txt"><b>' + _t(st.name) + '</b><span>'
@@ -16058,7 +16180,7 @@ function hex2rgb(h){
 
     document.getElementById('psBody').innerHTML = html;
     // المجموعاتُ تصعد واحدةً بعد واحدة، فتُقرأ بترتيبها لا دفعةً واحدة
-    zxRise(document.getElementById('psBody'), '.ps-step');
+    zxRise(document.getElementById('psBody'), '.ps-cell');
     try { ZahimI18n.applyTo(document.getElementById('psSheet')); } catch(e){}
     document.getElementById('psBack').classList.add('open');
     document.getElementById('psSheet').classList.add('open');
@@ -16994,7 +17116,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-12-2010').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-13-0130').catch(function(){});
     });
   }
 })();
@@ -17797,6 +17919,24 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
 
   /* ── شروحُ صفوف الإعدادات ── */
   ZahimI18n.load('en', {
+    'الآن': 'Now',
+    'قبل الأذان': 'Before the adhan',
+    'الراتبةُ القبليّة': 'The sunnah before',
+    'بعد السلام': 'After the salam',
+    'باقٍ': 'in',
+    'للإقامة': 'to iqama',
+    'وقتُ الراتبة البعديّة والأذكار': 'time for the sunnah after and the adhkar',
+    'قبلها': 'Before',
+    'بعدها': 'After',
+    'الفريضة': 'Obligatory',
+    'راتبة': 'Sunnah',
+    'الأذكار': 'Adhkar',
+    'ساعات': 'hours',
+    'ساعتين': 'two hours',
+    'ساعة': 'an hour',
+    'دقيقتين': 'two minutes',
+    'أقلّ من دقيقة': 'under a minute',
+    'و': 'and',
     'القطامي': 'Al-Qatami',
     'الشيخ ناصر القطامي': 'Sheikh Nasser Al-Qatami',
     'اللهمّ صلِّ وسلِّم عليه': 'O Allah, send blessings upon him',
@@ -17903,6 +18043,24 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('id', {
+    'الآن': 'Kini',
+    'قبل الأذان': 'Sebelum azan',
+    'الراتبةُ القبليّة': 'Sunah sebelum',
+    'بعد السلام': 'Setelah salam',
+    'باقٍ': 'sisa',
+    'للإقامة': 'ke ikamah',
+    'وقتُ الراتبة البعديّة والأذكار': 'waktu sunah setelah dan zikir',
+    'قبلها': 'Sebelum',
+    'بعدها': 'Setelah',
+    'الفريضة': 'Fardu',
+    'راتبة': 'Sunah',
+    'الأذكار': 'Zikir',
+    'ساعات': 'jam',
+    'ساعتين': 'dua jam',
+    'ساعة': 'sejam',
+    'دقيقتين': 'dua menit',
+    'أقلّ من دقيقة': 'kurang semenit',
+    'و': 'dan',
     'القطامي': 'Al-Qatami',
     'الشيخ ناصر القطامي': 'Syekh Nasser Al-Qatami',
     'اللهمّ صلِّ وسلِّم عليه': 'Ya Allah, limpahkanlah selawat kepadanya',
@@ -17996,6 +18154,24 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('ms', {
+    'الآن': 'Kini',
+    'قبل الأذان': 'Sebelum azan',
+    'الراتبةُ القبليّة': 'Sunat sebelum',
+    'بعد السلام': 'Selepas salam',
+    'باقٍ': 'baki',
+    'للإقامة': 'ke iqamah',
+    'وقتُ الراتبة البعديّة والأذكار': 'waktu sunat selepas dan zikir',
+    'قبلها': 'Sebelum',
+    'بعدها': 'Selepas',
+    'الفريضة': 'Fardu',
+    'راتبة': 'Sunat',
+    'الأذكار': 'Zikir',
+    'ساعات': 'jam',
+    'ساعتين': 'dua jam',
+    'ساعة': 'sejam',
+    'دقيقتين': 'dua minit',
+    'أقلّ من دقيقة': 'kurang seminit',
+    'و': 'dan',
     'القطامي': 'Al-Qatami',
     'الشيخ ناصر القطامي': 'Syeikh Nasser Al-Qatami',
     'اللهمّ صلِّ وسلِّم عليه': 'Ya Allah, selawatkanlah ke atasnya',
