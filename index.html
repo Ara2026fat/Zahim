@@ -35,6 +35,8 @@
 </script>
 <!-- ═══ تطبيقٌ قابل للتثبيت ═══ -->
 <link rel="manifest" href="manifest.webmanifest">
+<!-- نتولّى ألوانَنا بأنفسنا: بلا هذا يقلب أندرويدُ الصفحةَ قسرًا -->
+<meta name="color-scheme" content="light">
 <meta name="theme-color" content="#14304F">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0B1A13">
 <meta name="application-name" content="زاحِم">
@@ -56,7 +58,9 @@
   font-family: 'FallbackArabic';
   src: local('Traditional Arabic'), local('Al Bayan'), local('Geeza Pro'), local('Arabic Typesetting');
 }
+/* color-scheme يمنع القلبَ القسريّ، ويتبع وضعَ زاحِم لا وضعَ النظام */
 :root{
+  color-scheme:light;
   --green:#14304F;
   --green-mid:#1B4A73;
   --green-light:#2E6E9E;
@@ -110,7 +114,10 @@ body{max-width:480px;margin:0 auto;position:relative;}
    كان اللوحُ ينزلق عرضَ الشاشة كاملًا في اتجاهٍ واحدٍ ذهابًا وإيابًا —
    فالرجوعُ يبدو كالتقدّم. صار انتقالًا هادئًا لا اتجاهَ له: الخارجةُ
    تنكمش وتخفت، والداخلةُ تصعد قليلًا وتظهر. أقصرُ وأصدق. */
+/* الشاشةُ تُحدّ بحدّ المتن: على الحاسوب لوحٌ في الوسط لا امتدادٌ عريض */
 .screen{position:fixed;inset:0;overflow-y:auto;background:var(--cream);
+  width:100%;max-width:480px;left:50%;right:auto;transform:translateX(-50%);
+  box-shadow:0 0 0 1px rgba(122,109,87,.10);
   transition:transform .34s cubic-bezier(.22,1,.36,1),opacity .26s ease;
   will-change:transform,opacity;}
 
@@ -1661,6 +1668,44 @@ body.theme-dark .slw-bar{
 body.theme-dark .slw-word,
 body.theme-dark .slw-nums b{color:#E6C784;}
 
+/* ═══ شريطُ التحديث ═══
+   يظهر أسفلَ الشاشة حين تنزل نسخةٌ جديدة، ولا يُلحّ: لمسةٌ واحدة. */
+.zx-upd{
+  position:fixed;left:50%;bottom:18px;z-index:9000;
+  transform:translateX(-50%) translateY(140%);
+  display:flex;align-items:center;gap:11px;
+  width:min(calc(100% - 28px), 452px);
+  font:inherit;text-align:start;cursor:pointer;
+  padding:12px 14px;border-radius:18px;
+  border:1px solid rgba(214,169,74,.42);
+  background:linear-gradient(150deg,#3F9BC9 0%,#2A6E96 46%,#14304F 100%);
+  box-shadow:0 12px 30px rgba(20,48,79,.34), inset 0 1px 0 rgba(255,255,255,.28);
+  opacity:0;transition:transform .42s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+}
+.zx-upd.in{ transform:translateX(-50%) translateY(0); opacity:1; }
+.zx-upd-dot{
+  flex:0 0 auto;width:9px;height:9px;border-radius:50%;background:#E8C070;
+  box-shadow:0 0 0 4px rgba(232,192,112,.22);
+  animation:updPulse 1.9s ease-in-out infinite;
+}
+@keyframes updPulse{ 50%{ box-shadow:0 0 0 8px rgba(232,192,112,.08); } }
+.zx-upd-txt{ flex:1 1 auto; min-width:0; }
+.zx-upd-txt b{ display:block;font-size:13.5px;font-weight:800;color:#FFFDF7; }
+.zx-upd-txt i{ display:block;font-style:normal;font-size:11px;font-weight:600;
+  color:rgba(255,253,247,.78);margin-top:2px; }
+.zx-upd-go{
+  flex:0 0 auto;font-size:12px;font-weight:800;color:#14304F;
+  padding:8px 15px;border-radius:12px;
+  background:linear-gradient(165deg,#FFFDF7,#F0E6CC);
+  box-shadow:0 3px 9px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.zx-upd.busy{ pointer-events:none; opacity:.72; }
+.zx-upd.busy .zx-upd-go{ opacity:.6; }
+@media (prefers-reduced-motion:reduce){
+  .zx-upd{ transition:opacity .3s ease; transform:translateX(-50%); }
+  .zx-upd-dot{ animation:none; }
+}
+
 /* ═══ صفُّ الصلاة المربّع ═══
    أربعُ بطاقاتٍ في صفّ: العددُ كبيرًا، وموضعُه، واسمُه.
    تُلمس فتُضيء — فاللوحُ مرآةٌ لا لافتة. */
@@ -2562,6 +2607,8 @@ body.mode-sea{
 }
 
 /* ٣ · الليليّ — داكنٌ يريح العين في الظلمة، والذهبُ يبقى دليلًا. */
+/* الليليُّ يُعلن نفسَه كذلك، فلا يُقلَب مرّتين */
+body.mode-night{ color-scheme:dark; }
 body.mode-night{
   --green:#1E496B; --green-mid:#245782; --green-light:#3F9BC9; --green-pale:#172932;
   --gold:#E8C070; --gold-light:#F2D89A;
@@ -6198,7 +6245,9 @@ var ZahimHadithID = {
   height:100dvh;max-height:100dvh;}
 /* حاشيةٌ أضيقُ في وضع التلاوة: كلُّ بكسلٍ يُوفَّر من الحاشية يذهب
    إلى عرض السطر، فيكبر الخطُّ ويطول النصُّ ويقلّ الفراغ. */
-#screen-mushaf.bare .mus-page{padding:12px 9px;max-width:none;}
+/* وضعُ التجرّد كان يرفع الحدَّ فتمتدّ الصفحةُ بعرض النافذة.
+   وصفحةُ المصحف الورقيّ لا تتجاوز شبرًا — فالحدُّ يبقى. */
+#screen-mushaf.bare .mus-page{padding:12px 9px;}
 #screen-mushaf.bare{height:100dvh;}
 /* إطارُ الورقة: خطٌّ أخضرُ عريضٌ يحصر، ورفيعٌ يهدّئ.
    حدودٌ حقيقية لا رسمٌ ممدود — فلا تدخل النصَّ مهما طالت الصفحة. */
@@ -13060,12 +13109,22 @@ function startQuranPlan(){
   renderQuranScreen();
 }
 
+/* ═══ الوِردُ ينتظرك ═══
+   كان اليومُ يُحسب بالتقويم، فمن فاته يومٌ فاته وِردُه إلى الأبد.
+   وصار يُحسب بما أُتِمّ: تقف الرحلةُ عند أوّل يومٍ لم يُقرأ.
+   والتقويمُ يبقى سقفًا: لا يسبق الوِردُ يومَه ولو أتممتَ مبكرًا. */
 function getCurrentQuranDay(){
   if(!_quranPlan) return 0;
-  const start = new Date(_quranPlan.start);
-  const today = new Date();
-  const diff = Math.floor((today - start) / 86400000);
-  return Math.min(diff, _quranPlan.days - 1);
+  var last = _quranPlan.days - 1;
+  /* أوّلُ يومٍ لم يُتَمّ — وهو موضعُك من الرحلة */
+  var pending = 0;
+  while(pending <= last && _quranDone.indexOf(pending) !== -1) pending++;
+  if(pending > last) pending = last;      /* تمّت الختمةُ كلُّها */
+  /* وسقفُ التقويم: لا يُفتح وِردُ غدٍ اليوم */
+  var start = new Date(_quranPlan.start);
+  var diff  = Math.floor((new Date() - start) / 86400000);
+  var ceil  = Math.max(0, Math.min(diff, last));
+  return Math.min(pending, ceil);
 }
 
 function renderQuranProgress(wrap){
@@ -15173,7 +15232,10 @@ function showToast(msg){
     <div class="zx-group-head">عن زاحِم</div>
     <p class="zx-hint">ما يخصّ التطبيقَ نفسَه: هويّتك فيه، وأثرُ أيّامك، وطريقُ التواصل.</p>
     <div class="zx-row" onclick="zxEditWho()">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="3.4"/><path d="M5 19.4c0-3.3 3.1-5.4 7-5.4s7 2.1 7 5.4"/></svg></span><span class="zx-row-label">اسمك ودولتك<i>يظهران في التحيّة وحدها</i></span><span class="zx-row-value" id="zxWho">—</span>
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="3.4"/><path d="M5 19.4c0-3.3 3.1-5.4 7-5.4s7 2.1 7 5.4"/></svg></span><span class="zx-row-label">اسمك ودولتك<i>يظهران في التحيّة وحدها</i></span><span class="zx-row-value" id="zxWho">—</span></div>
+      <!-- ختمُ الإصدار: ليُعرف تاريخُ النسخة التي بين يديك -->
+      <div class="zx-row">
+        <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.6V12l3 1.8"/></svg></span><span class="zx-row-label">إصدار زاحِم<i>تاريخُ النسخة التي بين يديك</i></span><span class="zx-row-value" id="zxVer">—</span>
     </div>
     <div class="zx-row" onclick="window.open('https://zahim.app/intro','_blank','noopener')">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 5.2h5.2a2.2 2.2 0 0 1 2.2 2.2v11.4a1.7 1.7 0 0 0-1.7-1.7H4.6z"/><path d="M19.4 5.2h-5.2a2.2 2.2 0 0 0-2.2 2.2v11.4a1.7 1.7 0 0 1 1.7-1.7h5.7z"/></svg></span><span class="zx-row-label">كيف تستخدم زاحِم<i>شرحٌ بالصور لكلّ شاشة</i></span><span class="zx-row-chev">←</span>
@@ -17116,9 +17178,51 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-13-0130').catch(function(){});
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-13-1520').then(function(reg){
+        /* ═══ مراقبةُ التحديث ═══
+           نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
+           وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
+        function watch(w){
+          if(!w) return;
+          w.addEventListener('statechange', function(){
+            if(w.state === 'installed' && navigator.serviceWorker.controller) zxUpdateBar(w);
+          });
+        }
+        if(reg.waiting && navigator.serviceWorker.controller) zxUpdateBar(reg.waiting);
+        watch(reg.installing);
+        reg.addEventListener('updatefound', function(){ watch(reg.installing); });
+        setInterval(function(){ try{ reg.update(); }catch(e){} }, 3600000);
+        document.addEventListener('visibilitychange', function(){
+          if(!document.hidden){ try{ reg.update(); }catch(e){} }
+        });
+      }).catch(function(){});
+      var reloaded = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function(){
+        if(reloaded) return;
+        reloaded = true;
+        location.reload();
+      });
     });
   }
+  /* شريطُ التحديث: يظهر مرّةً ولا يُلحّ */
+  window.zxUpdateBar = function(worker){
+    if(document.getElementById('zxUpd')) return;
+    var ar = true; try{ ar = ZahimI18n.lang() === 'ar'; }catch(e){}
+    var bar = document.createElement('button');
+    bar.type = 'button'; bar.id = 'zxUpd'; bar.className = 'zx-upd';
+    bar.innerHTML = '<span class="zx-upd-dot"></span>'
+      + '<span class="zx-upd-txt"><b>'
+      + (ar ? 'تحديثٌ جديدٌ لزاحِم' : 'A new version of Zahim') + '</b><i>'
+      + (ar ? 'المسْ لتثبيته الآن' : 'Tap to install it now') + '</i></span>'
+      + '<span class="zx-upd-go">' + (ar ? 'حدِّث' : 'Update') + '</span>';
+    bar.onclick = function(){
+      bar.classList.add('busy');
+      try{ worker.postMessage({ type: 'SKIP_WAITING' }); }catch(e){}
+      setTimeout(function(){ location.reload(); }, 2000);
+    };
+    document.body.appendChild(bar);
+    requestAnimationFrame(function(){ bar.classList.add('in'); });
+  };
 })();
 </script>
 
@@ -17174,6 +17278,7 @@ window.addEventListener('popstate', function(){
     if(code === ZahimI18n.lang()){ return; }
     ZahimI18n.apply(code);
     try{ zxPaintLang(); }catch(e){}
+    try{ zxPaintVer(); }catch(e){}
     try{ if(typeof buildCompass === 'function') buildCompass(); }catch(e){}
     try{ if(typeof paintHomeDates === 'function') paintHomeDates(); }catch(e){}
     try{ if(typeof renderMaydan === 'function' &&
@@ -17193,7 +17298,20 @@ window.addEventListener('popstate', function(){
     var c = prompt(ar ? 'دولتك (اختياري)' : 'Your country (optional)', co);
     if(c !== null){ try{ localStorage.setItem('zahim_user_country', c.trim()); }catch(e){} }
     zxPaintWho();
+    try{ zxPaintVer(); }catch(e){}
     try{ zahimRegister(); }catch(e){}
+  };
+  /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
+  window.ZAHIM_STAMP = 'zahim-2026-09-13-1520';
+  window.zxPaintVer = function(){
+    var el = document.getElementById('zxVer');
+    if(!el) return;
+    var v = (window.ZAHIM_STAMP || '').replace(/^zahim-/, '');
+    var m = v.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    /* تحويلٌ محلّيّ: toAr تعيش في نطاقٍ آخر، ونداؤها من هنا يرمي */
+    var A = function(x){ return String(x).replace(/[0-9]/g, function(d){
+      return '٠١٢٣٤٥٦٧٨٩'[+d]; }); };
+    el.textContent = m ? (A(m[3]) + '/' + A(m[2]) + '/' + A(m[1])) : (v || '—');
   };
   window.zxPaintWho = function(){
     var el = document.getElementById('zxWho');
@@ -18985,6 +19103,8 @@ window.zxTile = function(key){
   if(grid) grid.hidden = true;
   if(back) back.hidden = false;
   try{ zxTab(key); }catch(e){}
+  /* ختمُ الإصدار يُرسم عند فتح لوحته لا عند الإقلاع وحدَه */
+  if(key === 'about'){ try{ zxPaintVer(); }catch(e){} }
   try{ zxTileify(document.getElementById('zxPane-' + key)); }catch(e){}
   /* العنوانُ يقول أين أنت، فلا يحتاج المرءُ أن يتذكّر أيَّ بلاطةٍ ضغط */
   zxSetTitle(ZX_TITLES[key] || 'الإعدادات');
