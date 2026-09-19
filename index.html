@@ -1623,6 +1623,73 @@ body.tsb-wheel-on .tsb-arc{display:none;}
 /* ═══ وِردُ الجمعة ═══
    لوحٌ يظهر يومَ الجمعة وحدَه فوق وِرد الختمة — لا بدلَه.
    بطاقتان بصبغة بطاقات الختمة، والمقروءةُ تُضاء كحليّةً. */
+/* ═══ «عن زاحِم» على الشاشات القصيرة ═══
+   الحشواتُ الثابتةُ لا تكفي: شاشةُ ٧٤٠ تفيض ٢٢٠ بكسلًا، والإنجليزيّةُ
+   أطولُ نصًّا. فتُقاس الحشوةُ والحرفُ بالارتفاع المتاح لا بعددٍ ثابت. */
+@media (max-height:800px){
+  #zxPane-about .zx-tiles > .zx-row{ padding:4px 7px 3px !important;gap:0 !important; }
+  #zxPane-about .zx-row-ic{ width:20px !important;height:20px !important;border-radius:7px; }
+  #zxPane-about .zx-row-ic svg{ width:12px;height:12px; }
+  #zxPane-about .zx-row-label{ font-size:11px !important;line-height:1.2 !important; }
+  #zxPane-about .zx-row-label i{ font-size:8px !important;line-height:1.3 !important;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+  #zxPane-about .zx-row-value{ font-size:10.5px; }
+  #zxPane-about .zx-hint{ display:none; }
+  #zxPane-about .zx-group-head{ font-size:10.5px;margin-bottom:2px; }
+  #zxPane-about .zx-group{ padding:7px 8px !important; }
+  #zxPane-about .zx-tiles{ gap:4px !important; }
+  #zxPane-about .zx-dev{ font-size:10px !important; }
+  #zxPane-about [data-zx-rights]{ font-size:8px !important;line-height:1.35 !important;margin-top:2px !important;padding-top:2px !important; }
+}
+/* والإنجليزيّةُ والملايويّةُ أطولُ، فسطرٌ واحدٌ للتلميح فيها */
+html[lang="en"] #zxPane-about .zx-row-label i,
+html[lang="ms"] #zxPane-about .zx-row-label i,
+html[lang="id"] #zxPane-about .zx-row-label i{ -webkit-line-clamp:1; }
+
+/* ═══ ألواحُ الإعدادات في شاشةٍ واحدة ═══
+   البطاقةُ كانت ١٢٩ بكسلًا وثمانٍ منها في «عن زاحِم» — شاشتان.
+   والأذانُ ١٤٦ فلا يُرى الفجرُ إلّا بنزول. فتُضغط الحشواتُ والحروف. */
+#zxPane-about .zx-tiles > .zx-row,
+#zxPane-adhan .zx-tiles > .zx-row{
+  gap:2px !important; padding:7px 9px 6px !important; min-height:0 !important;
+}
+/* رأسُ اللوح يُضغط: العنوانُ والتلميحُ يأخذان ٩٠ بكسلًا بلا حاجة */
+#zxPane-about .zx-group-head,
+#zxPane-adhan .zx-group-head{ font-size:11.5px;margin-bottom:3px; }
+#zxPane-about .zx-row-ic,
+#zxPane-adhan .zx-row-ic{ margin-bottom:1px; }
+#zxPane-about .zx-row-ic,
+#zxPane-adhan .zx-row-ic{ width:24px !important;height:24px !important;border-radius:8px; }
+#zxPane-about .zx-row-ic svg,
+#zxPane-adhan .zx-row-ic svg{ width:15px;height:15px; }
+#zxPane-about .zx-row-label,
+#zxPane-adhan .zx-row-label{ font-size:12px;line-height:1.24; }
+#zxPane-about .zx-row-label i,
+#zxPane-adhan .zx-row-label i{ font-size:9.5px;line-height:1.45;margin-top:1px; }
+#zxPane-about .zx-row-value,
+#zxPane-adhan .zx-row-value{ font-size:11.5px;margin-top:1px; }
+#zxPane-about .zx-group,
+#zxPane-adhan .zx-group{ padding:9px 10px; }
+#zxPane-about .zx-hint,
+#zxPane-adhan .zx-hint{ font-size:10px;line-height:1.6;margin-bottom:6px; }
+#zxPane-about .zx-tiles,
+#zxPane-adhan .zx-tiles{ gap:6px; }
+/* ذيلُ الحقوق يُضغط كذلك، فهو آخرُ ما يُرى */
+#zxPane-about [data-zx-rights]{ margin-top:4px;padding-top:4px;font-size:9px;line-height:1.55; }
+#zxPane-about .zx-dev{ font-size:12px; }
+/* سطران للتلميح لا أكثر: بطاقةٌ تطول تُخرج ذيلَ الحقوق عن الشاشة */
+#zxPane-about .zx-row-label i{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+/* وآخرُ لوحٍ لا يحتاج هامشًا سفليًّا: هو آخرُ ما في الشاشة */
+#zxPane-about .zx-group:last-child{ padding-bottom:6px;margin-bottom:0; }
+/* بطاقاتُ اختيار المؤذّن: مربّعةٌ أصغرُ فيسع اللوحُ الفجرَ بلا نزول */
+#zxPane-adhan .za-picks{ gap:6px; }
+/* aspect-ratio:1/1 يجعلها تكبر بعرض اللوح: ١٦٠ بكسلًا على شاشةٍ عريضة.
+   والاسمُ سطرٌ واحدٌ لا يحتاج مربّعًا — فيُقيَّد الارتفاعُ وتُلغى النسبة. */
+#zxPane-adhan .za-pick{
+  aspect-ratio:auto;height:62px;border-radius:14px;padding:6px 4px; }
+#zxPane-adhan .za-pick b{ font-size:11.5px; }
+
 /* ═══ شريطُ الصلاة على النبيّ ﷺ ═══
    يومَ الجمعة وحدَه، تحت البوصلة مباشرةً — أوّلُ ما تقع عليه العين.
    لمسةٌ تزيد واحدة، والشريطُ يمتلئ نحو المئة. */
@@ -15455,7 +15522,7 @@ function showToast(msg){
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.2h15"/><path d="M7.6 19.2v-6.4M12 19.2V6.6M16.4 19.2v-9"/></svg></span><span class="zx-row-label">ميدان الطاعة<i>قَلِيلٌ دَائِمٌ خَيْرٌ مِنْ كَثِيرٍ مُنْقَطِعٍ</i></span><span class="zx-row-chev">←</span>
     </div>
     <div class="zx-row" onclick="zxTasbihShapeToggle()">
-      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6 19.2 8v8L12 20.4 4.8 16V8z"/><circle cx="12" cy="12" r="2.6"/></svg></span><span class="zx-row-label">شكل التسبيح<i>قوسُ الإبهام في متناول اليد، وعجلةُ الأذكار تُدار بالإبهام</i></span><span class="zx-row-value" id="zxTsbShape">قوس الإبهام</span>
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6 19.2 8v8L12 20.4 4.8 16V8z"/><circle cx="12" cy="12" r="2.6"/></svg></span><span class="zx-row-label">شكل التسبيح<i>قوسٌ في متناول الإبهام، أو عجلةٌ تُدار</i></span><span class="zx-row-value" id="zxTsbShape">قوس الإبهام</span>
     </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(openFeedbackScreen, 300);">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12.6a7.4 7.4 0 0 1-7.4 7.4H7.2L4 22.4v-4.9A7.4 7.4 0 0 1 4 12.6 7.4 7.4 0 0 1 11.4 5.2h1.2A7.4 7.4 0 0 1 20 12.6z"/></svg></span><span class="zx-row-label">تواصل مع مطوري زاحِم<i>ملاحظةٌ أو تصحيحٌ في نصّ</i></span><span class="zx-row-chev">←</span>
@@ -17378,7 +17445,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-18-1615').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-19-0110').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -17502,7 +17569,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-09-18-1615';
+  window.ZAHIM_STAMP = 'zahim-2026-09-19-0110';
   window.zxPaintVer = function(){
     var el = document.getElementById('zxVer');
     if(!el) return;
