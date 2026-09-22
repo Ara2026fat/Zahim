@@ -122,7 +122,9 @@ body{max-width:480px;margin:0 auto;position:relative;}
   will-change:transform,opacity;}
 
 body{max-width:480px;margin:0 auto;position:relative;}
-.screen.hidden{transform:translateY(10px) scale(.985);opacity:0;pointer-events:none;
+/* التوسيطُ في translateX(-50%) وهذا يستبدله، فتنزاح
+   الشاشاتُ المخفيّة عن العمود على الحاسوب. فيُجمعان. */
+.screen.hidden{transform:translateX(-50%) translateY(10px);opacity:0;pointer-events:none;
   visibility:hidden;transition:transform .26s cubic-bezier(.4,0,.2,1),opacity .2s ease,visibility 0s .26s;}
 .screen:not(.hidden){visibility:visible;transition-delay:0s;}
 .screen.slide-in{transform:translateY(14px);opacity:0;}
@@ -1265,7 +1267,14 @@ body.theme-dark .home-dock{
    والمحتوى في وسطها، والشريطُ السفليّ في قاعها. */
 #screen-home{position:fixed;display:flex;flex-direction:column;justify-content:flex-start;
   padding-top:env(safe-area-inset-top,0px);}
-#screen-home > #home-bg{margin-top:auto;}
+/* ═══ الفراغُ فوق الشريط ═══
+   margin-top:auto كان يدفع المحتوى إلى أسفلِ الشاشة ويترك ٦٠ بكسلًا
+   فارغةً فوق شريط التاريخ — مساحةٌ لا تحمل شيئًا. وقد وُضعت يوم كان
+   المحتوى أقصر. فيُلغى، ويُوزَّع الفضلُ على البوصلة والميدان. */
+#screen-home > #home-bg{margin-top:0;}
+/* والفضلُ الذي تحرّر (٦٠ بكسلًا) يذهب إلى البوصلة لا إلى فراغٍ
+   أسفلَ الشاشة: فهي قلبُ الرئيسيّة وأوّلُ ما تقع عليه العين. */
+#screen-home .wird-circles-wrap{ margin-block:auto; }
 /* الشاشةُ الرئيسيّة لا تُمرَّر: كلُّ شيءٍ يسعها أو يتقلّص ليسعها،
    فلا يُقصّ شريطٌ ولا يختفي رصيف. */
 /* الشريطان ملتصقان بالطرفين، والوسطُ يتمرّر إن طال.
@@ -1308,7 +1317,23 @@ body.theme-dark #home-bg > .home-topbar{
    القصيرة تُطوى بطاقةُ الميدان (وهي في الإعدادات ← عن زاحِم)،
    ويُضغط ما بقي. البوصلةُ أولى بالمساحة من ملخّصٍ يُقرأ مرّةً. */
 @media (max-height:740px){
-  .ros-card{display:none !important;}
+  /* ═══ ميدانُ الطاعة لا يُحذف ═══
+     كان display:none تحت ٧٤٠ — قرارٌ قديمٌ يوم لم يكن ثمّ متّسع.
+     فيختفي الميدانُ على الشاشات القصيرة وفي الجمعة، ولا يدري
+     صاحبُه لمَ غاب. وأثرُ الأيّام أولى بالبقاء من فراغٍ حوله.
+     فيُضغط: سطرٌ واحدٌ بختمٍ أصغر، لا بطاقةٌ بسطرين. */
+  .ros-card{
+    display:flex !important;
+    padding:5px 10px !important;
+    margin-top:3px !important;margin-bottom:2px !important;
+    gap:8px !important;
+  }
+  .ros-card .ros-seal,
+  .ros-card > :first-child{ width:30px !important;height:30px !important; }
+  .ros-txt{ gap:1px !important; }
+  .ros-kick{ font-size:8.5px !important;letter-spacing:1.2px !important; }
+  .ros-state{ font-size:12.5px !important;line-height:1.35 !important; }
+  .ros-bars{ transform:scale(.88);transform-origin:center right; }
   .compass-station-label,#stationTitle{margin-top:2px !important;}
 }
 @media (max-height:900px){
@@ -1776,6 +1801,118 @@ body.theme-dark .slw-nums b{color:#E6C784;}
 .qd-m-go{ flex:0 0 auto;font-size:17px;color:#E8C070;opacity:.9; }
 @media (prefers-reduced-motion:reduce){ .qd-mushaf::after{ animation:none;opacity:0; } }
 
+/* ═══ زرُّ إغلاق لوح المواقيت ═══
+   اللوحُ يملأ الشاشةَ فيُخفي زرَّ الرجوع، فيُوضع له بابُ خروجٍ في رأسه. */
+/* ═══ تمييزُ النصّ الشرعيّ في اللغات الأخرى ═══
+   من فتح زاحِمَ بالإنجليزيّة رأى عربيًّا وإنجليزيًّا في بطاقةٍ واحدة
+   بلون واحدٍ — فلا يدري أيُّهما الأصلُ وأيُّهما الترجمة.
+   فيُعطى الأصلُ العربيُّ لونَه وحرفَه وهامشَه، ويُسمَّى «العربيّة».
+   ولا يُمسّ في العربيّة: هناك النصُّ هو كلُّ شيء. */
+html:not([lang="ar"]) .matn,
+html:not([lang="ar"]) .hadith,
+html:not([lang="ar"]) .dhikr-text,
+html:not([lang="ar"]) .dhikr-arabic,
+html:not([lang="ar"]) .quran-text,
+html:not([lang="ar"]) .ayah,
+html:not([lang="ar"]) .riyad-matn,
+html:not([lang="ar"]) .had-text,
+html:not([lang="ar"]) .riyad-card-text,
+html:not([lang="ar"]) .riyad-day-text,
+html:not([lang="ar"]) .di-text{
+  direction:rtl;text-align:center;
+  color:#14304F;
+  border-inline-start:3px solid rgba(201,150,58,.55);
+  padding-inline-start:11px;
+  background:rgba(201,150,58,.055);
+  border-radius:0 12px 12px 0;
+}
+html:not([lang="ar"]) .di-text{ border-radius:12px 0 0 12px; }
+body.theme-dark html:not([lang="ar"]) .matn,
+html:not([lang="ar"]) body.theme-dark .matn{ color:#E6C784; }
+
+/* وسمٌ صغيرٌ يقول «العربيّة» فوق الأصل — علامةٌ لا شرح */
+html:not([lang="ar"]) .di-text::before,
+html:not([lang="ar"]) .riyad-card-text::before,
+html:not([lang="ar"]) .matn::before{
+  content:"العربية";
+  display:block;font-family:'Tajawal',sans-serif;
+  font-size:8.5px;font-weight:800;letter-spacing:.4px;
+  color:var(--gold-ink,#7A5E22);opacity:.72;
+  margin-bottom:5px;direction:rtl;
+}
+
+/* ═══ أزرارُ الرصيف لا تنكمش ═══
+   ٢٠ بكسلًا لا تُلمس. والحدُّ الأدنى للمس أربعٌ وأربعون، فيُفرض.
+   والرصيفُ آخرُ ما يُضحّى به: هو طريقُ الخروج من كلّ شيء. */
+.home-dock .dock-btn,
+.home-dock button{
+  min-height:46px !important;
+  flex:0 0 auto;
+}
+@media (max-height:700px){
+  .home-dock .dock-btn,
+  .home-dock button{ min-height:42px !important;padding:4px 6px !important; }
+  .home-dock{ padding:4px 12px calc(4px + env(safe-area-inset-bottom)) !important; }
+}
+
+/* ═══ الجمعةُ على الشاشات القصيرة ═══
+   شريطُ الصلاة + ميدانُ الطاعة + الرصيف = أكثرُ ممّا تسع ٧٤٠.
+   فيُضغط شريطُ الصلاة: سطرٌ واحدٌ نحيف، لا بطاقةٌ بهامشين. */
+@media (max-height:760px){
+  .slw-bar{ padding:6px 12px 7px !important;margin:6px auto 7px !important; }
+  .slw-word{ font-size:13px !important; }
+  .slw-nums b{ font-size:15px !important; }
+  .slw-track{ height:3px !important;margin-top:5px !important; }
+  .home-tagline{ font-size:17px !important;margin:1px 16px 3px !important; }
+  #home-bg{ padding-bottom:4px !important; }
+}
+
+/* ═══ أبوابُ الخروج ═══
+   ثلاثُ شاشاتٍ تُفتح فوق بعضها، ومن دخل الثالثةَ لم يجد طريقًا
+   إلى الأولى. فلكلٍّ بابُه الظاهر. */
+#screen-mihrab .mih-home{
+  /* z-index عالٍ وpointer-events صريح: طبقةُ .content تعلوه
+     وتمنع اللمس عن كلّ ما تحتها. */
+  position:absolute;top:14px;inset-inline-start:16px;z-index:40;pointer-events:auto;
+  font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;
+  padding:8px 15px;border-radius:13px;color:var(--ink);
+  border:1px solid var(--hair);
+  background:rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  box-shadow:0 2px 8px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.22);
+}
+#screen-mihrab.board-open .mih-home{
+  color:#14232E;background:rgba(255,255,255,.62);
+  border-color:rgba(20,35,46,.18);
+}
+#screen-mihrab .mih-home:active{ transform:scale(.96); }
+.ps-home{
+  display:none;position:fixed;top:calc(14px + env(safe-area-inset-top,0px));
+  inset-inline-start:16px;z-index:42;
+  font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;
+  padding:8px 15px;border-radius:13px;color:#FFFDF7;
+  border:1px solid rgba(255,255,255,.26);
+  background:rgba(20,48,79,.72);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  box-shadow:0 4px 14px rgba(0,0,0,.26);
+}
+.ps-home.on{ display:block; }
+.ps-home:active{ transform:scale(.96); }
+/* قوسُ المحراب زخرفةٌ لا تُلمس: مستطيلُ أرضيّته يمتدّ
+   على الوجه كلّه فيحجب كلّ زرّ تحته. */
+#screen-mihrab svg.arch{ pointer-events:none; }
+#screen-mihrab .strip-close{ display:none; }
+#screen-mihrab.board-open .strip-close{
+  display:block;position:absolute;top:14px;inset-inline-end:16px;z-index:8;
+  font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;
+  padding:8px 15px;border-radius:13px;color:#14232E;
+  border:1px solid rgba(20,35,46,.18);
+  background:rgba(255,255,255,.62);
+  box-shadow:0 2px 8px rgba(20,48,79,.12), inset 0 1px 0 rgba(255,255,255,.85);
+}
+#screen-mihrab.board-open .strip-close:active{
+  transform:scale(.96);box-shadow:inset 0 2px 6px rgba(20,48,79,.16); }
+
 /* ═══ لوحُ المواقيت مفتوحًا ═══
    ستّةُ صفوفٍ تملأ الوجه بدل ستّة أعمدةٍ في شريط. */
 /* قاعدةٌ لاحقةٌ تفرض width:200px و transform — فتُقوّى هذه بـ!important،
@@ -1874,17 +2011,17 @@ body.theme-dark .zq-honest .zq-h1{ color:#E6C784; }
    على عرض النافذة — فينفصل الشريطُ السفليُّ عن اللوح في وسط الشاشة.
    والحدُّ ههنا لكلّ ما position:fixed. */
 @media (min-width:520px){
+  /* ═══ التوسيطُ بالهوامش لا بـtransform ═══
+     كان translateX(-50%) !important يمحو إزاحةَ الإخفاء
+     translateY(100%) — فتظهر الإعداداتُ مفتوحةً عند الإقلاع
+     وتثبت. والهامشُ التلقائيُّ يوسّط ولا يمسّ الحركة. */
   .ps-back, .ps-sheet, .zx-backdrop, .zx-sheet,
   .mini-toast, .toast, .zx-upd, #zxUpd{
-    left:50% !important; right:auto !important;
+    left:0 !important; right:0 !important;
     width:100% !important; max-width:480px !important;
-    transform:translateX(-50%) !important;
+    margin-inline:auto !important;
   }
-  /* اللوحُ المنزلق يحتفظ بحركة صعوده */
-  .ps-sheet, .zx-sheet{ margin:0 auto; }
-  /* شريطُ التحديث يجمع الإزاحتين: التوسيطَ والصعود */
   #zxUpd{ max-width:452px !important; }
-  #zxUpd.in{ transform:translateX(-50%) !important; }
 }
 
 /* ═══ شريطُ التحديث ═══
@@ -3554,7 +3691,8 @@ html body.zx-text-3 #screen-mihrab .content p.lead{font-size:15px !important;}
           border-radius:44px;box-shadow:0 40px 90px rgba(0,0,0,.5);}
 @media (max-width:520px){
 #screen-mihrab{display:block;background:var(--wallbg,#EDE7DA);}
-#screen-mihrab{width:100vw;height:100dvh;border-radius:0;box-shadow:none;}
+/* 100vw يكسر عمودَ زاحِم على الحاسوب: يمتدّ المحرابُ
+   عرضَ النافذة والباقي في وسطها. فيتبع العمودَ كإخوته. */
 #screen-mihrab{--safe:env(safe-area-inset-bottom,0px);}
 #screen-mihrab .sill{padding-bottom:env(safe-area-inset-bottom,0px);}
 }
@@ -3764,7 +3902,10 @@ body.theme-dark #screen-mihrab .strip-col.now{
 /* سطرُ العدّاد و«مواقيت الصلاة» أشدُّ خفوتًا من الحدّ في كلّ الأوقات */
 #screen-mihrab .sf-label{font-size:8.5px;color:var(--ink);opacity:.92;}
 #screen-mihrab .strip.to-iqama .sf-label{color:var(--ink);opacity:.85;}
+/* الذهبيُّ الفاتحُ على الجدار الفاتح 4.33:1 — دون العتبة.
+   و#7A5E22 عليه 5.9:1، وهو ذهبٌ أعمقُ لا لونٌ آخر. */
 #screen-mihrab .strip.to-iqama .sf-value{color:#E8C070;}
+#screen-mihrab:not(.dark) .strip.to-iqama .sf-value{color:#7A5E22;}
 #screen-mihrab .strip-col .iq.pending{opacity:1;color:#E8C070;font-weight:700;}
 #screen-mihrab .sf-value{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.4px;
             font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;}
@@ -11783,7 +11924,7 @@ function getCompassActiveIndex(doneMap){
     if(!doneMap.prayer && typeof zxNextLine === 'function'){
       const _d = new Date();
       const _r = zxNextLine(ZahimDay.times(_d), _d.getHours() * 60 + _d.getMinutes());
-      if(_r && _r.mode === 'standing') return 0;
+      if(_r && (_r.mode === 'standing' || _r.mode === 'adhan')) return 0;
     }
   }catch(e){}
   /* كانت الإشارةُ تمضي إلى الأمام فتقف عند أوّل وِردٍ غيرِ مُتَمّ، ولو لم يدخل
@@ -15156,6 +15297,7 @@ function showToast(msg){
 <!-- ═══ لوحُ الصلاة ═══ ما قبلَها وما بعدَها في موضعٍ واحد.
      يُعرض تذكيرًا لا محاسبة: لا نسبةَ ولا شريطَ إنجاز. -->
 <div class="ps-back" id="psBack" onclick="closePrayerSheet()"></div>
+<button type="button" class="ps-home" id="psHome" onclick="closePrayerSheet(false, true)">↩ الرئيسية</button>
 <div class="ps-sheet" id="psSheet" role="dialog" aria-modal="true" aria-labelledby="psName">
   <div class="ps-grip"></div>
   <div class="ps-head">
@@ -15249,6 +15391,9 @@ function showToast(msg){
 </div>
 <div class="screen hidden" id="screen-mihrab">
 
+      <!-- بابُ الرئيسيّة: يظهر في المحراب وفي اللوح معًا،
+         فمن دخل المواقيتَ وجد طريقَ العودة حيثما كان. -->
+    <button type="button" class="mih-home" id="mihHome" onclick="goHome()">↩ الرئيسية</button>
   <svg class="arch" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <pattern id="girih" width="78" height="78" patternUnits="userSpaceOnUse">
@@ -15356,6 +15501,10 @@ function showToast(msg){
   <button type="button" class="state-door" id="stateDoor" hidden></button>
   <!-- شريط المواقيت: في قاع الإطار، أفقيّ كلوحات المساجد -->
   <div class="strip" id="strip">
+    <!-- زرُّ إغلاق اللوح: يظهر مفتوحًا فقط، إذ يُخفي اللوحُ رأسَ الشاشة -->
+    <button type="button" class="strip-close" id="stripClose"
+            onclick="document.getElementById('screen-mihrab').classList.remove('board-open')"
+            aria-label="إغلاق المواقيت">↩ المحراب</button>
     <div class="strip-cols" id="stripCols"></div>
     <div class="strip-foot" onclick="sharePrayerTimesCard()" title="مشاركة المواقيت">
       <span class="sf-label" id="cdLabel"></span><span class="sf-value" id="cdValue"></span>
@@ -16428,6 +16577,7 @@ function hex2rgb(h){
   }
 
   window.openPrayerSheet = function(key){
+    try{ document.getElementById('psHome').classList.add('on'); }catch(e){}
     var st = null;
     for (var i=0;i<PRAYER_STRUCTURE.length;i++)
       if (PRAYER_STRUCTURE[i].key === key) st = PRAYER_STRUCTURE[i];
@@ -16516,9 +16666,12 @@ function hex2rgb(h){
     try { history.pushState({psSheet:1}, ''); } catch(e){}
   };
 
-  window.closePrayerSheet = function(fromPop){
+  window.closePrayerSheet = function(fromPop, toHome){
     document.getElementById('psBack').classList.remove('open');
     document.getElementById('psSheet').classList.remove('open');
+    try{ document.getElementById('psHome').classList.remove('on'); }catch(e){}
+    /* من أغلق اللوحَ بزرّ الخروج يريد الخروج، لا الرجوعَ إلى ما خلفه */
+    if(toHome){ try{ setTimeout(function(){ goHome(); }, 220); }catch(e){} }
     if (!fromPop) { try { if (history.state && history.state.psSheet) { window.__zxHandled = true; history.back(); } } catch(e){} }
   };
   window.addEventListener('popstate', function(){
@@ -16791,6 +16944,9 @@ function openMihrab(){
     if(s.id!=='screen-mihrab'){ s.classList.add('hidden'); s.classList.remove('active'); }
   });
   var el2=document.getElementById('screen-mihrab');
+  /* اللوحُ يُغلق عند كلّ فتح: وإلّا عاد المرءُ فوجده مفتوحًا
+     ولم يرَ المحرابَ أبدًا. */
+  el2.classList.remove('board-open');
   el2.classList.remove('hidden'); el2.style.display=''; el2.classList.add('active');
   window.scrollTo(0,0);
   if(typeof window.mihrabActivate==='function') window.mihrabActivate();
@@ -17445,7 +17601,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-19-0110').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-23-0840').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -17569,7 +17725,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-09-19-0110';
+  window.ZAHIM_STAMP = 'zahim-2026-09-23-0840';
   window.zxPaintVer = function(){
     var el = document.getElementById('zxVer');
     if(!el) return;
@@ -18304,6 +18460,7 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
 
   /* ── شروحُ صفوف الإعدادات ── */
   ZahimI18n.load('en', {
+    '↩ المحراب': '↩ Mihrab',
     'الاتّجاهُ محسوبٌ بدقّة من موقعك إلى الكعبة.': 'The direction is computed precisely from your location to the Kaaba.',
     'لكنّ حسّاسَ الهاتف يتأثّر بالحديد: الخرسانةُ المسلَّحة والأبوابُ والأجهزةُ تزيغ بالإبرة درجاتٍ كثيرة.': 'But the phone sensor is disturbed by iron: reinforced concrete, doors and appliances can swing the needle by many degrees.',
     'فإن أردتَ الدقّة: اخرج إلى فضاءٍ بعيدًا عن البنيان، وأبعِد الهاتفَ عن كلّ معدن، ثمّ حرّكه على شكل ٨ ليُعايِر نفسَه.': 'For accuracy: step outside away from buildings, keep the phone clear of metal, then move it in a figure-8 to let it calibrate.',
@@ -18431,6 +18588,7 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('id', {
+    '↩ المحراب': '↩ Mihrab',
     'الاتّجاهُ محسوبٌ بدقّة من موقعك إلى الكعبة.': 'Arah dihitung dengan tepat dari lokasi Anda ke Ka’bah.',
     'لكنّ حسّاسَ الهاتف يتأثّر بالحديد: الخرسانةُ المسلَّحة والأبوابُ والأجهزةُ تزيغ بالإبرة درجاتٍ كثيرة.': 'Namun sensor ponsel terganggu oleh besi: beton bertulang, pintu dan peralatan dapat menyimpangkan jarum puluhan derajat.',
     'فإن أردتَ الدقّة: اخرج إلى فضاءٍ بعيدًا عن البنيان، وأبعِد الهاتفَ عن كلّ معدن، ثمّ حرّكه على شكل ٨ ليُعايِر نفسَه.': 'Untuk akurasi: keluarlah ke ruang terbuka jauh dari bangunan, jauhkan ponsel dari logam, lalu gerakkan membentuk angka 8 untuk kalibrasi.',
@@ -18545,6 +18703,7 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('ms', {
+    '↩ المحراب': '↩ Mihrab',
     'الاتّجاهُ محسوبٌ بدقّة من موقعك إلى الكعبة.': 'Arah dikira dengan tepat dari lokasi anda ke Kaabah.',
     'لكنّ حسّاسَ الهاتف يتأثّر بالحديد: الخرسانةُ المسلَّحة والأبوابُ والأجهزةُ تزيغ بالإبرة درجاتٍ كثيرة.': 'Namun penderia telefon terganggu oleh besi: konkrit bertetulang, pintu dan perkakas boleh memesongkan jarum berpuluh darjah.',
     'فإن أردتَ الدقّة: اخرج إلى فضاءٍ بعيدًا عن البنيان، وأبعِد الهاتفَ عن كلّ معدن، ثمّ حرّكه على شكل ٨ ليُعايِر نفسَه.': 'Untuk ketepatan: keluar ke ruang terbuka jauh dari bangunan, jauhkan telefon dari logam, kemudian gerakkannya bentuk 8 untuk menentukur.',
@@ -18988,6 +19147,17 @@ else boot();
   border-radius:999px;padding:9px 16px;cursor:pointer;
 }
 @media (prefers-reduced-motion:reduce){#zaBar .zaPulse{animation:none}}
+
+/* قواعدُ سابقةٌ تفرض position:relative وwidth:390px — وهي من
+   عهد معاينةٍ في إطار جوّال. فيُردّ إلى نظام .screen نفسِه. */
+#screen-mihrab{
+  position:fixed !important;inset:0 !important;
+  width:100% !important;max-width:480px !important;height:auto !important;
+  left:50% !important;right:auto !important;
+  transform:translateX(-50%) !important;
+  border-radius:0;box-shadow:0 0 0 1px rgba(122,109,87,.10);}
+#screen-mihrab.hidden{
+  transform:translateX(-50%) translateY(10px) !important;}
 </style>
 
 <div id="zaBar" role="status" aria-live="polite">
@@ -19445,15 +19615,30 @@ window.zxBackToGrid = function(){
   var ZX_ORDER = ['fajr','dhuhr','asr','maghrib','isha'];
 
   /* دالّةٌ صافيةٌ تُختبر وحدها: تُعطى المواقيتَ والدقيقةَ فتقول ما يُعرض */
+  /* دقائقُ الإقامة لهذه الصلاة — من إعداده إن ضبطه، وإلّا فالافتراض */
+  function ZX_IQ(k){
+    var f = { fajr:25, dhuhr:20, asr:20, maghrib:15, isha:20 };
+    var v = f[k] != null ? f[k] : 20;
+    try{
+      var raw = localStorage.getItem('zahim_iqama_v1');
+      if(raw){ var c = JSON.parse(raw); if(c && c[k] != null) v = +c[k]; }
+    }catch(e){}
+    return isFinite(v) && v >= 0 ? v : (f[k] || 20);
+  }
   window.zxNextLine = function(Tm, n){
-    var i, k, t, w;
+    var i, k, t, w, iq;
     for(i = 0; i < ZX_ORDER.length; i++){
       k = ZX_ORDER[i]; t = Tm[k];
       if(t == null) continue;
-      w = ZX_WIN(k);
-      /* عشاءٌ متأخّرٌ قد تعبر نافذتُه منتصفَ الليل، فنقيس باليومين */
-      if((n >= t && n < t + w) || (n + 1440 >= t && n + 1440 < t + w))
-        return { mode:'standing', key:k };
+      w = ZX_WIN(k); iq = ZX_IQ(k);
+      var inWin = (n >= t && n < t + w) || (n + 1440 >= t && n + 1440 < t + w);
+      if(!inWin) continue;
+      /* ═══ بين الأذان والإقامة الصلاةُ لم تُقَم بعد ═══
+         كان يُقال «الصلاةُ قائمة» من لحظة الأذان — وهو خبرٌ غيرُ صادق.
+         فما بين الأذان والإقامة حالٌ ثالثةٌ لها اسمُها. */
+      var since = (n >= t) ? (n - t) : (n + 1440 - t);
+      if(since < iq) return { mode:'adhan', key:k, mins:iq - since };
+      return { mode:'standing', key:k };
     }
     for(i = 0; i < ZX_ORDER.length; i++){
       k = ZX_ORDER[i]; t = Tm[k];
@@ -19492,6 +19677,13 @@ window.zxBackToGrid = function(){
     var isJum = false;
     try{ isJum = (r.key === 'dhuhr' && typeof zxIsJumua === 'function' && zxIsJumua()); }catch(e){}
     if(isJum) name = 'الجُمُعة';
+    /* بين الأذان والإقامة: دخل الوقتُ ولمّا تُقَم الصلاة */
+    if(r.mode === 'adhan'){
+      return { mode:'adhan', key: r.key, pname: T(name),
+               lead: T('حان وقت'),
+               name: T(isJum ? 'الجُمُعة' : name),
+               sub:  T('الإقامة بعد') + ' ' + phrase(r.mins) };
+    }
     if(r.mode === 'standing'){
       /* pname: الاسمُ مجرَّدًا للباب — «العصر» لا «وقت العصر» */
       return { mode:'standing', key: r.key, pname: T(name),
