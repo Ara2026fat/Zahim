@@ -1667,9 +1667,24 @@ body.tsb-wheel-on .tsb-arc{display:none;}
   #zxPane-about [data-zx-rights]{ font-size:8px !important;line-height:1.35 !important;margin-top:2px !important;padding-top:2px !important; }
 }
 /* والإنجليزيّةُ والملايويّةُ أطولُ، فسطرٌ واحدٌ للتلميح فيها */
+/* سطرٌ واحدٌ للتلميح في اللغات اللاتينيّة: نصُّها أطولُ من العربيّ
+   فتطول البطاقةُ ويُدفع ذيلُ الحقوق خارجَ الشاشة. */
 html[lang="en"] #zxPane-about .zx-row-label i,
 html[lang="ms"] #zxPane-about .zx-row-label i,
-html[lang="id"] #zxPane-about .zx-row-label i{ -webkit-line-clamp:1; }
+html[lang="id"] #zxPane-about .zx-row-label i{
+  -webkit-line-clamp:1;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+@media (max-height:800px){
+  html[lang="en"] #zxPane-about .zx-tiles > .zx-row,
+  html[lang="ms"] #zxPane-about .zx-tiles > .zx-row,
+  html[lang="id"] #zxPane-about .zx-tiles > .zx-row{
+    padding:3px 7px 2px !important;
+  }
+  html[lang="en"] #zxPane-about .zx-row-label,
+  html[lang="ms"] #zxPane-about .zx-row-label,
+  html[lang="id"] #zxPane-about .zx-row-label{ font-size:10.5px !important; }
+}
 
 /* ═══ ألواحُ الإعدادات في شاشةٍ واحدة ═══
    البطاقةُ كانت ١٢٩ بكسلًا وثمانٍ منها في «عن زاحِم» — شاشتان.
@@ -1841,13 +1856,36 @@ html:not([lang="ar"]) .matn::before{
   margin-bottom:5px;direction:rtl;
 }
 
+/* ═══ «عن زاحِم» على الشاشات القصيرة جدًّا ═══
+   ٦٤٠ بكسلًا تفيض بـ٨٤ — فتُضغط البطاقاتُ والختام أكثر.
+   والمعيارُ واحد: لا تمرير، فالحقوقُ والمطوِّرُ آخرُ ما يُرى. */
+@media (max-height:680px){
+  #zxPane-about .zx-tiles > .zx-row{ padding:3px 6px 2px !important;gap:0 !important; }
+  #zxPane-about .zx-row-ic{ width:17px !important;height:17px !important;border-radius:6px; }
+  #zxPane-about .zx-row-ic svg{ width:10px !important;height:10px !important; }
+  #zxPane-about .zx-row-label{ font-size:10px !important;line-height:1.15 !important; }
+  #zxPane-about .zx-row-label i{ font-size:7.5px !important;line-height:1.25 !important; }
+  #zxPane-about .zx-row-value{ font-size:9.5px !important; }
+  #zxPane-about .zx-group{ padding:5px 7px !important; }
+  #zxPane-about .zx-tiles{ gap:3px !important; }
+  #zxPane-about .zx-group-head{ font-size:9.5px !important;margin-bottom:1px !important; }
+  .zx-owner-ar{ font-size:12px !important;line-height:1.5 !important; }
+  .zx-owner-en{ font-size:9.5px !important; }
+  #zxPane-about [data-zx-rights]{ font-size:7.5px !important;line-height:1.3 !important;
+    margin-top:2px !important;padding-top:2px !important; }
+  #zxPane-about .zx-seal-mono{ width:16px !important;margin-bottom:2px !important; }
+}
+
 /* ═══ أزرارُ الرصيف لا تنكمش ═══
    ٢٠ بكسلًا لا تُلمس. والحدُّ الأدنى للمس أربعٌ وأربعون، فيُفرض.
    والرصيفُ آخرُ ما يُضحّى به: هو طريقُ الخروج من كلّ شيء. */
 .home-dock .dock-btn,
 .home-dock button{
+  /* min-height يمنع الانكماشَ رأسيًّا. أمّا flex:0 0 auto فكان خطأً:
+     جعل كلَّ زرٍّ بعرض نصّه فانزوت الثلاثةُ في ناحية. والصوابُ
+     أن تتقاسم العرضَ بالسواء كما كانت. */
   min-height:46px !important;
-  flex:0 0 auto;
+  flex:1 1 0 !important;
 }
 @media (max-height:700px){
   .home-dock .dock-btn,
@@ -1865,6 +1903,34 @@ html:not([lang="ar"]) .matn::before{
   .slw-track{ height:3px !important;margin-top:5px !important; }
   .home-tagline{ font-size:17px !important;margin:1px 16px 3px !important; }
   #home-bg{ padding-bottom:4px !important; }
+}
+
+/* ═══ سطرُ المطوِّر ═══
+   كان أثقلَ ممّا تحته: حجمٌ أكبرُ ووزنٌ أغلظ، فبدا ناشزًا بين
+   الحقوق والدعاء وهما أرشقُ منه. فيُخفَّف حتى يجلس معهما
+   في نَسَقٍ واحد: حرفُ الأميري نفسُه، بوزنٍ عاديٍّ ولونٍ أهدأ. */
+#zxPane-about .zx-owner-ar{
+  font-family:'Amiri','Noto Naskh Arabic',serif !important;
+  font-size:15.5px !important;
+  font-weight:400 !important;
+  letter-spacing:.2px;
+  line-height:1.75 !important;
+  color:var(--green,#14304F) !important;
+  opacity:.94;
+}
+#zxPane-about .zx-owner-en{
+  font-family:'Amiri','Georgia',serif !important;
+  font-size:11px !important;
+  font-weight:400 !important;
+  font-style:italic;
+  letter-spacing:.5px;
+  color:var(--gold-ink,#7A5E22) !important;
+  opacity:.78;
+  margin-top:1px;
+}
+@media (max-height:800px){
+  #zxPane-about .zx-owner-ar{ font-size:14px !important; }
+  #zxPane-about .zx-owner-en{ font-size:10px !important; }
 }
 
 /* ═══ أبوابُ الخروج ═══
@@ -2828,9 +2894,13 @@ body.theme-dark .home-topbar{
 .zx-row.zx-owner{cursor:default;}
 /* سطرُ التطوير: جملةٌ واحدة بلغتين — تُقرأ في كل واجهة، ولا تُترجَم */
 .zx-row.zx-owner{flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;}
-.zx-row.zx-owner .zx-owner-ar{font-family:'Tajawal','Noto Kufi Arabic',sans-serif;
-  font-size:12.5px;font-weight:600;color:var(--text,#1B2B3D);opacity:.92;}
-.zx-row.zx-owner .zx-owner-en{font-size:11px;letter-spacing:.2px;color:var(--muted,#6B788C);opacity:.9;}
+.zx-row.zx-owner /* أميري كالدعاء تحته لا تجاول: سطرُ المطوّر خِتامٌ
+   لا عنوان، فيليق به حرفُ النسخ لا حرفُ الواجهة. */
+.zx-owner-ar{font-family:'Amiri','Noto Naskh Arabic',serif;
+  font-size:14.5px;font-weight:400;color:var(--text,#1B2B3D);opacity:.92;
+  letter-spacing:.2px;line-height:1.7;}
+.zx-row.zx-owner .zx-owner-en{font-family:'Amiri',serif;font-size:11.5px;letter-spacing:.3px;
+  color:var(--muted,#6B788C);opacity:.85;}
 #zxSheetRights .zx-seal-mono{width:22px;margin:0 auto 5px;display:block;opacity:.85;}
 .zx-rights::before{content:none;display:none;}
 /* أميري جميلٌ في المتون، دقيقٌ في الحواشي — فالحاشية تأخذ تجوال الأوضح عند الصغر.
@@ -15664,7 +15734,9 @@ function showToast(msg){
              stroke-linecap="round" stroke-linejoin="round">
           <rect x="6.4" y="2.6" width="11.2" height="18.8" rx="2.4"/><path d="M10.6 18.6h2.8"/></svg>
       </span>
-      <span class="zx-row-label">التطبيق<i>يعمل دون إنترنت بعد التثبيت</i></span>
+      <!-- حُذفت «يعمل دون إنترنت»: لا أحدَ يمسك جوّالًا بلا شبكة،
+           وهي تناقض التحديثَ الذي يأتي منها. -->
+      <span class="zx-row-label">التطبيق<i>على شاشتك كأيّ تطبيق</i></span>
       <span class="zx-row-value" id="zxInstallState">—</span>
     </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(openInsightsScreen, 300);">
@@ -17601,7 +17673,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-23-0840').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-23-1150').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -17725,7 +17797,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-09-23-0840';
+  window.ZAHIM_STAMP = 'zahim-2026-09-23-1150';
   window.zxPaintVer = function(){
     var el = document.getElementById('zxVer');
     if(!el) return;
@@ -18460,6 +18532,10 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
 
   /* ── شروحُ صفوف الإعدادات ── */
   ZahimI18n.load('en', {
+    'إصدار زاحِم': 'Zahim version',
+    'تاريخُ النسخة التي بين يديك': 'Date of the build you have',
+    'قوسٌ في متناول الإبهام، أو عجلةٌ تُدار': 'An arc within thumb reach, or a wheel you turn',
+    'ملاحظةٌ أو تصحيحٌ في نصّ': 'A note, or a correction to a text',
     '↩ المحراب': '↩ Mihrab',
     'الاتّجاهُ محسوبٌ بدقّة من موقعك إلى الكعبة.': 'The direction is computed precisely from your location to the Kaaba.',
     'لكنّ حسّاسَ الهاتف يتأثّر بالحديد: الخرسانةُ المسلَّحة والأبوابُ والأجهزةُ تزيغ بالإبرة درجاتٍ كثيرة.': 'But the phone sensor is disturbed by iron: reinforced concrete, doors and appliances can swing the needle by many degrees.',
@@ -18517,7 +18593,7 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
     'يظهران في التحيّة وحدها': 'Shown in the greeting only',
     'شرحٌ بالصور لكلّ شاشة': 'A picture guide to every screen',
     'شاشاتٌ تشرح البوصلة ومحطّاتها': 'Screens explaining the compass and its stations',
-    'يعمل دون إنترنت بعد التثبيت': 'Works offline once installed',
+    'على شاشتك كأيّ تطبيق': 'On your home screen like any app',
     'قوسُ الإبهام في متناول اليد، وعجلةُ الأذكار تُدار بالإبهام': 'The thumb arc sits within reach; the wheel turns with the thumb',
     'ملاحظةٌ أو تصحيحٌ في نصّ': 'A note, or a correction to a text',
     'شكل التسبيح': 'Tasbih layout',
@@ -18588,6 +18664,11 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('id', {
+    'إصدار زاحِم': 'Versi Zahim',
+    'تاريخُ النسخة التي بين يديك': 'Tanggal versi yang Anda miliki',
+    'قوسٌ في متناول الإبهام، أو عجلةٌ تُدار': 'Busur dalam jangkauan ibu jari, atau roda yang diputar',
+    'ملاحظةٌ أو تصحيحٌ في نصّ': 'Catatan, atau koreksi pada teks',
+    'على شاشتك كأيّ تطبيق': 'Di layar utama seperti aplikasi lain',
     '↩ المحراب': '↩ Mihrab',
     'الاتّجاهُ محسوبٌ بدقّة من موقعك إلى الكعبة.': 'Arah dihitung dengan tepat dari lokasi Anda ke Ka’bah.',
     'لكنّ حسّاسَ الهاتف يتأثّر بالحديد: الخرسانةُ المسلَّحة والأبوابُ والأجهزةُ تزيغ بالإبرة درجاتٍ كثيرة.': 'Namun sensor ponsel terganggu oleh besi: beton bertulang, pintu dan peralatan dapat menyimpangkan jarum puluhan derajat.',
@@ -18703,6 +18784,11 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('ms', {
+    'إصدار زاحِم': 'Versi Zahim',
+    'تاريخُ النسخة التي بين يديك': 'Tarikh versi yang anda miliki',
+    'قوسٌ في متناول الإبهام، أو عجلةٌ تُدار': 'Lengkung dalam jangkauan ibu jari, atau roda yang diputar',
+    'ملاحظةٌ أو تصحيحٌ في نصّ': 'Nota, atau pembetulan pada teks',
+    'على شاشتك كأيّ تطبيق': 'Pada skrin utama seperti mana-mana apl',
     '↩ المحراب': '↩ Mihrab',
     'الاتّجاهُ محسوبٌ بدقّة من موقعك إلى الكعبة.': 'Arah dikira dengan tepat dari lokasi anda ke Kaabah.',
     'لكنّ حسّاسَ الهاتف يتأثّر بالحديد: الخرسانةُ المسلَّحة والأبوابُ والأجهزةُ تزيغ بالإبرة درجاتٍ كثيرة.': 'Namun penderia telefon terganggu oleh besi: konkrit bertetulang, pintu dan perkakas boleh memesongkan jarum berpuluh darjah.',
