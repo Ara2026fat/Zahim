@@ -1347,7 +1347,7 @@ body.theme-dark #home-bg > .home-topbar{
   .home-topbar{padding-top:6px;padding-bottom:6px;}
 }
 #screen-home > .home-dock{margin-top:auto;position:sticky;bottom:0;padding-top:10px;}
-.compass-wrap{width:min(620px, 94vw, calc(100dvh - 424px)) !important;}
+.compass-wrap{width:min(460px, 94%, calc(100dvh - 424px)) !important;}
 /* غلافُ اللمعان: يُقصّ عند حدّ الختم فلا تخرج الومضةُ عنه */
 .zx-seal-shine{position:relative;overflow:hidden;border-radius:22%;}
 .zx-seal-shine::after{
@@ -1365,7 +1365,7 @@ body.theme-dark #home-bg > .home-topbar{
   100% { inset-inline-start:120%; opacity:0; }
 }
 @media (prefers-reduced-motion:reduce){ .zx-seal-shine::after{animation:none;opacity:0;} }
-@media (max-height:790px){ .compass-wrap{width:min(620px, 94vw, calc(100dvh - 438px)) !important;} }
+@media (max-height:790px){ .compass-wrap{width:min(460px, 94%, calc(100dvh - 438px)) !important;} }
 @media (max-height:740px){ .compass-wrap{width:min(620px, 94vw, calc(100dvh - 320px)) !important;} }
 .dock-btn{position:relative;overflow:hidden;
   flex:1;max-width:118px;display:flex;flex-direction:column;align-items:center;gap:3px;
@@ -1933,6 +1933,313 @@ html:not([lang="ar"]) .matn::before{
   #zxPane-about .zx-owner-en{ font-size:10px !important; }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   وضعُ رمضان — عدّادُ الإفطار والعشرُ الأواخر
+   ═══════════════════════════════════════════════════════════════ */
+.zr-cd{
+  display:block;width:min(100%, 21rem);margin:11px auto 4px;
+  padding:12px 16px;border-radius:18px;text-align:center;
+  background:linear-gradient(150deg,#2E7FAB 0%,#215C80 46%,#122A45 100%);
+  border:1px solid rgba(214,169,74,.44);
+  box-shadow:0 7px 20px rgba(20,48,79,.26), inset 0 1px 0 rgba(255,255,255,.26);
+}
+.zr-cd[hidden]{ display:none; }
+/* السحورُ والإمساكُ بلونِ الليل الدافئ، تمييزًا لهما عن الإفطار */
+.zr-cd.pre{ background:linear-gradient(150deg,#8C6A2E,#6B4F1E 50%,#3E2D10); }
+/* ولحظةُ الإفطار ذهبٌ خالص */
+.zr-cd.now{ background:linear-gradient(150deg,#D9A441,#B8842C 50%,#7A5E22);
+  border-color:rgba(255,243,218,.5); }
+.zr-cd-lab{ display:block;font-size:11.5px;font-weight:700;color:rgba(255,253,247,.80); }
+.zr-cd-val{ display:block;font-family:'Amiri','Noto Naskh Arabic',serif;
+  font-size:27px;font-weight:700;color:#FFF3DA;line-height:1.4;margin-top:2px; }
+.zr-cd-dua{ display:block;font-family:'Amiri',serif;font-size:13px;color:#FFF3DA;
+  opacity:.9;margin-top:7px;padding-top:7px;
+  border-top:1px solid rgba(255,243,218,.28);line-height:1.9; }
+.zr-cd-dua[hidden]{ display:none; }
+
+/* ═══ العشرُ الأواخر ═══ */
+.zr-ashr{
+  width:min(100%, 21rem);margin:8px auto 4px;
+  padding:13px 15px;border-radius:18px;text-align:center;
+  background:linear-gradient(165deg,rgba(232,192,112,.15),rgba(232,192,112,.05));
+  border:1px solid rgba(232,192,112,.36);
+}
+.zr-ashr[hidden]{ display:none; }
+.zr-a-t{ font-family:'Amiri',serif;font-size:18px;font-weight:700;color:var(--gold-ink,#7A5E22); }
+.zr-a-n{ display:flex;gap:5px;justify-content:center;margin:10px 0 7px;flex-wrap:wrap; }
+.zr-a-n b{
+  width:31px;height:31px;border-radius:10px;display:grid;place-items:center;
+  font-size:13px;font-weight:800;color:var(--muted);
+  border:1px solid rgba(201,150,58,.24);background:rgba(255,255,255,.5);
+}
+/* الليالي الوترية ذهبٌ: هي مظانُّ ليلة القدر */
+.zr-a-n b.w{ color:#3E2D10;background:linear-gradient(150deg,#E8C070,#C9963A);
+  border-color:rgba(255,243,218,.45);box-shadow:0 3px 9px rgba(201,150,58,.22); }
+.zr-a-n b.now{ outline:2px solid var(--green,#14304F);outline-offset:2px; }
+.zr-a-d{ font-family:'Amiri',serif;font-size:14px;color:var(--text);line-height:1.95;
+  margin-top:5px;padding-top:8px;border-top:1px solid rgba(201,150,58,.24); }
+
+/* ═══ الليالي العشرُ تُعتِم الرئيسيّة ═══
+   لا زينةً، بل لأنّ هذه الليالي غيرُ سائر الشهر — فيُحَسّ ذلك. */
+/* قاعدةٌ أخصُّ تفرض العاجيَّ، فهذه تُقوّى */
+/* العشرُ ليالي رجاءٍ لا حزن: فلا تكون أرضيّتُها رمادًا كئيبًا.
+   زرقةٌ ليليّةٌ دافئةٌ بلمسة بنفسجٍ، وهالةٌ ذهبيّةٌ من أعلاها
+   كأنّها قنديلٌ معلّق. */
+body.zr-ashr-on #screen-home{
+  background:
+    radial-gradient(120% 62% at 50% -6%, rgba(232,192,112,.22), rgba(232,192,112,0) 58%),
+    radial-gradient(90% 50% at 50% 104%, rgba(90,140,190,.16), rgba(90,140,190,0) 60%),
+    linear-gradient(180deg,#1E3050 0%,#18274A 46%,#141E38 100%) !important; }
+body.zr-ashr-on #home-bg{ background:transparent !important; }
+body.zr-ashr-on #home-bg{ background:transparent; }
+body.zr-ashr-on .home-topbar{
+  background:linear-gradient(165deg,rgba(255,243,218,.12),rgba(232,192,112,.05));
+  border-color:rgba(232,192,112,.34);
+  box-shadow:0 3px 14px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,243,218,.16); }
+body.zr-ashr-on .htb-hijri{ color:#E8C070; }
+body.zr-ashr-on .htb-name{ color:#F2E4C4; }
+body.zr-ashr-on .htb-greg{ color:#A9A092; }
+body.zr-ashr-on .zr-ashr{
+  background:
+    radial-gradient(100% 70% at 50% 0%, rgba(255,243,218,.16), rgba(255,243,218,0) 62%),
+    linear-gradient(165deg,rgba(232,192,112,.16),rgba(232,192,112,.05));
+  border-color:rgba(232,192,112,.42);
+  box-shadow:0 6px 22px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,243,218,.20); }
+body.zr-ashr-on .zr-a-t{ color:#F2D89A; }
+body.zr-ashr-on .zr-a-n b{ color:#D9C79C;background:rgba(255,255,255,.06);
+  border-color:rgba(232,192,112,.26); }
+/* الوتريّةُ تبقى ذهبًا في الإعتام أيضًا: هي مظانُّ ليلة القدر،
+   والقاعدةُ أعلاه كانت تغلبها لأنّها لاحقة. */
+body.zr-ashr-on .zr-a-n b.w{ color:#3E2D10;
+  background:linear-gradient(150deg,#FFE9B0,#E8C070 52%,#C9963A);
+  border-color:rgba(255,243,218,.62);
+  box-shadow:0 0 14px rgba(232,192,112,.36), 0 3px 9px rgba(0,0,0,.26); }
+body.zr-ashr-on .zr-a-n b.now{ outline-color:#FFF3DA; }
+body.zr-ashr-on .zr-a-d{ color:#EDE7DA; }
+body.zr-ashr-on .ros-card{
+  background:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+  border-color:rgba(232,192,112,.20); }
+body.zr-ashr-on .ros-kick{ color:#E8C070; }
+body.zr-ashr-on .ros-state{ color:#EDE7DA; }
+body.zr-ashr-on .home-tagline{ color:#F2E4C4; }
+body.zr-ashr-on .compass-station-label{ fill:#D9C79C; }
+@media (max-height:760px){
+  .zr-cd{ padding:8px 13px !important;margin:7px auto 3px !important; }
+  .zr-cd-val{ font-size:22px !important; }
+  .zr-ashr{ padding:9px 12px !important;margin:5px auto 3px !important; }
+  .zr-a-n b{ width:26px;height:26px;font-size:11px; }
+  .zr-a-d{ font-size:12px !important; }
+}
+
+
+/* ═══ تمامُ ليالي العشر ═══
+   الشريطُ العلويُّ كان يرث رماديَّه من الوضع الفاتح، وسطرُ الصلاة
+   القادمةِ يكاد لا يُقرأ. فيُدفَّآن كسائر الشاشة. */
+body.zr-ashr-on .home-topbar,
+body.zr-ashr-on #home-topbar{
+  background:linear-gradient(165deg,rgba(255,243,218,.13),rgba(232,192,112,.05)) !important;
+  border:1px solid rgba(232,192,112,.36) !important;
+  box-shadow:0 3px 14px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,243,218,.18) !important;
+}
+body.zr-ashr-on .htb-hijri{ color:#F2D89A !important; }
+body.zr-ashr-on .htb-name{  color:#FFF3DA !important; }
+body.zr-ashr-on .htb-greg{  color:#C6BCA8 !important; }
+/* سطرُ الصلاة القادمة */
+body.zr-ashr-on #cc2-next{ color:#D9CFBB !important; }
+body.zr-ashr-on #cc2-next b,
+body.zr-ashr-on #cc2-next strong,
+body.zr-ashr-on #cc2-next .nm{ color:#F2D89A !important; }
+/* ميدانُ الطاعة يتبع الليل */
+body.zr-ashr-on .ros-card{
+  background:linear-gradient(165deg,rgba(255,243,218,.10),rgba(255,243,218,.03)) !important;
+  border-color:rgba(232,192,112,.28) !important; }
+body.zr-ashr-on .ros-kick{  color:#E8C070 !important; }
+body.zr-ashr-on .ros-state{ color:#F2E4C4 !important; }
+body.zr-ashr-on .home-tagline{ color:#F2D89A !important; }
+/* والرصيفُ السفليّ */
+body.zr-ashr-on .home-dock button{
+  background:linear-gradient(165deg,rgba(255,243,218,.12),rgba(255,243,218,.04)) !important;
+  border-color:rgba(232,192,112,.28) !important;
+  color:#F2E4C4 !important; }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   ليالي العشر — نبرةٌ واحدةٌ لا ثلاث
+   ───────────────────────────────────────────────────────────────
+   كان في الشاشة ثلاثةُ ألوانٍ تتنافس: أرضيّةٌ زرقاءُ فاتحة، وشريطٌ
+   ذهبيّ، وعدّادٌ أزرقُ لامع. والبوصلةُ عاجيّةٌ ناصعةٌ فوقها، كقرصٍ
+   أبيضَ في سماء — فتبتلع العينَ ويبهت ما حولها.
+   فالعلاجُ ليس تفتيحَ الكحليّ، بل توحيدُ النبرة:
+     · الأرضيّةُ تُعمَّق نيليًّا فتصير ليلًا لا رمادًا أزرق
+     · والبوصلةُ تُدفَّأ بغِشاوةٍ عنبريّةٍ فلا تنصع
+     · والعدّادُ يترك الأزرقَ إلى الذهب — لونٌ واحدٌ يسود
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ١ · أرضيّةٌ نيليّةٌ أعمق، والهالةُ أدفأ */
+body.zr-ashr-on #screen-home{
+  background:
+    radial-gradient(130% 58% at 50% -10%, rgba(232,192,112,.26), rgba(232,192,112,0) 56%),
+    radial-gradient(80% 46% at 50% 106%, rgba(58,96,148,.20), rgba(58,96,148,0) 62%),
+    linear-gradient(180deg,#16274A 0%,#122043 46%,#0D1730 100%) !important;
+}
+
+/* ٢ · البوصلةُ تُدفَّأ: غِشاوةٌ عنبريّةٌ فوق قرصها العاجيّ */
+body.zr-ashr-on .compass-wrap::after{
+  content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:
+    radial-gradient(70% 70% at 50% 34%, rgba(255,226,166,.20), rgba(255,226,166,0) 72%),
+    linear-gradient(180deg, rgba(122,94,34,.10), rgba(28,44,76,.20));
+  mix-blend-mode:multiply;opacity:.9;
+}
+body.zr-ashr-on .compass-wrap{ position:relative; }
+body.zr-ashr-on .compass-station-label{ fill:#6B4A1E !important; }
+
+/* ٣ · العدّادُ ذهبٌ لا أزرق — فلا يزاحم لونٌ لونًا */
+/* الذهبُ يُعتَم درجةً: اللافتةُ الصغيرةُ عليه كانت 4.07:1 */
+body.zr-ashr-on .zr-cd{
+  background:linear-gradient(150deg,#B98D3E 0%,#96702A 48%,#5E461B 100%) !important;
+  border-color:rgba(255,243,218,.40) !important;
+  box-shadow:0 8px 24px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,243,218,.26) !important;
+}
+body.zr-ashr-on .zr-cd.pre{
+  background:linear-gradient(150deg,#8C6A2E,#6B4F1E 50%,#42301A 100%) !important; }
+body.zr-ashr-on .zr-cd.now{
+  background:linear-gradient(150deg,#F0CE85,#D9A441 50%,#9A7228 100%) !important; }
+
+/* ٤ · حدودٌ ذهبيّةٌ رفيعةٌ توحّد البطاقات */
+body.zr-ashr-on .ros-card,
+body.zr-ashr-on .home-topbar,
+body.zr-ashr-on .home-dock button{
+  border-color:rgba(232,192,112,.30) !important; }
+
+
+/* لافتةُ العدّاد على الذهب: العاجيُّ الشفيف 3.56:1 — دون العتبة.
+   وحبرٌ داكنٌ على الذهب يُقرأ، وهو أليقُ به من الأبيض. */
+body.zr-ashr-on .zr-cd .zr-cd-lab{ color:#241A06 !important;opacity:1 !important;
+  font-weight:800 !important; }
+body.zr-ashr-on .zr-cd .zr-cd-val{ color:#2A1E0A !important; }
+body.zr-ashr-on .zr-cd .zr-cd-dua{ color:#3E2D10 !important;opacity:.92 !important;
+  border-top-color:rgba(62,45,16,.26) !important; }
+/* والسحورُ داكنُ الأرضيّة، فحبرُه عاجيٌّ كما كان */
+body.zr-ashr-on .zr-cd.pre .zr-cd-lab{ color:#FFF3DA !important; }
+body.zr-ashr-on .zr-cd.pre .zr-cd-val{ color:#FFF3DA !important; }
+body.zr-ashr-on .zr-cd.pre .zr-cd-dua{ color:#FFF3DA !important;
+  border-top-color:rgba(255,243,218,.28) !important; }
+
+
+/* ═══ العدّادُ برونزٌ داكنٌ بحبرٍ عاجيّ ═══
+   التدرّجُ الذهبيُّ الفاتحُ يخفض التباينَ إلى 4.3:1 مهما أُعتم الحبر،
+   لأنّ أفتحَ جزءٍ منه يقارب لونَ الحرف. فيُقلَب: أرضيّةٌ داكنةٌ من
+   عائلة الذهب، وحبرٌ عاجيٌّ فوقها — يبقى الشهرُ ذهبيَّ النبرة ويُقرأ. */
+body.zr-ashr-on .zr-cd{
+  background:linear-gradient(150deg,#6B5122 0%,#503B16 48%,#33250E 100%) !important;
+  border-color:rgba(232,192,112,.46) !important;
+  box-shadow:0 8px 24px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,243,218,.20) !important;
+}
+body.zr-ashr-on .zr-cd .zr-cd-lab{ color:#F2D89A !important;opacity:1 !important;font-weight:800 !important; }
+body.zr-ashr-on .zr-cd .zr-cd-val{ color:#FFF3DA !important; }
+body.zr-ashr-on .zr-cd .zr-cd-dua{ color:#F2D89A !important;opacity:.95 !important;
+  border-top-color:rgba(255,243,218,.26) !important; }
+/* ولحظةُ الإفطار وحدَها تشعّ ذهبًا — وحبرُها داكنٌ عليها */
+body.zr-ashr-on .zr-cd.now{
+  background:linear-gradient(150deg,#F0CE85,#D9A441 50%,#A87F30 100%) !important; }
+body.zr-ashr-on .zr-cd.now .zr-cd-lab,
+body.zr-ashr-on .zr-cd.now .zr-cd-val,
+body.zr-ashr-on .zr-cd.now .zr-cd-dua{ color:#2A1E0A !important; }
+
+
+/* ═══ الشريطان: علويٌّ وسفليٌّ من نَسَقٍ واحد ═══
+   وعاءُ الرصيف كان يرث تدرّجَه الأبيضَ من الوضع النهاريّ، فيُضيء
+   أسفلَ الشاشة كأنّه من تطبيقٍ آخر، ويصادم الشريطَ العلويّ.
+   فيُذوَّب في الليل كما يفعل في النهار: تدرّجٌ من شفّافٍ إلى لونِ
+   الأرضيّة نفسِه — يُقطَع الشريطُ بلا حدٍّ حادّ. */
+body.zr-ashr-on .home-dock{
+  background:linear-gradient(to top,
+      rgba(13,23,48,.94) 42%,
+      rgba(13,23,48,.62) 74%,
+      rgba(13,23,48,0)) !important;
+  border-top:0 !important;
+  box-shadow:none !important;
+}
+/* والزرُّ نفسُه كالشريط العلويّ حرفًا بحرف */
+body.zr-ashr-on .home-dock button{
+  background:linear-gradient(165deg,rgba(255,243,218,.13),rgba(232,192,112,.05)) !important;
+  border:1px solid rgba(232,192,112,.30) !important;
+  box-shadow:0 3px 14px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,243,218,.18) !important;
+  color:#F2E4C4 !important;
+}
+body.zr-ashr-on .home-dock button svg,
+body.zr-ashr-on .home-dock button *{ color:#F2D89A !important;stroke:#F2D89A !important; }
+
+
+/* ═══ حلقةُ الإقامة في ليالي العشر ═══
+   كانت زرقاءَ ساطعةً `#2778F7` — نبرةٌ رابعةٌ تصرخ وسط الذهب
+   والنيليّ فتكسر التناسق. فتُدفَّأ ذهبًا كسائر الشهر، وتبقى
+   دلالتُها كما هي: حلقةٌ تدور حول الختم. */
+body.zr-ashr-on .iq-band{ stroke:#E8C070 !important; }
+body.zr-ashr-on .iq-band:nth-of-type(2){ stroke:#C9963A !important; }
+body.zr-ashr-on .iq-band:nth-of-type(4){ stroke:#FFE9B0 !important; }
+body.zr-ashr-on .ros-halo{ fill:#E8C070 !important;opacity:.55 !important; }
+/* وسطرُ «الإقامة بعد» يتبعها */
+body.zr-ashr-on #cc2-next,
+body.zr-ashr-on #cc2-stage{ color:#E8C070 !important; }
+body.zr-ashr-on #cc2-next b{ color:#FFF3DA !important; }
+
+
+/* ═══ ليالي العشر: اللوحُ لا يدفع الرصيفَ ═══
+   لوحُ العشر بطاقةٌ زائدةٌ فوق العدّاد والميدان، فيطول المحتوى
+   ويُقصّ الرصيفُ إلى ٨ بكسلات. فتُضغط بطاقاتُ الليل معًا:
+   العدّادُ واللوحُ والميدان — كلٌّ يعطي قليلًا فيسع الجميع. */
+body.zr-ashr-on .zr-cd{
+  padding:9px 14px !important;margin:7px auto 4px !important; }
+body.zr-ashr-on .zr-cd-val{ font-size:22px !important;line-height:1.3 !important; }
+body.zr-ashr-on .zr-cd-dua{ font-size:11.5px !important;margin-top:5px !important;
+  padding-top:5px !important;line-height:1.75 !important; }
+body.zr-ashr-on .zr-ashr{
+  padding:9px 12px !important;margin:5px auto 4px !important; }
+body.zr-ashr-on .zr-a-t{ font-size:15px !important; }
+body.zr-ashr-on .zr-a-n{ gap:4px !important;margin:7px 0 5px !important; }
+body.zr-ashr-on .zr-a-n b{ width:27px;height:27px;font-size:11.5px;border-radius:9px; }
+body.zr-ashr-on .zr-a-d{ font-size:12px !important;margin-top:3px !important;
+  padding-top:6px !important;line-height:1.8 !important; }
+body.zr-ashr-on .ros-card{ padding:7px 11px !important;margin-top:3px !important; }
+body.zr-ashr-on .home-tagline{ font-size:17px !important;margin:2px 16px 4px !important; }
+/* وعلى الشاشات القصيرة يُضغط أكثر */
+@media (max-height:760px){
+  body.zr-ashr-on .zr-cd-val{ font-size:19px !important; }
+  body.zr-ashr-on .zr-cd-dua{ display:none !important; }
+  body.zr-ashr-on .zr-a-n b{ width:24px;height:24px;font-size:10.5px; }
+  body.zr-ashr-on .zr-a-d{ font-size:11px !important; }
+}
+
+
+/* ═══ الرصيفُ لا يُقصّ أبدًا ═══
+   #home-bg بـ flex:0 0 auto — لا ينكمش. فإذا طال محتواه (وِردُ
+   الجمعة أو لوحُ العشر) دفع الرصيفَ خارجَ الشاشة فانحسر إلى ٨ بكسلات.
+   والصوابُ أن يكون الرصيفُ ثابتًا في القاع لا عنصرًا يُزاحَم،
+   والمحتوى فوقه يتمرّر إن طال. فالخروجُ مضمونٌ في كلّ حال. */
+#screen-home{ overflow:hidden; }
+#home-bg{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  scrollbar-width:none;
+  padding-bottom:12px !important;
+}
+#home-bg::-webkit-scrollbar{ display:none; }
+.home-dock{
+  position:sticky !important;
+  bottom:0 !important;
+  flex:0 0 auto !important;
+  z-index:40;
+}
+
+
+/* وجهُ البوصلة أُعتِم، فيُرفع حبرُ ما عليه */
+body.zr-ashr-on .compass-station-label{ fill:#F2D89A !important; }
+body.zr-ashr-on .compass-wrap::after{ display:none !important; }
+
 /* ═══ أبوابُ الخروج ═══
    ثلاثُ شاشاتٍ تُفتح فوق بعضها، ومن دخل الثالثةَ لم يجد طريقًا
    إلى الأولى. فلكلٍّ بابُه الظاهر. */
@@ -2131,7 +2438,10 @@ body.theme-dark .zq-honest .zq-h1{ color:#E6C784; }
 /* ═══ صفُّ الصلاة المربّع ═══
    أربعُ بطاقاتٍ في صفّ: العددُ كبيرًا، وموضعُه، واسمُه.
    تُلمس فتُضيء — فاللوحُ مرآةٌ لا لافتة. */
-.ps-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:14px;}
+/* أربعٌ في العادة، وخمسٌ في رمضان مع التراويح */
+.ps-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:7px;margin-top:14px;}
+.ps-cell.trw b{ font-size:19px; }
+.ps-cell.trw i{ color:var(--gold-ink,#7A5E22); }
 .ps-cell{
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
   font:inherit;cursor:pointer;padding:13px 3px 11px;border-radius:16px;
@@ -2750,7 +3060,7 @@ body.theme-dark .home-topbar{
 /* الاحتواء: القرصُ كان ٩٩٪ من عرض الشاشة، فيُلامس الحافّتين ويُقصُّ
    ما خرج عن دائرته من أسماء المحطّات. أُفسِح له هامشٌ يتنفّس فيه. */
 .compass-wrap{
-  position:relative;width:min(620px,96vw);aspect-ratio:1/1;
+  position:relative;width:min(460px,96%);aspect-ratio:1/1;
   margin:10px auto 0;
   animation:dashFadeUp .5s ease .05s both;
 }
@@ -6565,6 +6875,13 @@ var ZahimHadithID = {
       <div class="cc2-next" id="cc2-next"></div>
       <!-- الجمعة: الحثُّ حيث تقع العينُ أوّلَ ما تُفتح الشاشة.
            لمسةٌ تزيد واحدةً بلا فتح التسبيح، والهدفُ مئةٌ تُكمَّل. -->
+      <!-- عدّادُ الإفطار والسحور: أوّلُ ما يُطلب في رمضان -->
+      <div class="zr-cd" id="zrCd" hidden>
+        <span class="zr-cd-lab" id="zrCdLab"></span>
+        <span class="zr-cd-val" id="zrCdVal"></span>
+        <span class="zr-cd-dua" id="zrCdDua" hidden></span>
+      </div>
+      <div class="zr-ashr" id="zrAshr" hidden></div>
       <button type="button" class="slw-bar" id="slwBar" onclick="slwBump()" hidden>
         <span class="slw-top">
           <span class="slw-word" data-i18n>اللهمّ صلِّ وسلِّم على نبيّنا محمّد ﷺ</span>
@@ -6938,9 +7255,44 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
   padding:7px 14px;cursor:pointer;white-space:nowrap;}
 </style>
 
+<!-- ═══ فهرسُ السور ═══ بابُ القراءة الحرّة إلى المصحف -->
+<div class="screen hidden" id="screen-fihris">
+  <div class="fhr-app">
+    <div class="fhr-hd">
+      <button class="back-btn" onclick="closeFihris()">↩ رجوع</button>
+      <div class="fhr-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="fhrQ" type="search" placeholder="ابحث باسم السورة أو رقمها…"
+               oninput="fhrSearch()" autocomplete="off">
+      </div>
+      <div class="fhr-modes">
+        <button id="fhrM-sur" class="on" onclick="fhrMode('sur')">السور</button>
+        <button id="fhrM-juz" onclick="fhrMode('juz')">الأجزاء</button>
+        <button id="fhrM-pap" onclick="fhrMode('pap')">فهرس المصحف</button>
+      </div>
+      <div class="fhr-tabs" id="fhrTabs"></div>
+    </div>
+    <div class="fhr-track" id="fhrTrack"><div class="fhr-pages" id="fhrPages"></div></div>
+    <div class="fhr-nav" id="fhrNav">
+      <button id="fhrPrev" onclick="fhrGo(FHR.p-1)">← السابق</button>
+      <span class="fhr-pos" id="fhrPos"></span>
+      <button id="fhrNext" onclick="fhrGo(FHR.p+1)">التالي →</button>
+    </div>
+  </div>
+  <div class="fhr-sheet" id="fhrSheet">
+    <div class="fhr-veil" onclick="fhrSheetClose()"></div>
+    <div class="fhr-card" id="fhrCard"></div>
+  </div>
+</div>
+
 <div class="screen hidden" id="screen-mushaf">
   <div class="topbar">
     <button class="back-btn" onclick="closeMushaf()">↩ رجوع</button>
+    <!-- بابُ الفهرس: من فتح المصحفَ يتنقّل فيه. وموضعُه شريطُ
+         الرجوع لا أدواتُ الرأس — فتلك تحت صفحة المصحف فلا تُلمس. -->
+    <button class="back-btn fhr-open" type="button"
+            onclick="window._fhrFrom='mushaf'; openFihris();">☰ الفهرس</button>
   </div>
   <div class="mus-head">
     <span class="mus-surah" id="musSurah">—</span>
@@ -11912,6 +12264,29 @@ const COMPASS_STAGES = [
   { key:'evening', label:'المساء', icon:'evening_crescent', stageName:'أذكار المساء', open:function(){ openDhikr('evening'); } },
   { key:'night',   label:'النوم',  icon:'shield_sleep',  stageName:'أذكار النوم',      open:function(){ openDhikr('night'); } },
 ];
+/* في رمضان تُفسِح «المساء» لـ«الإفطار» و«النوم» لـ«القيام».
+   والوجهةُ واحدة: أذكارُ المساء هي أذكارُ ما قبل الإفطار،
+   وأذكارُ النوم هي أذكارُ ما بعد القيام. فلا يُبنى شيءٌ جديد،
+   وإنّما يُسمّى القائمُ باسم الشهر. */
+(function(){
+  var RAM = { evening:'الإفطار', night:'القيام' };
+  var ORIG = {};
+  COMPASS_STAGES.forEach(function(st){ ORIG[st.key] = st.label; });
+  var _last = null;
+  window.zrRelabel = function(){
+    var on = (typeof zrIsRam === 'function') && zrIsRam();
+    COMPASS_STAGES.forEach(function(st){
+      st.label = (on && RAM[st.key]) ? RAM[st.key] : ORIG[st.key];
+    });
+    /* الهيكلُ يُبنى مرّةً واحدةً عند الإقلاع، فتبدّلُ الاسم
+       لا يبلغ الرسمَ. فيُعاد بناؤه عند تبدّل الوضع لا في كلّ رسمة. */
+    if(_last !== on){
+      _last = on;
+      try{ if(typeof buildCompassSkeleton === 'function') buildCompassSkeleton(); }catch(e){}
+    }
+  };
+  zrRelabel();
+})();
 
 // حال اليوم تُقرأ الآن من ZahimDay — مرجعٌ واحد تشترك فيه البوصلة والمحراب،
 // محسوبٌ من مواقيت الصلاة الفعلية بموقع المستخدم، لا من نطاقات ساعة تقديرية.
@@ -12430,6 +12805,8 @@ function buildCompass(){
 
   renderCompassCenter(segments);
   try{ slwPaint(); }catch(e){}   /* شريطُ الجمعة يتبع البوصلة في كلّ رسمة */
+  try{ zrRelabel(); }catch(e){}
+  try{ zrPaint();  }catch(e){}
   if(!_compassLive && !_liveArmed){ _liveArmed = true; setTimeout(setCompassLive, 600); }
 }
 
@@ -13372,6 +13749,388 @@ function closeQuranScreen(){
   buildWirdCircles();
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   وضعُ رمضان
+   ───────────────────────────────────────────────────────────────────
+   رمضانُ ليس زينةً تُضاف: إيقاعُ اليوم كلِّه ينقلب. فمحورُ النهار
+   يصير الإمساكَ والإفطار، والليلُ قيامًا لا نومًا.
+   والتقويمُ الهجريُّ يختلف يومًا بين البلدان — فيبدأ الوضعُ آليًّا،
+   ويُعطى صاحبُه مِقودًا يُقدّمه يومًا أو يؤخّره إن خالف بلدُه.
+   ═══════════════════════════════════════════════════════════════════ */
+(function(global){
+  'use strict';
+  var KEY_SHIFT = 'zahim_ramadan_shift_v1';   /* −١ · ٠ · +١ */
+  var KEY_TRW   = 'zahim_tarawih_v1';
+
+  function shift(){
+    try{ var v = +localStorage.getItem(KEY_SHIFT); return (v===1||v===-1) ? v : 0; }
+    catch(e){ return 0; }
+  }
+  global.zrSetShift = function(v){
+    try{ localStorage.setItem(KEY_SHIFT, String(v)); }catch(e){}
+    try{ if(typeof buildCompass==='function') buildCompass(); }catch(e){}
+    try{ if(typeof zrPaintShift==='function') zrPaintShift(); }catch(e){}
+    try{ if(typeof refreshHome==='function') refreshHome(); }catch(e){}
+  };
+  global.zrShift = shift;
+
+  /* اليومُ الرمضانيُّ أو صفرٌ إن لم يكن رمضان */
+  function ramDay(d){
+    try{
+      var when = d || new Date();
+      var sh = shift();
+      if(sh) when = new Date(when.getTime() + sh*86400000);
+      var p = ZahimHijri.parts(when);
+      if(!p || p.month !== 9) return 0;
+      return p.day;
+    }catch(e){ return 0; }
+  }
+  global.zrDay    = ramDay;
+  global.zrIsRam  = function(d){ return ramDay(d) > 0; };
+  global.zrIsAshr = function(d){ var x = ramDay(d); return x >= 21; };
+
+  /* الليالي الوترية من العشر */
+  global.zrIsWitr = function(d){
+    var x = ramDay(d);
+    return x===21 || x===23 || x===25 || x===27 || x===29;
+  };
+
+  /* ═══ العدّادُ: إفطارٌ أو سحور ═══ */
+  global.zrCounter = function(T, now){
+    if(!global.zrIsRam()) return null;
+    var n = now != null ? now : (function(){ var d=new Date(); return d.getHours()*60+d.getMinutes(); })();
+    var f = T.fajr, mg = T.maghrib;
+    if(f == null || mg == null) return null;
+    if(n >= f && n < mg)               return { mode:'iftar',  mins: mg - n };
+    if(n >= mg && n < mg + 30)         return { mode:'now' };
+    var toFajr = (f - n + 1440) % 1440;
+    if(toFajr <= 120)                  return { mode:'imsak',  mins: toFajr };
+    return { mode:'suhur', mins: toFajr };
+  };
+
+  /* ═══ التراويحُ تُحفظ بتاريخها ═══ */
+  function twDay(){ var d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+  global.zrTarawihDone = function(){
+    try{ var o = JSON.parse(localStorage.getItem(KEY_TRW)||'null');
+         return !!(o && o.day === twDay()); }catch(e){ return false; }
+  };
+  global.zrTarawihToggle = function(){
+    var on = !global.zrTarawihDone();
+    try{ localStorage.setItem(KEY_TRW, JSON.stringify(on ? {day:twDay()} : {})); }catch(e){}
+    if(navigator.vibrate){ try{ navigator.vibrate(on?14:8); }catch(e){} }
+    return on;
+  };
+})(window);
+
+var FHR_SUR=[
+[1,'الفاتحة',1,1,7],
+[2,'البقرة',2,0,286],
+[3,'آل عمران',50,0,200],
+[4,'النساء',77,0,176],
+[5,'المائدة',106,0,120],
+[6,'الأنعام',128,1,165],
+[7,'الأعراف',151,1,206],
+[8,'الأنفال',177,0,75],
+[9,'التوبة',187,0,129],
+[10,'يونس',208,1,109],
+[11,'هود',221,1,123],
+[12,'يوسف',235,1,111],
+[13,'الرعد',249,0,43],
+[14,'إبراهيم',255,1,52],
+[15,'الحجر',262,1,99],
+[16,'النحل',267,1,128],
+[17,'الإسراء',282,1,111],
+[18,'الكهف',293,1,110],
+[19,'مريم',305,1,98],
+[20,'طه',312,1,135],
+[21,'الأنبياء',322,1,112],
+[22,'الحج',332,0,78],
+[23,'المؤمنون',342,1,118],
+[24,'النور',350,0,64],
+[25,'الفرقان',359,1,77],
+[26,'الشعراء',367,1,227],
+[27,'النمل',377,1,93],
+[28,'القصص',385,1,88],
+[29,'العنكبوت',396,1,69],
+[30,'الروم',404,1,60],
+[31,'لقمان',411,1,34],
+[32,'السجدة',415,1,30],
+[33,'الأحزاب',418,0,73],
+[34,'سبأ',428,1,54],
+[35,'فاطر',434,1,45],
+[36,'يس',440,1,83],
+[37,'الصافات',446,1,182],
+[38,'ص',453,1,88],
+[39,'الزمر',458,1,75],
+[40,'غافر',467,1,85],
+[41,'فصلت',477,1,54],
+[42,'الشورى',483,1,53],
+[43,'الزخرف',489,1,89],
+[44,'الدخان',496,1,59],
+[45,'الجاثية',499,1,37],
+[46,'الأحقاف',502,1,35],
+[47,'محمد',507,0,38],
+[48,'الفتح',511,0,29],
+[49,'الحجرات',515,0,18],
+[50,'ق',518,1,45],
+[51,'الذاريات',520,1,60],
+[52,'الطور',523,1,49],
+[53,'النجم',526,1,62],
+[54,'القمر',528,1,55],
+[55,'الرحمن',531,0,78],
+[56,'الواقعة',534,1,96],
+[57,'الحديد',537,0,29],
+[58,'المجادلة',542,0,22],
+[59,'الحشر',545,0,24],
+[60,'الممتحنة',548,0,13],
+[61,'الصف',551,0,14],
+[62,'الجمعة',553,0,11],
+[63,'المنافقون',554,0,11],
+[64,'التغابن',556,0,18],
+[65,'الطلاق',558,0,12],
+[66,'التحريم',560,0,12],
+[67,'الملك',562,1,30],
+[68,'القلم',564,1,52],
+[69,'الحاقة',566,1,52],
+[70,'المعارج',568,1,44],
+[71,'نوح',570,1,28],
+[72,'الجن',572,1,28],
+[73,'المزمل',574,1,20],
+[74,'المدثر',575,1,56],
+[75,'القيامة',577,1,40],
+[76,'الإنسان',578,0,31],
+[77,'المرسلات',580,1,50],
+[78,'النبأ',582,1,40],
+[79,'النازعات',583,1,46],
+[80,'عبس',585,1,42],
+[81,'التكوير',586,1,29],
+[82,'الانفطار',587,1,19],
+[83,'المطففين',587,1,36],
+[84,'الانشقاق',589,1,25],
+[85,'البروج',590,1,22],
+[86,'الطارق',591,1,17],
+[87,'الأعلى',591,1,19],
+[88,'الغاشية',592,1,26],
+[89,'الفجر',593,1,30],
+[90,'البلد',594,1,20],
+[91,'الشمس',595,1,15],
+[92,'الليل',595,1,21],
+[93,'الضحى',596,1,11],
+[94,'الشرح',596,1,8],
+[95,'التين',597,1,8],
+[96,'العلق',597,1,19],
+[97,'القدر',598,1,5],
+[98,'البينة',598,0,8],
+[99,'الزلزلة',599,0,8],
+[100,'العاديات',599,1,11],
+[101,'القارعة',600,1,11],
+[102,'التكاثر',600,1,8],
+[103,'العصر',601,1,3],
+[104,'الهمزة',601,1,9],
+[105,'الفيل',601,1,5],
+[106,'قريش',602,1,4],
+[107,'الماعون',602,1,7],
+[108,'الكوثر',602,1,3],
+[109,'الكافرون',603,1,6],
+[110,'النصر',603,0,3],
+[111,'المسد',603,1,5],
+[112,'الإخلاص',604,1,4],
+[113,'الفلق',604,1,5],
+[114,'الناس',604,1,6]
+];
+/* ═══════════════════════════════════════════════════════════════
+   فهرسُ السور — ثلاثةُ أوضاع
+   ───────────────────────────────────────────────────────────────
+   المصحفُ يُفتح على الوِرد وحدَه، ومن أراد مراجعةَ سورةٍ أو مقطعٍ
+   لم يجد بابًا. فهذا بابُه: بالسور، وبالأجزاء، وكفهرس المصحف.
+   والقراءةُ منه حرّةٌ لا تُحسب على الختمة — فالمراجعةُ شيءٌ
+   والختمةُ شيء.
+   ═══════════════════════════════════════════════════════════════ */
+var FHR_JUZ=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,
+             402,422,442,462,482,502,522,542,562,582];
+var FHR_JN=['الأوّل','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن',
+  'التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر',
+  'السادس عشر','السابع عشر','الثامن عشر','التاسع عشر','العشرون','الحادي والعشرون',
+  'الثاني والعشرون','الثالث والعشرون','الرابع والعشرون','الخامس والعشرون',
+  'السادس والعشرون','السابع والعشرون','الثامن والعشرون','التاسع والعشرون','الثلاثون'];
+function fhrAr(x){ return String(x).replace(/[0-9]/g,function(d){
+  return '\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669'[+d]; }); }
+function fhrJuzOf(p){ for(var j=29;j>=0;j--) if(p>=FHR_JUZ[j]) return j+1; return 1; }
+function fhrJuzEnd(j){ return j<30?FHR_JUZ[j]-1:604; }
+function fhrLast(i){ return i<FHR_SUR.length-1?FHR_SUR[i+1][2]:604; }
+function fhrNorm(x){
+  return x.replace(/[\u064B-\u0652\u0640]/g,'').replace(/[\u0623\u0625\u0622\u0671]/g,'\u0627')
+          .replace(/\u0649/g,'\u064A').replace(/\u0629/g,'\u0647').replace(/\s+/g,'');
+}
+var FHR={mode:'sur', per:15, p:0, filt:null};
+
+function fhrRowSur(i){
+  var s=FHR_SUR[i], mk=s[3]===1;
+  /* الميزانُ بجذر عدد الآيات: البقرةُ ٢٨٦ والكوثرُ ٣، فالنسبةُ
+     المباشرةُ تجعل القصارَ خطوطًا لا تُرى، والجذرُ يُنصف الطرفين. */
+  var w=Math.round(Math.sqrt(s[4]/286)*100);
+  return '<button class="fhr-row '+(mk?'mk':'md')+'" onclick="fhrOpen('+i+')">'
+    + '<span class="fhr-n">'+fhrAr(s[0])+'</span>'
+    + '<span class="fhr-tx"><span class="fhr-nm">'+s[1]+'</span>'
+    + '<span class="fhr-thr" style="width:'+w+'%"></span></span>'
+    + '<span class="fhr-mt"><b>جزء '+fhrAr(fhrJuzOf(s[2]))+'</b>'
+    + fhrAr(s[4])+' آية · ص '+fhrAr(s[2])+'</span></button>';
+}
+function fhrSurasIn(j){
+  var a=FHR_JUZ[j-1], b=fhrJuzEnd(j), out=[];
+  for(var i=0;i<FHR_SUR.length;i++){
+    var st=FHR_SUR[i][2], en=(i<FHR_SUR.length-1?FHR_SUR[i+1][2]-1:604);
+    if(en>=a && st<=b) out.push(i);
+  }
+  return out;
+}
+function fhrRowJuz(j){
+  return '<button class="fhr-row juz" onclick="fhrOpenJuz('+j+')">'
+    + '<span class="fhr-n">'+fhrAr(j)+'</span>'
+    + '<span class="fhr-tx"><span class="fhr-nm">الجزء '+FHR_JN[j-1]+'</span></span>'
+    + '<span class="fhr-mt">←</span></button>';
+}
+function fhrCell(i){
+  if(i>=FHR_SUR.length) return '<td class="nm"></td><td class="c"></td><td class="c"></td>';
+  var s=FHR_SUR[i];
+  return '<td class="nm" onclick="fhrOpen('+i+')">'+s[1]+'</td>'
+       + '<td class="c">'+fhrAr(s[0])+'</td><td class="c">'+fhrAr(s[2])+'</td>';
+}
+function fhrPaper(p){
+  var A=p*58, rows='';
+  for(var r=0;r<29;r++) rows+='<tr>'+fhrCell(A+r)+fhrCell(A+29+r)+'</tr>';
+  return '<div class="fhr-page"><div class="fhr-paper">'
+    + '<div class="fhr-crown">'
+    +   '<svg class="fhr-band" viewBox="0 0 320 26" preserveAspectRatio="none" aria-hidden="true">'
+    +     '<defs><pattern id="fhrGir" width="26" height="26" patternUnits="userSpaceOnUse">'
+    +       '<g fill="none" stroke="currentColor" stroke-width="1.1" opacity=".55">'
+    +         '<path d="M13 2 L24 13 L13 24 L2 13 Z"/><path d="M13 7 L19 13 L13 19 L7 13 Z"/>'
+    +       '</g></pattern></defs><rect width="320" height="26" fill="url(#fhrGir)"/></svg>'
+    +   '<svg class="fhr-seal" viewBox="0 0 24 24" aria-hidden="true">'
+    +     '<g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round">'
+    +       '<path d="M12 2.6 L18.2 5.8 L21.4 12 L18.2 18.2 L12 21.4 L5.8 18.2 L2.6 12 L5.8 5.8 Z"/>'
+    +       '<path d="M12 6.4 L16 8.4 L18 12 L16 15.6 L12 17.6 L8 15.6 L6 12 L8 8.4 Z" opacity=".55"/>'
+    +     '</g><circle cx="12" cy="12" r="2.1" fill="currentColor" opacity=".75"/></svg>'
+    +   '<span class="fhr-ttl">فهرسُ سور القرآن الكريم</span>'
+    +   '<span class="fhr-sub">'+(p===0?'من الفاتحة إلى المجادلة':'من الحشر إلى الناس')+'</span>'
+    + '</div><table class="fhr-tbl">'
+    + '<tr><th>السُّورة</th><th>رقم</th><th>صفحة</th>'
+    +     '<th>السُّورة</th><th>رقم</th><th>صفحة</th></tr>'
+    + rows + '</table></div></div>';
+}
+function fhrNP(){
+  if(FHR.filt) return 1;
+  if(FHR.mode==='sur') return Math.ceil(FHR_SUR.length/FHR.per);
+  if(FHR.mode==='juz') return 3;
+  return 2;
+}
+function fhrBuild(){
+  var h='', pg=document.getElementById('fhrPages');
+  if(!pg) return;
+  if(FHR.filt){
+    h='<div class="fhr-page">'+(FHR.filt.length?FHR.filt.map(fhrRowSur).join('')
+      :'<div class="fhr-empty">لا سورةَ بهذا الاسم</div>')+'</div>';
+  } else if(FHR.mode==='sur'){
+    for(var p=0;p<fhrNP();p++){
+      h+='<div class="fhr-page">';
+      for(var i=p*FHR.per;i<Math.min((p+1)*FHR.per,FHR_SUR.length);i++) h+=fhrRowSur(i);
+      h+='</div>';
+    }
+  } else if(FHR.mode==='juz'){
+    for(var p=0;p<3;p++){
+      h+='<div class="fhr-page">';
+      for(var j=p*10+1;j<=Math.min((p+1)*10,30);j++) h+=fhrRowJuz(j);
+      h+='</div>';
+    }
+  } else { for(var p=0;p<2;p++) h+=fhrPaper(p); }
+  pg.innerHTML=h;
+  fhrPaint();
+}
+function fhrPaint(){
+  var t=document.getElementById('fhrTabs'), nv=document.getElementById('fhrNav');
+  if(FHR.filt){ t.innerHTML=''; nv.style.display='none';
+    document.getElementById('fhrPages').style.transform='translateX(0)'; return; }
+  nv.style.display='';
+  var h='';
+  for(var p=0;p<fhrNP();p++)
+    h+='<button class="fhr-tab'+(FHR.p===p?' on':'')+'" onclick="fhrGo('+p+')">'+fhrAr(p+1)+'</button>';
+  t.innerHTML=h;
+  document.getElementById('fhrPages').style.transform='translateX('+(FHR.p*100)+'%)';
+  document.getElementById('fhrPrev').disabled=FHR.p===0;
+  document.getElementById('fhrNext').disabled=FHR.p===fhrNP()-1;
+  document.getElementById('fhrPos').textContent=fhrAr(FHR.p+1)+' من '+fhrAr(fhrNP());
+  var p0=document.querySelectorAll('.fhr-page')[FHR.p]; if(p0) p0.scrollTop=0;
+}
+window.fhrGo=function(p){ if(FHR.filt) return;
+  FHR.p=Math.max(0,Math.min(fhrNP()-1,p)); fhrPaint(); };
+window.fhrMode=function(m){
+  FHR.mode=m; FHR.p=0; FHR.filt=null;
+  var q=document.getElementById('fhrQ'); if(q) q.value='';
+  ['sur','juz','pap'].forEach(function(k){
+    var e=document.getElementById('fhrM-'+k); if(e) e.classList.toggle('on',k===m); });
+  fhrBuild();
+  if(m==='sur') requestAnimationFrame(fhrFit);
+};
+window.fhrSearch=function(){
+  var q=fhrNorm(document.getElementById('fhrQ').value.trim());
+  if(!q){ FHR.filt=null; fhrBuild(); return; }
+  FHR.filt=[];
+  for(var i=0;i<FHR_SUR.length;i++)
+    if(fhrNorm(FHR_SUR[i][1]).indexOf(q)>=0||String(FHR_SUR[i][0]).indexOf(q)>=0) FHR.filt.push(i);
+  fhrBuild();
+};
+/* عددُ السور في الصفحة يُقاس من ارتفاع المسار لا يُقدَّر */
+function fhrFit(){
+  var r=document.querySelector('.fhr-row'), tr=document.getElementById('fhrTrack');
+  if(!r||!tr||FHR.mode!=='sur'||FHR.filt) return;
+  var rh=r.getBoundingClientRect().height, th=tr.clientHeight;
+  /* الشاشةُ قد تكون مخفيّةً لحظةَ القياس فيعود صفرًا — فيُعاد
+     القياسُ في الإطار التالي بدل أن يُحسب على فراغ. */
+  if(rh<10 || th<50){ requestAnimationFrame(fhrFit); return; }
+  var k=Math.max(8, Math.min(30, Math.floor((th-10)/(rh+4))));
+  if(k!==FHR.per){ FHR.per=k; FHR.p=0; fhrBuild(); }
+}
+window.openFihris=function(){
+  if(typeof zxOnly==='function') zxOnly('screen-fihris');
+  else{
+    document.querySelectorAll('.screen').forEach(function(x){
+      if(x.id!=='screen-fihris') x.classList.add('hidden'); });
+    document.getElementById('screen-fihris').classList.remove('hidden');
+  }
+  fhrBuild(); requestAnimationFrame(fhrFit);
+};
+window.closeFihris=function(){
+  document.getElementById('screen-fihris').classList.add('hidden');
+  if(typeof openMushaf==='function' && window._fhrFrom==='mushaf'){
+    document.getElementById('screen-mushaf').classList.remove('hidden');
+  } else if(typeof goHome==='function') goHome();
+};
+/* القراءةُ الحرّة: تفتح المصحفَ ولا تمسّ الوِرد */
+window.fhrOpen=function(i){
+  var s=FHR_SUR[i];
+  document.getElementById('screen-fihris').classList.add('hidden');
+  try{ openMushaf(s[2], fhrLast(i)); }catch(e){}
+};
+window.fhrOpenJuz=function(j){
+  var a=FHR_JUZ[j-1], b=fhrJuzEnd(j), L=fhrSurasIn(j);
+  document.getElementById('fhrCard').innerHTML =
+      '<div class="fhr-grip"></div>'
+    + '<div class="fhr-shnm">الجزء '+FHR_JN[j-1]+'</div>'
+    + '<div class="fhr-shmt">من '+FHR_SUR[L[0]][1]+' إلى '+FHR_SUR[L[L.length-1]][1]
+    +   ' · '+fhrAr(L.length)+' سورة</div>'
+    + '<div class="fhr-shmt">من صفحة '+fhrAr(a)+' إلى '+fhrAr(b)+' · '+fhrAr(b-a+1)+' صفحة</div>'
+    + '<div class="fhr-jlist">'+L.map(function(i){
+        return '<button class="fhr-jitem" onclick="fhrSheetClose(); fhrOpen('+i+')">'
+             + '<b>'+FHR_SUR[i][1]+'</b><i>ص '+fhrAr(FHR_SUR[i][2])+'</i></button>';
+      }).join('')+'</div>'
+    + '<button class="fhr-btn" onclick="fhrSheetClose(); document.getElementById(\'screen-fihris\').classList.add(\'hidden\'); openMushaf('+a+','+b+');">افتح الجزء</button>'
+    + '<button class="fhr-btn ghost" onclick="fhrSheetClose()">إغلاق</button>';
+  document.getElementById('fhrSheet').classList.add('on');
+};
+window.fhrSheetClose=function(){
+  document.getElementById('fhrSheet').classList.remove('on');
+};
+
 /* ═══ الصلاةُ على النبيّ ﷺ يومَ الجمعة ═══ */
 /* SLW_LAP إيقاعُ الشريط لا هدفُ العدّ: يمتلئ في كلّ مئةٍ ثمّ يعود.
    والعددُ نفسُه بلا نهاية. */
@@ -13399,7 +14158,123 @@ window.slwBump = function(){
   slwPaint(true);
   try{ renderQuranScreen(); }catch(e){}
 };
-function slwPaint(bump){
+
+  function _zt(x){ try{ return ZahimI18n.t(x); }catch(e){ return x; } }
+  function _zA(x){ return String(x).replace(/[0-9]/g, function(d){
+    return '\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669'[+d]; }); }
+  /* ═══ رسمُ عدّاد رمضان والعشرِ الأواخر ═══ */
+
+  /* ═══ وجهُ البوصلة في ليالي العشر ═══
+     كان عاجيًّا ناصعًا #FFFDF6 — قرصٌ أبيضُ يملأ نصفَ الشاشة وسط
+     ليلٍ نيليّ، فيصرخ ويُبهت ما حوله. وكلُّ إصلاحٍ في الأطراف
+     (الحلقةِ والعدّادِ والرصيف) كان علاجًا لعَرَضٍ لا لعلّة.
+     فيُعتَم الوجهُ نفسُه إلى برونزٍ ليليٍّ دافئ، ويُرفع حبرُ ما
+     عليه. والمِلءُ يُبدَّل في SVG لا بـfilter: المرشِّحُ يُسطّح
+     الختمَ والنقشَ كما لدغني من قبل. */
+  window.zrFace = function(){
+    var on = (typeof zrIsAshr === 'function') && zrIsAshr();
+    /* وجهُ البوصلة وقرصُها الأوسط معًا: إعتامُ أحدهما دون الآخر
+       يترك قرصًا أبيضَ في وسط الليل — وهو أنشزُ من الوجه نفسِه. */
+    var set = function(id, a, b, c){
+      var g = document.getElementById(id);
+      if(!g) return;
+      var st = g.querySelectorAll('stop');
+      if(st.length < 2) return;
+      st[0].setAttribute('stop-color', a);
+      st[st.length - 1].setAttribute('stop-color', c || b);
+      if(st.length > 2 && b) st[1].setAttribute('stop-color', b);
+    };
+    if(on){
+      set('face-grad',  '#3B4C6B', null, '#28364F');
+      set('medal-grad', '#33445F', '#2C3B54', '#26334A');
+    } else {
+      set('face-grad',  '#FFFDF6', null, '#FAF0D8');
+      set('medal-grad', '#F1EADB', '#F8F3E8', '#FCF9F1');
+    }
+  };
+
+  /* ═══ سجلُّ ليالي العشر ═══
+     كلُّ ليلةٍ تُلمس فتُسجَّل قيامًا — لا تُمحى بانقضاء اليوم. */
+  var KEY_N = 'zahim_ashr_nights_v1';
+  function nightsRead(){
+    try{ return JSON.parse(localStorage.getItem(KEY_N) || '{}') || {}; }
+    catch(e){ return {}; }
+  }
+  window.zrNightDone = function(d){ return !!nightsRead()[d]; };
+  window.zrNightTap = function(d){
+    var o = nightsRead();
+    o[d] = !o[d];
+    try{ localStorage.setItem(KEY_N, JSON.stringify(o)); }catch(e){}
+    if(navigator.vibrate){ try{ navigator.vibrate(o[d] ? 14 : 8); }catch(e){} }
+    zrPaint();
+  };
+  window.zrPaint = function(){
+    var box = document.getElementById('zrCd');
+    var ash = document.getElementById('zrAshr');
+    if(!box) return;
+    var on = (typeof zrIsRam === 'function') && zrIsRam();
+    if(!on){ box.hidden = true; if(ash) ash.hidden = true;
+             document.body.classList.remove('zr-ashr-on'); return; }
+    var T, r;
+    try{ T = ZahimDay.times(); r = zrCounter(T); }catch(e){ r = null; }
+    if(!r){ box.hidden = true; }
+    else {
+      box.hidden = false;
+      box.classList.toggle('pre', r.mode === 'imsak' || r.mode === 'suhur');
+      box.classList.toggle('now', r.mode === 'now');
+      var L = document.getElementById('zrCdLab');
+      var V = document.getElementById('zrCdVal');
+      var D = document.getElementById('zrCdDua');
+      var dur = function(m){
+        var h = m/60|0, q = m%60, o = [];
+        if(h) o.push(_zA(h) + (h===1 ? ' \u0633\u0627\u0639\u0629' : h===2 ? ' \u0633\u0627\u0639\u062a\u064a\u0646' : ' \u0633\u0627\u0639\u0627\u062a'));
+        if(q) o.push(_zA(q) + ' \u062f\u0642\u064a\u0642\u0629');
+        return o.join(' \u0648') || '\u0623\u0642\u0644\u0651 \u0645\u0646 \u062f\u0642\u064a\u0642\u0629';
+      };
+      D.hidden = true;
+      if(r.mode === 'now'){
+        L.textContent = _zt('\u062d\u0627\u0646 \u0627\u0644\u0625\u0641\u0637\u0627\u0631');
+        V.textContent = _zt('\u0623\u0641\u0637\u0650\u0631\u060c \u062a\u0642\u0628\u0651\u0644 \u0627\u0644\u0644\u0647');
+        D.hidden = false;
+        D.textContent = '\u00ab\u0630\u0647\u0628 \u0627\u0644\u0638\u0645\u0623\u064f \u0648\u0627\u0628\u062a\u0644\u0651\u062a \u0627\u0644\u0639\u0631\u0648\u0642\u064f \u0648\u062b\u0628\u062a \u0627\u0644\u0623\u062c\u0631\u064f \u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647\u00bb';
+      } else {
+        L.textContent = _zt(r.mode === 'iftar' ? '\u0627\u0644\u0625\u0641\u0637\u0627\u0631 \u0628\u0639\u062f'
+                          : r.mode === 'imsak' ? '\u0627\u0644\u0625\u0645\u0633\u0627\u0643 \u0628\u0639\u062f'
+                                               : '\u0627\u0644\u0633\u062d\u0648\u0631 \u0628\u0639\u062f');
+        V.textContent = dur(r.mins);
+        if(r.mode === 'imsak'){
+          D.hidden = false;
+          D.textContent = '\u062a\u0633\u062d\u0651\u0631\u0648\u0627 \u0641\u0625\u0646\u0651 \u0641\u064a \u0627\u0644\u0633\u062d\u0648\u0631 \u0628\u0631\u0643\u0629';
+        }
+      }
+    }
+    if(ash){
+      if(!zrIsAshr()){ ash.hidden = true; }
+      else {
+        var day = zrDay(), h = '', witr = [21,23,25,27,29];
+        /* الليالي تُلمس كلُّها: كلُّ ليلةٍ من العشر تُسجَّل قيامًا.
+           والوتريّةُ ذهبٌ لأنّها مظانُّ ليلةِ القدر — لا لأنّها
+           وحدَها المعنيّة، فالدعاءُ والقيامُ في العشر جميعًا. */
+        for(var d = 21; d <= 30; d++){
+          var done = zrNightDone(d);
+          h += '<button type="button" class="' + (witr.indexOf(d) !== -1 ? 'w' : '')
+             + (d === day ? ' now' : '') + (done ? ' on' : '')
+             + '" onclick="zrNightTap(' + d + ')">' + _zA(d) + '</button>';
+        }
+        ash.hidden = false;
+        ash.innerHTML =
+            '<div class="zr-a-t">' + _zt('\u0627\u0644\u0639\u0634\u0631\u064f \u0627\u0644\u0623\u0648\u0627\u062e\u0631') + ' \u00b7 '
+          + _zt('\u0644\u064a\u0644\u0629') + ' ' + _zA(day) + '</div>'
+          + '<div class="zr-a-n">' + h + '</div>'
+          + '<div class="zr-a-d" data-sacred>\u00ab\u0627\u0644\u0644\u0647\u0645\u0651 \u0625\u0646\u0651\u0643 \u0639\u0641\u0648\u0651\u064c \u062a\u062d\u0628\u0651 \u0627\u0644\u0639\u0641\u0648\u064e \u0641\u0627\u0639\u0641\u064f \u0639\u0646\u0651\u064a\u00bb</div>'
+          + '<div class="zr-a-n2">' + _zt('\u062f\u0639\u0627\u0621\u064f \u0627\u0644\u0639\u0634\u0631 \u0643\u0644\u0651\u0647\u0627 \u00b7 \u0648\u0627\u0644\u0648\u062a\u0631\u064a\u0651\u0629\u064f \u0645\u0638\u0627\u0646\u0651\u064f \u0644\u064a\u0644\u0629 \u0627\u0644\u0642\u062f\u0631') + '</div>';
+      }
+    }
+    document.body.classList.toggle('zr-ashr-on', zrIsAshr());
+    try{ zrFace(); }catch(e){}
+  };
+
+  function slwPaint(bump){
   var box = document.getElementById('slwBar');
   if(!box) return;
   if(typeof jumWindow !== 'function' || !jumWindow()){ box.hidden = true; return; }
@@ -15721,6 +16596,11 @@ function showToast(msg){
       <!-- ختمُ الإصدار: ليُعرف تاريخُ النسخة التي بين يديك -->
       <div class="zx-row">
         <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.6V12l3 1.8"/></svg></span><span class="zx-row-label">إصدار زاحِم<i>تاريخُ النسخة التي بين يديك</i></span><span class="zx-row-value" id="zxVer">—</span>
+      </div>
+      <!-- مِقودُ رمضان: التقويمُ الهجريُّ يختلف يومًا بين البلدان،
+           فيبدأ الوضعُ آليًّا ويُعطى صاحبُه ما يُقدّمُه أو يُؤخّره. -->
+      <div class="zx-row zr-row" id="zrRow" onclick="zrCycle()">
+        <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18.5 14.2A7.2 7.2 0 1 1 9.8 5.5 5.9 5.9 0 0 0 18.5 14.2z"/></svg></span><span class="zx-row-label">بداية رمضان<i>إن خالف التقويمُ بلدَك</i></span><span class="zx-row-value" id="zrShiftVal">—</span>
     </div>
     <div class="zx-row" onclick="window.open('https://zahim.app/intro','_blank','noopener')">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 5.2h5.2a2.2 2.2 0 0 1 2.2 2.2v11.4a1.7 1.7 0 0 0-1.7-1.7H4.6z"/><path d="M19.4 5.2h-5.2a2.2 2.2 0 0 0-2.2 2.2v11.4a1.7 1.7 0 0 1 1.7-1.7h5.7z"/></svg></span><span class="zx-row-label">كيف تستخدم زاحِم<i>شرحٌ بالصور لكلّ شاشة</i></span><span class="zx-row-chev">←</span>
@@ -16705,6 +17585,18 @@ function hex2rgb(h){
       after.forEach(function(x){
         h += psCell('a_' + x.key, PS_RAK[x.key] || 2, _t('بعدها'), _t('راتبة'));
       });
+      /* في رمضان خرزةٌ زائدةٌ بعد العشاء: التراويح.
+         ولا تُعرض إلّا مع العشاء، فهي تابعةٌ لها لا صلاةٌ مستقلّة. */
+      if(key === 'isha' && typeof zrIsRam === 'function' && zrIsRam()){
+        var tw = (typeof zrTarawihDone === 'function') && zrTarawihDone();
+        h += '<button type="button" class="ps-cell trw' + (tw ? ' lit' : '')
+           + '" onclick="zrTarawihToggle(); openPrayerSheet(&#39;isha&#39;);">'
+           /* لا عددَ على الخرزة: قيامُ رمضان ورد عن النبيّ \u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\n              وعن السلف بأعدادٍ مختلفة \u2014 ثمانٍ وعشرون وغيرها \u2014 والأمرُ واسع.\n              فزاحِمُ يعرض ما اتُّفق عليه ولا يُرجّح في مسألةٍ خلافيّة. */
+           +   '<b>\u2726</b>'
+           +   '<i>' + _t('التراويح') + '</i>'
+           +   '<u>' + _t('بعد العشاء') + '</u>'
+           + '</button>';
+      }
       h += psCell('dhk', 'ذ', _t('الأذكار'), _t('بعد السلام'), 'dhk');
       return h + '</div>';
     }
@@ -17673,7 +18565,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-23-1150').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-24-1930').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -17797,7 +18689,31 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-09-23-1150';
+  window.ZAHIM_STAMP = 'zahim-2026-09-24-1930';
+  /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
+  window.zrCycle = function(){
+    var v = (typeof zrShift === 'function') ? zrShift() : 0;
+    var nx = v === 0 ? -1 : v === -1 ? 1 : 0;
+    try{ zrSetShift(nx); }catch(e){}
+    zrPaintShift();
+  };
+  window.zrPaintShift = function(){
+    var row = document.getElementById('zrRow');
+    /* لا يُعرض المِقودُ إلّا في رمضان أو شعبان، فلا معنى
+       لإزاحة شهرٍ لم يأتِ بعد. */
+    if(row){
+      var near = false;
+      try{ var p = ZahimHijri.parts(); near = p && (p.month === 8 || p.month === 9); }catch(e){}
+      row.hidden = !near;
+    }
+    var el = document.getElementById('zrShiftVal');
+    if(!el) return;
+    var v = (typeof zrShift === 'function') ? zrShift() : 0;
+    var T = function(x){ try{ return ZahimI18n.t(x); }catch(e){ return x; } };
+    el.textContent = v === 0 ? T('كما هو')
+                   : v === -1 ? T('يومٌ قبل')
+                              : T('يومٌ بعد');
+  };
   window.zxPaintVer = function(){
     var el = document.getElementById('zxVer');
     if(!el) return;
@@ -18532,6 +19448,22 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
 
   /* ── شروحُ صفوف الإعدادات ── */
   ZahimI18n.load('en', {
+    'الإفطار بعد': 'Iftar in',
+    'الإمساك بعد': 'Imsak in',
+    'السحور بعد': 'Suhur in',
+    'حان الإفطار': 'Time to break the fast',
+    'أفطِر، تقبّل الله': 'Break your fast — may Allah accept',
+    'العشرُ الأواخر': 'The Last Ten Nights',
+    'ليلة': 'Night',
+    'التراويح': 'Tarawih',
+    'بعد العشاء': 'after Isha',
+    'بداية رمضان': 'Ramadan start',
+    'إن خالف التقويمُ بلدَك': 'if the calendar differs from your country',
+    'كما هو': 'As is',
+    'يومٌ قبل': 'A day earlier',
+    'يومٌ بعد': 'A day later',
+    'الإفطار': 'Iftar',
+    'القيام': 'Qiyam',
     'إصدار زاحِم': 'Zahim version',
     'تاريخُ النسخة التي بين يديك': 'Date of the build you have',
     'قوسٌ في متناول الإبهام، أو عجلةٌ تُدار': 'An arc within thumb reach, or a wheel you turn',
@@ -18664,6 +19596,22 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('id', {
+    'الإفطار بعد': 'Berbuka dalam',
+    'الإمساك بعد': 'Imsak dalam',
+    'السحور بعد': 'Sahur dalam',
+    'حان الإفطار': 'Waktunya berbuka',
+    'أفطِر، تقبّل الله': 'Berbukalah — semoga Allah menerima',
+    'العشرُ الأواخر': 'Sepuluh Malam Terakhir',
+    'ليلة': 'Malam',
+    'التراويح': 'Tarawih',
+    'بعد العشاء': 'setelah Isya',
+    'بداية رمضان': 'Awal Ramadan',
+    'إن خالف التقويمُ بلدَك': 'jika kalender berbeda dengan negara Anda',
+    'كما هو': 'Seperti adanya',
+    'يومٌ قبل': 'Sehari lebih awal',
+    'يومٌ بعد': 'Sehari kemudian',
+    'الإفطار': 'Berbuka',
+    'القيام': 'Qiyamullail',
     'إصدار زاحِم': 'Versi Zahim',
     'تاريخُ النسخة التي بين يديك': 'Tanggal versi yang Anda miliki',
     'قوسٌ في متناول الإبهام، أو عجلةٌ تُدار': 'Busur dalam jangkauan ibu jari, atau roda yang diputar',
@@ -18784,6 +19732,22 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
   });
 
   ZahimI18n.load('ms', {
+    'الإفطار بعد': 'Berbuka dalam',
+    'الإمساك بعد': 'Imsak dalam',
+    'السحور بعد': 'Sahur dalam',
+    'حان الإفطار': 'Masa berbuka',
+    'أفطِر، تقبّل الله': 'Berbukalah — semoga Allah terima',
+    'العشرُ الأواخر': 'Sepuluh Malam Terakhir',
+    'ليلة': 'Malam',
+    'التراويح': 'Terawih',
+    'بعد العشاء': 'selepas Isyak',
+    'بداية رمضان': 'Permulaan Ramadan',
+    'إن خالف التقويمُ بلدَك': 'jika takwim berbeza dengan negara anda',
+    'كما هو': 'Seperti sedia ada',
+    'يومٌ قبل': 'Sehari lebih awal',
+    'يومٌ بعد': 'Sehari lewat',
+    'الإفطار': 'Berbuka',
+    'القيام': 'Qiamullail',
     'إصدار زاحِم': 'Versi Zahim',
     'تاريخُ النسخة التي بين يديك': 'Tarikh versi yang anda miliki',
     'قوسٌ في متناول الإبهام، أو عجلةٌ تُدار': 'Lengkung dalam jangkauan ibu jari, atau roda yang diputar',
@@ -19244,6 +20208,194 @@ else boot();
   border-radius:0;box-shadow:0 0 0 1px rgba(122,109,87,.10);}
 #screen-mihrab.hidden{
   transform:translateX(-50%) translateY(10px) !important;}
+
+/* ══ ليالي العشر: كلُّها تُلمس ══ */
+.zr-a-n button{
+  width:31px;height:31px;border-radius:10px;display:grid;place-items:center;
+  font:inherit;font-size:13px;font-weight:800;cursor:pointer;
+  color:var(--muted);background:rgba(255,255,255,.5);
+  border:1px solid rgba(201,150,58,.24);
+  font-variant-numeric:tabular-nums;
+  transition:transform .12s ease, background .16s ease, border-color .16s ease;
+}
+.zr-a-n button:active{ transform:scale(.988); }
+/* الوتريّةُ ذهبٌ: مظانُّ ليلة القدر لا حصرًا للعمل */
+.zr-a-n button.w{ color:#3E2D10;
+  background:linear-gradient(150deg,#E8C070,#C9963A);
+  border-color:rgba(255,243,218,.45); }
+.zr-a-n button.now{ outline:2px solid var(--green,#14304F);outline-offset:2px; }
+/* المُسجَّلةُ قيامًا: علامةٌ لا لون — فلا تزاحم الذهبَ معناه */
+.zr-a-n button.on::after{
+  content:'';position:absolute;width:5px;height:5px;border-radius:50%;
+  background:currentColor;transform:translateY(11px);opacity:.8;
+}
+.zr-a-n button{ position:relative; }
+.zr-a-n2{ font-size:10px;color:var(--muted);text-align:center;
+  margin-top:6px;line-height:1.7;opacity:.9; }
+body.zr-ashr-on .zr-a-n button{ color:#D9C79C;background:rgba(255,255,255,.06);
+  border-color:rgba(232,192,112,.26); }
+body.zr-ashr-on .zr-a-n button.w{ color:#3E2D10;
+  background:linear-gradient(150deg,#FFE9B0,#E8C070 52%,#C9963A);
+  border-color:rgba(255,243,218,.62);
+  box-shadow:0 0 14px rgba(232,192,112,.36); }
+body.zr-ashr-on .zr-a-n button.now{ outline-color:#FFF3DA; }
+body.zr-ashr-on .zr-a-n2{ color:#A9A092; }
+
+/* ═══════════════════════════════════════════════════════════════
+   فهرسُ السور — بصبغة وِرد القرآن
+   الأزرقُ الكحليُّ سائدٌ والذهبُ خيطٌ خافت: الفهرسُ بابٌ إلى
+   المصحف فيرث هويّتَه لا هويّةً أخرى.
+   ═══════════════════════════════════════════════════════════════ */
+/* الشاشةُ عمودٌ مرن: الرأسُ ثابتٌ والمسارُ يملأ ما بقي والأسهمُ في
+   القاع. وبدونه يمتدّ المسارُ بلا حدٍّ فلا يُقاس ارتفاعُه. */
+#screen-fihris{
+  background:#EEF2F6 !important; overflow:hidden !important;
+  display:flex !important; flex-direction:column !important;
+}
+#screen-fihris.hidden{ display:none !important; }
+#screen-fihris::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.45;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(20,48,79,.055) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(-45deg, rgba(20,48,79,.055) 0 1px, transparent 1px 22px),
+    radial-gradient(90% 40% at 50% -6%, rgba(63,155,201,.14), rgba(63,155,201,0) 60%);
+}
+.fhr-app{position:relative;z-index:1;flex:1 1 auto;min-height:0;
+  display:flex;flex-direction:column}
+.fhr-hd{flex:0 0 auto;padding:8px 12px 0}
+#screen-fihris .back-btn{margin-bottom:7px}
+.fhr-search{position:relative;display:flex;gap:7px;align-items:center;
+  padding:5px 11px;border-radius:11px;
+  background:linear-gradient(158deg,rgba(255,255,255,.80),rgba(255,255,255,.50));
+  border:1px solid rgba(20,48,79,.10);box-shadow:0 8px 22px rgba(20,48,79,.08)}
+.fhr-search::before{content:'';position:absolute;inset:0 14% auto;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent)}
+.fhr-search input{flex:1;border:0;background:none;font:inherit;font-size:12px;
+  color:var(--text);outline:none}
+.fhr-search svg{width:13px;height:13px;color:#2A6E96;flex:0 0 auto}
+.fhr-modes{display:flex;gap:4px;margin:5px 0 0}
+.fhr-modes button{flex:1;font:inherit;font-size:10px;font-weight:800;cursor:pointer;
+  padding:4px 0;border-radius:9px;color:var(--muted);
+  background:rgba(255,255,255,.55);border:1px solid rgba(20,48,79,.09);
+  transition:background .16s ease,color .16s ease,border-color .16s ease}
+.fhr-modes button.on{background:linear-gradient(150deg,#3F9BC9,#2A6E96 46%,#14304F);
+  border-color:rgba(214,169,74,.40);color:#FFFDF7}
+.fhr-tabs{display:flex;gap:4px;margin:5px 0 0;overflow-x:auto;scrollbar-width:none;
+  padding:0 0 1px;justify-content:center}
+.fhr-tabs::-webkit-scrollbar{display:none}
+.fhr-tab{flex:0 0 auto;font:inherit;font-size:9px;font-weight:800;cursor:pointer;
+  width:20px;height:20px;border-radius:50%;display:grid;place-items:center;
+  color:var(--muted);background:rgba(255,255,255,.55);
+  border:1px solid rgba(20,48,79,.09);transition:all .16s ease}
+.fhr-tab.on{background:linear-gradient(150deg,#3F9BC9,#2A6E96 46%,#14304F);
+  border-color:rgba(214,169,74,.40);color:#FFFDF7}
+.fhr-track{flex:1 1 auto;min-height:0;position:relative;overflow:hidden;margin-top:5px}
+.fhr-pages{display:flex;height:100%;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.fhr-page{flex:0 0 100%;height:100%;overflow-y:auto;padding:0 12px 10px;scrollbar-width:none}
+.fhr-page::-webkit-scrollbar{display:none}
+/* الصفّ */
+.fhr-row{position:relative;display:flex;align-items:center;gap:9px;width:100%;
+  padding:6px 10px 6px 13px;margin-bottom:4px;border-radius:12px;
+  font:inherit;text-align:start;cursor:pointer;overflow:hidden;
+  background:linear-gradient(158deg,rgba(255,255,255,.80),rgba(255,255,255,.50));
+  border:1px solid rgba(20,48,79,.08);box-shadow:0 8px 22px rgba(20,48,79,.07);
+  transition:transform .12s ease}
+.fhr-row::before{content:'';position:absolute;inset:0 14% auto;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent)}
+.fhr-row::after{content:'';position:absolute;inset-inline-start:0;top:24%;bottom:24%;
+  width:2.5px;border-radius:0 3px 3px 0}
+.fhr-row.mk::after{background:linear-gradient(180deg,#C9963A,rgba(201,150,58,.28))}
+.fhr-row.md::after{background:linear-gradient(180deg,#2A6E96,rgba(42,110,150,.28))}
+.fhr-row.juz::after{background:linear-gradient(180deg,#2A6E96,rgba(42,110,150,.28))}
+.fhr-row:active{transform:scale(.988)}
+.fhr-n{flex:0 0 auto;width:24px;height:24px;display:grid;place-items:center;
+  font-size:9.5px;font-weight:800;color:#14304F;position:relative;z-index:1;
+  background:rgba(63,155,201,.12);border:1px solid rgba(20,48,79,.16);
+  font-variant-numeric:tabular-nums;border-radius:3px;
+  clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%)}
+.fhr-tx{flex:1 1 auto;min-width:0}
+.fhr-nm{display:block;font-family:'Amiri',serif;font-size:14.5px;font-weight:700;
+  color:#14304F;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fhr-thr{display:block;height:2px;border-radius:2px;margin-top:3px;
+  background:linear-gradient(90deg,rgba(63,155,201,.55),rgba(63,155,201,.16))}
+.fhr-row.mk .fhr-thr{background:linear-gradient(90deg,rgba(201,150,58,.50),rgba(201,150,58,.14))}
+.fhr-mt{flex:0 0 auto;text-align:end;font-size:8.5px;color:var(--muted);
+  line-height:1.4;font-variant-numeric:tabular-nums}
+.fhr-mt b{display:block;color:#2A6E96;font-weight:700;font-size:9px}
+.fhr-row.juz .fhr-mt{font-size:15px;color:#2A6E96;font-family:'Amiri',serif}
+/* فهرسُ المصحف */
+.fhr-paper{border-radius:16px;overflow:hidden;
+  background:linear-gradient(175deg,#FBFCFE,#EFF4F8);
+  border:1px solid rgba(20,48,79,.20);
+  box-shadow:0 10px 28px rgba(20,48,79,.12), inset 0 1px 0 rgba(255,255,255,.9)}
+.fhr-crown{position:relative;padding:0 0 9px;text-align:center;color:#2A6E96;
+  background:linear-gradient(180deg,rgba(63,155,201,.12),rgba(63,155,201,0));
+  border-bottom:1px solid rgba(20,48,79,.16)}
+.fhr-band{display:block;width:100%;height:22px;opacity:.45}
+.fhr-seal{display:block;width:22px;height:22px;margin:5px auto 0;color:#2A6E96;opacity:.9}
+.fhr-ttl{display:block;font-family:'Amiri',serif;font-size:16px;font-weight:700;
+  color:#14304F;margin-top:2px}
+.fhr-sub{display:block;font-size:9.5px;color:var(--muted);margin-top:2px}
+.fhr-tbl{width:100%;border-collapse:collapse}
+.fhr-tbl th{font-family:'Amiri',serif;font-size:11px;font-weight:700;color:#14304F;
+  padding:6px 3px;border:1px solid rgba(20,48,79,.14);
+  background:linear-gradient(180deg,rgba(63,155,201,.16),rgba(63,155,201,.06))}
+.fhr-tbl td{font-family:'Amiri',serif;font-size:12.5px;padding:4px 5px;
+  border:1px solid rgba(20,48,79,.09);color:var(--text);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.fhr-tbl td.nm{font-size:14px;font-weight:700;color:#14304F;text-align:center;cursor:pointer}
+.fhr-tbl td.nm:active{background:rgba(63,155,201,.14)}
+.fhr-tbl td.c{text-align:center;color:var(--muted);font-size:11px}
+.fhr-tbl tr:nth-child(even) td{background:rgba(63,155,201,.045)}
+.fhr-tbl td:nth-child(3),.fhr-tbl th:nth-child(3){border-inline-start:2px solid rgba(20,48,79,.22)}
+/* الأسهم */
+.fhr-nav{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:4px 12px calc(6px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top,#EEF2F6 62%,rgba(238,242,246,.7))}
+.fhr-nav button{font:inherit;font-size:11.5px;font-weight:800;cursor:pointer;
+  padding:6px 13px;border-radius:12px;color:#14304F;
+  background:linear-gradient(158deg,rgba(255,255,255,.80),rgba(255,255,255,.50));
+  border:1px solid rgba(20,48,79,.08);box-shadow:0 2px 7px rgba(20,48,79,.07)}
+.fhr-nav button[disabled]{opacity:.32;pointer-events:none}
+.fhr-pos{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+/* لوحُ الجزء */
+.fhr-sheet{position:absolute;inset:0;z-index:40;display:none}
+.fhr-sheet.on{display:block}
+.fhr-veil{position:absolute;inset:0;background:rgba(20,30,45,.36)}
+.fhr-card{position:absolute;left:0;right:0;bottom:0;
+  background:linear-gradient(180deg,#FBFCFE,#EFF4F8);
+  border-radius:26px 26px 0 0;padding:16px 18px 26px;max-height:86%;overflow:auto;
+  box-shadow:0 -12px 40px rgba(20,48,79,.22)}
+.fhr-grip{width:46px;height:5px;border-radius:3px;background:rgba(20,48,79,.26);margin:0 auto 14px}
+.fhr-shnm{font-family:'Amiri',serif;font-size:25px;font-weight:700;color:#14304F;text-align:center}
+.fhr-shmt{font-size:11.5px;color:var(--muted);text-align:center;margin-top:3px}
+.fhr-jlist{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:13px;
+  padding-top:12px;border-top:1px solid rgba(20,48,79,.14)}
+.fhr-jitem{font:inherit;cursor:pointer;padding:6px 10px;border-radius:11px;
+  background:rgba(255,255,255,.6);border:1px solid rgba(20,48,79,.09);
+  display:flex;align-items:baseline;gap:5px}
+.fhr-jitem b{font-family:'Amiri',serif;font-size:13.5px;font-weight:700;color:#14304F}
+.fhr-jitem i{font-style:normal;font-size:9px;color:var(--muted);font-variant-numeric:tabular-nums}
+.fhr-btn{display:block;width:100%;margin-top:11px;padding:13px;border-radius:15px;
+  font:inherit;font-family:'Amiri',serif;font-size:16px;font-weight:700;cursor:pointer;
+  color:#FFFDF7;border:1px solid rgba(214,169,74,.44);
+  background:linear-gradient(150deg,#3F9BC9,#2A6E96 46%,#14304F);
+  box-shadow:0 6px 16px rgba(20,48,79,.24)}
+.fhr-btn.ghost{background:none;border-color:transparent;color:var(--muted);
+  font-family:inherit;font-size:13px;font-weight:600;box-shadow:none;padding:10px;margin-top:2px}
+.fhr-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
+
+
+/* رأسُ المصحف فوق صفحته: .mus-page تعلو الأدواتِ فتمنع لمسَها،
+   فيُرفع الرأسُ بطبقةٍ ويُصرَّح له باللمس. */
+#screen-mushaf .mus-head{ position:relative; z-index:12; }
+#screen-mushaf .mus-tools{ position:relative; z-index:12; pointer-events:auto; }
+#screen-mushaf .mus-tool{ position:relative; z-index:12; pointer-events:auto; }
+
+/* شريطُ الرجوع في المصحف: زرّان متقابلان */
+#screen-mushaf .topbar{ display:flex;align-items:center;
+  justify-content:space-between;gap:8px; }
+#screen-mushaf .fhr-open{ font-size:12.5px; }
 </style>
 
 <div id="zaBar" role="status" aria-live="polite">
@@ -19636,7 +20788,8 @@ window.zxTile = function(key){
   if(back) back.hidden = false;
   try{ zxTab(key); }catch(e){}
   /* ختمُ الإصدار يُرسم عند فتح لوحته لا عند الإقلاع وحدَه */
-  if(key === 'about'){ try{ zxPaintVer(); }catch(e){} }
+  if(key === 'about'){ try{ zxPaintVer(); }catch(e){}
+                       try{ zrPaintShift(); }catch(e){} }
   try{ zxTileify(document.getElementById('zxPane-' + key)); }catch(e){}
   /* العنوانُ يقول أين أنت، فلا يحتاج المرءُ أن يتذكّر أيَّ بلاطةٍ ضغط */
   zxSetTitle(ZX_TITLES[key] || 'الإعدادات');
