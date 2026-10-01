@@ -1317,6 +1317,14 @@ body.theme-dark #home-bg > .home-topbar{
    القصيرة تُطوى بطاقةُ الميدان (وهي في الإعدادات ← عن زاحِم)،
    ويُضغط ما بقي. البوصلةُ أولى بالمساحة من ملخّصٍ يُقرأ مرّةً. */
 @media (max-height:740px){
+  .compass-station-label,#stationTitle{margin-top:2px !important;}
+}
+/* ميدانُ الطاعة: حدُّه الخاصّ منفصلٌ عن حدّ البوصلة (٧٤٠px) —
+   كان الحدّان مشتركين فيقع جهازُ المستخدم ضمن ٧٤٠px بسبب ارتفاع
+   العارضة (شريط العنوان ونحوه) رغم أنّ شاشته ليست صغيرةً فعلًا،
+   فيُضغط الميدانُ رغم تكبيره عمدًا. الحدُّ هنا أضيقُ بكثيرٍ (٦٢٠px)،
+   فلا يُطبَّق إلا على الشاشات الصغيرة حقًّا. */
+@media (max-height:620px){
   /* ═══ ميدانُ الطاعة لا يُحذف ═══
      كان display:none تحت ٧٤٠ — قرارٌ قديمٌ يوم لم يكن ثمّ متّسع.
      فيختفي الميدانُ على الشاشات القصيرة وفي الجمعة، ولا يدري
@@ -1334,7 +1342,6 @@ body.theme-dark #home-bg > .home-topbar{
   .ros-kick{ font-size:8.5px !important;letter-spacing:1.2px !important; }
   .ros-state{ font-size:12.5px !important;line-height:1.35 !important; }
   .ros-bars{ transform:scale(.88);transform-origin:center right; }
-  .compass-station-label,#stationTitle{margin-top:2px !important;}
 }
 @media (max-height:800px){
   #home-bg{padding-bottom:8px;}
@@ -18893,7 +18900,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-01-0900';
+  window.ZAHIM_STAMP = 'zahim-2026-10-01-1015';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
