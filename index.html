@@ -1396,14 +1396,14 @@ body.theme-dark .iqama-cap{fill:#8FC4DF;stroke:rgba(20,26,23,.85);}
 
 
 /* ═══ وردةُ اليوم ═══ من عائلة الزجاج نفسها: هالةٌ ثم جسمٌ شفيف ثم لمعةٌ مائلة */
-.ros-card{display:flex;align-items:center;gap:13px;width:calc(100% - 32px);margin:2px 16px 10px;
-  padding:12px 14px;border-radius:20px;cursor:pointer;text-align:start;
+.ros-card{display:flex;align-items:center;gap:15px;width:calc(100% - 32px);margin:2px 16px 10px;
+  padding:16px 18px;border-radius:22px;cursor:pointer;text-align:start;
   border:1px solid rgba(255,255,255,.92);
   background:linear-gradient(158deg,rgba(255,251,240,.96),rgba(247,242,230,.70));
   box-shadow:0 10px 26px rgba(120,90,42,.13),0 1px 0 rgba(255,255,255,.98) inset;
   transition:transform .14s cubic-bezier(.4,0,.2,1);}
 .ros-card:active{transform:scale(.97) translateY(2px);}
-.ros{width:88px;height:88px;flex:0 0 auto;filter:drop-shadow(0 6px 14px rgba(120,90,42,.16));}
+.ros{width:104px;height:104px;flex:0 0 auto;filter:drop-shadow(0 6px 14px rgba(120,90,42,.16));}
 .ros-halo{fill:#48C6E8;opacity:0;filter:url(#rosBloom);transition:opacity .7s ease;}
 .ros-glass{fill:url(#rosDim);transition:fill .7s ease,opacity .7s ease;opacity:.62;}
 .ros-sheen{fill:#fff;opacity:0;transition:opacity .7s ease;}
@@ -1413,8 +1413,8 @@ body.theme-dark .iqama-cap{fill:#8FC4DF;stroke:rgba(20,26,23,.85);}
 .ros-pet.just .ros-halo{animation:rosPop 1.1s cubic-bezier(.22,1,.36,1);}
 @keyframes rosPop{0%{opacity:0;}35%{opacity:.85;}100%{opacity:.34;}}
 .ros-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
-.ros-kick{font-size:10px;font-weight:800;letter-spacing:1.7px;color:var(--gold-ink,#7A5E22);}
-.ros-state{font-family:'Amiri',serif;font-size:17px;color:var(--green);line-height:1.5;}
+.ros-kick{font-size:11px;font-weight:800;letter-spacing:1.7px;color:var(--gold-ink,#7A5E22);}
+.ros-state{font-family:'Amiri',serif;font-size:19px;color:var(--green);line-height:1.5;}
 .ros-bars{display:flex;gap:4px;margin-top:2px;}
 .ros-bars i{width:19px;height:4px;border-radius:99px;background:#E3D8BE;transition:background .5s ease;}
 .ros-bars i.on{background:linear-gradient(90deg,#2E709B,#8FC4DF);
@@ -1965,17 +1965,11 @@ html:not([lang="ar"]) .matn::before{
   border:1px solid rgba(232,192,112,.36);
 }
 .zr-ashr[hidden]{ display:none; }
-.zr-a-t{ font-family:'Amiri',serif;font-size:18px;font-weight:700;color:var(--gold-ink,#7A5E22); }
-.zr-a-n{ display:flex;gap:5px;justify-content:center;margin:10px 0 7px;flex-wrap:wrap; }
-.zr-a-n b{
-  width:31px;height:31px;border-radius:10px;display:grid;place-items:center;
-  font-size:13px;font-weight:800;color:var(--muted);
-  border:1px solid rgba(201,150,58,.24);background:rgba(255,255,255,.5);
-}
-/* الليالي الوترية ذهبٌ: هي مظانُّ ليلة القدر */
-.zr-a-n b.w{ color:#3E2D10;background:linear-gradient(150deg,#E8C070,#C9963A);
-  border-color:rgba(255,243,218,.45);box-shadow:0 3px 9px rgba(201,150,58,.22); }
-.zr-a-n b.now{ outline:2px solid var(--green,#14304F);outline-offset:2px; }
+.zr-a-t{ font-family:'Amiri',serif;font-size:16px;font-weight:700;color:var(--gold-ink,#7A5E22); }
+/* شبكةٌ ثابتةٌ من عشرة أعمدةٍ لا صفٌّ مرن: فالليالي العشرُ تبقى
+   صفًّا واحدًا مهما ضاقت الشاشةُ، بدل أن تلتفَّ إلى صفّين وتُطيل
+   المحتوى (كانت ٨ ليالٍ في صفٍّ ثم ٢ في صفٍّ ثانٍ). */
+.zr-a-n{ display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:9px 0 7px; }
 .zr-a-d{ font-family:'Amiri',serif;font-size:14px;color:var(--text);line-height:1.95;
   margin-top:5px;padding-top:8px;border-top:1px solid rgba(201,150,58,.24); }
 
@@ -2006,15 +2000,6 @@ body.zr-ashr-on .zr-ashr{
   border-color:rgba(232,192,112,.42);
   box-shadow:0 6px 22px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,243,218,.20); }
 body.zr-ashr-on .zr-a-t{ color:#F2D89A; }
-body.zr-ashr-on .zr-a-n b{ color:#D9C79C;background:rgba(255,255,255,.06);
-  border-color:rgba(232,192,112,.26); }
-/* الوتريّةُ تبقى ذهبًا في الإعتام أيضًا: هي مظانُّ ليلة القدر،
-   والقاعدةُ أعلاه كانت تغلبها لأنّها لاحقة. */
-body.zr-ashr-on .zr-a-n b.w{ color:#3E2D10;
-  background:linear-gradient(150deg,#FFE9B0,#E8C070 52%,#C9963A);
-  border-color:rgba(255,243,218,.62);
-  box-shadow:0 0 14px rgba(232,192,112,.36), 0 3px 9px rgba(0,0,0,.26); }
-body.zr-ashr-on .zr-a-n b.now{ outline-color:#FFF3DA; }
 body.zr-ashr-on .zr-a-d{ color:#EDE7DA; }
 body.zr-ashr-on .ros-card{
   background:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
@@ -2027,7 +2012,7 @@ body.zr-ashr-on .compass-station-label{ fill:#D9C79C; }
   .zr-cd{ padding:8px 13px !important;margin:7px auto 3px !important; }
   .zr-cd-val{ font-size:22px !important; }
   .zr-ashr{ padding:9px 12px !important;margin:5px auto 3px !important; }
-  .zr-a-n b{ width:26px;height:26px;font-size:11px; }
+  .zr-a-n button{ height:26px;font-size:11px; }
   .zr-a-d{ font-size:12px !important; }
 }
 
@@ -2199,7 +2184,7 @@ body.zr-ashr-on .zr-ashr{
   padding:9px 12px !important;margin:5px auto 4px !important; }
 body.zr-ashr-on .zr-a-t{ font-size:15px !important; }
 body.zr-ashr-on .zr-a-n{ gap:4px !important;margin:7px 0 5px !important; }
-body.zr-ashr-on .zr-a-n b{ width:27px;height:27px;font-size:11.5px;border-radius:9px; }
+body.zr-ashr-on .zr-a-n button{ height:27px;font-size:11.5px;border-radius:9px; }
 body.zr-ashr-on .zr-a-d{ font-size:12px !important;margin-top:3px !important;
   padding-top:6px !important;line-height:1.8 !important; }
 body.zr-ashr-on .ros-card{ padding:7px 11px !important;margin-top:3px !important; }
@@ -2208,7 +2193,7 @@ body.zr-ashr-on .home-tagline{ font-size:17px !important;margin:2px 16px 4px !im
 @media (max-height:760px){
   body.zr-ashr-on .zr-cd-val{ font-size:19px !important; }
   body.zr-ashr-on .zr-cd-dua{ display:none !important; }
-  body.zr-ashr-on .zr-a-n b{ width:24px;height:24px;font-size:10.5px; }
+  body.zr-ashr-on .zr-a-n button{ height:24px;font-size:10.5px; }
   body.zr-ashr-on .zr-a-d{ font-size:11px !important; }
 }
 
@@ -2982,7 +2967,7 @@ body.theme-dark .dial-engrave.dim{fill:#8A8371;}
 .home-topbar{
   position:relative;overflow:hidden;
   display:flex;align-items:center;justify-content:space-between;gap:10px;
-  margin:12px 14px 2px;padding:9px 13px;min-height:56px;
+  margin:6px 14px 2px;padding:9px 13px;min-height:56px;
   /* البديلُ الصلب أوّلًا: من عجز متصفّحُه رأى سطحًا معتمًا يُقرأ عليه */
   background:linear-gradient(168deg,rgba(255,251,240,.97),rgba(240,230,204,.90));
   border:1px solid rgba(255,255,255,.92);
@@ -6897,7 +6882,7 @@ var ZahimHadithID = {
          وبقي عنصرُ التذوّق مخفيًّا لئلّا تنكسر الدوالُّ التي تكتب فيه. -->
     <div id="dpcTaste" hidden></div>
 
-  <div style="height:12px;"></div>
+  <div style="height:4px;"></div>
   </div><!-- end wird-circles-wrap -->
 
 
@@ -6970,8 +6955,9 @@ var ZahimHadithID = {
   --medge:#121F55;--mhair:#5F6BB0;--mfs:23px;
   display:flex;flex-direction:column;overflow:hidden;}
 /* الأدواتُ كانت تأكل ١٥٢ بكسلًا من الصفحة — فتُضغط حشواتُها */
-#screen-mushaf .mus-head{flex:0 0 auto;padding:4px 14px 2px;display:flex;
+#screen-mushaf .mus-head{flex:0 0 auto;padding:4px 14px 2px;display:flex;flex-wrap:wrap;
   align-items:baseline;justify-content:space-between;font-size:12px;color:var(--muted);}
+#screen-mushaf .mus-head .mus-search-bar{flex:0 0 100%;}
 #screen-mushaf .mus-surah{font-family:'Amiri',serif;font-size:15px;color:var(--text);}
 #screen-mushaf .mus-sheet{flex:1 1 auto;overflow:auto;display:flex;
   justify-content:center;align-items:stretch;padding:4px 8px;}
@@ -6982,7 +6968,7 @@ var ZahimHadithID = {
 #screen-mushaf .ln{display:flex;justify-content:space-between;align-items:center;
   direction:rtl;line-height:1.95;font-size:var(--mfs);white-space:nowrap;color:var(--mink);}
 #screen-mushaf .ln.mid{justify-content:center;gap:.3em;}
-#screen-mushaf .ln w{display:inline-block;}
+#screen-mushaf .ln w{display:inline-block;transition:background 1.4s ease;}
 /* الفاتحةُ وأولُ البقرة في المصحف داخل إطار:
    سطورٌ موسَّطةٌ متقاربة، وعمودٌ أضيق، والكتلةُ في وسط الورقة لا في أعلاها. */
 #screen-mushaf .mus-sheet.framed-sheet{align-items:stretch;}
@@ -7253,6 +7239,35 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
   box-shadow:0 4px 12px rgba(20,48,79,.24), inset 0 1px 0 rgba(255,255,255,.28);
   color:#FFFDF7;font-family:inherit;font-size:12px;font-weight:800;
   padding:7px 14px;cursor:pointer;white-space:nowrap;}
+
+/* ═══ شريطُ البحث بالكلمات — ظاهرٌ دائمًا، لا خلف أيقونة ═══ */
+#screen-mushaf .mus-search-bar{display:flex;align-items:center;gap:8px;margin-top:7px;
+  background:var(--card-bg);border:1px solid rgba(26,74,107,.16);border-radius:12px;
+  padding:8px 12px;}
+#screen-mushaf .mus-search-bar svg{width:16px;height:16px;flex:0 0 auto;color:var(--muted);}
+#screen-mushaf .mus-search-bar input{flex:1;min-width:0;border:0;background:none;
+  font:inherit;font-size:14px;color:var(--text);outline:none;}
+/* النتائجُ تنسدل تحت الشريط فوق صفحة المصحف — لا شاشةً منفصلة */
+/* النتائجُ تنسدل تحت الشريط فوق صفحة المصحف — لا شاشةً منفصلة.
+   top:100% من رأس المصحف نفسِه (لا رقمٌ ثابت) فتصحّ مهما اختلف
+   ارتفاعُ الرأس بين الأوضاع. */
+#screen-mushaf .mus-head{position:relative;}
+#screen-mushaf .mus-search-results{position:absolute;top:100%;left:14px;right:14px;z-index:20;
+  max-height:60vh;overflow:auto;background:var(--card-bg);
+  border:1px solid rgba(26,74,107,.14);border-radius:14px;
+  box-shadow:0 10px 30px rgba(20,30,40,.16);display:none;}
+#screen-mushaf .mus-search-results.on{display:block;}
+#screen-mushaf .mus-sr{display:block;width:100%;text-align:start;background:none;border:0;
+  border-bottom:1px solid rgba(26,74,107,.08);padding:11px 13px;cursor:pointer;font-family:inherit;}
+#screen-mushaf .mus-sr:last-child{border-bottom:0;}
+#screen-mushaf .mus-sr-ref{font-size:10.5px;color:var(--gold-ink,#7A5E22);font-weight:800;
+  margin-bottom:3px;}
+#screen-mushaf .mus-sr-txt{font-family:'Amiri',serif;font-size:15.5px;color:var(--text);
+  line-height:1.85;}
+#screen-mushaf .mus-sr-txt mark{background:rgba(201,150,58,.28);color:inherit;
+  border-radius:3px;padding:0 1px;}
+/* تظليلُ الآية المقصودة على ورقة المصحف نفسها — لمسةٌ عابرة لا علامةٌ دائمة */
+#screen-mushaf .mus-page w.mus-hl{background:rgba(201,150,58,.34);border-radius:4px;}
 </style>
 
 <!-- ═══ فهرسُ السور ═══ بابُ القراءة الحرّة إلى المصحف -->
@@ -7310,6 +7325,13 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
         </svg>
       </button>
     </span>
+    <!-- شريطُ البحث — ظاهرٌ دائمًا، مكان أيقونة العدسة السابقة تمامًا -->
+    <div class="mus-search-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input type="search" id="musSearchInput" placeholder="" oninput="musSearchInput()" dir="rtl">
+    </div>
+    <div class="mus-search-results" id="musSearchResults"></div>
   </div>
   <div class="mus-resume" id="musResume" style="display:none;">
     <span class="mus-resume-txt" id="musResumeTxt">—</span>
@@ -7353,6 +7375,8 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
 <div class="screen hidden" id="screen-tasbih">
   <div class="topbar">
     <button class="back-btn" onclick="closeTasbih()">↩ الرئيسية</button>
+    <button type="button" class="back-btn" id="tsbShapeBtn" onclick="zxTasbihShapeToggle()"
+            aria-label="تبديل شكل اختيار الذكر">⇄ <span id="tsbShapeLabel">قوس الإبهام</span></button>
     <button type="button" class="htb-menu" onclick="openSettings()" aria-label="الإعدادات">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
         <path d="M3 8h18M3 16h18"/><circle cx="9" cy="8" r="2.4" fill="var(--card-bg)"/>
@@ -14726,7 +14750,8 @@ function musPaint(j){
       /* char محرفُ الخطّ، و text نصٌّ عاديّ — والرسمُ الصحيح بالأول */
       var g = w.char || w.text || '';
       var fam = w.font ? " style=\"font-family:'" + w.font + "','Amiri',serif\"" : '';
-      return '<w' + fam + '>' + musEsc(g) + '</w>';
+      var vk = w.verse_key ? ' data-vk="' + w.verse_key + '"' : '';
+      return '<w' + fam + vk + '>' + musEsc(g) + '</w>';
     }).join('');
     if(isSurah){ html += musBand(out); return; }
     html += '<div class="ln' + (isText ? '' : ' mid') + '">' + out + '</div>';
@@ -14744,6 +14769,11 @@ function musPaint(j){
   document.getElementById('musPageNo').textContent = 'صفحة ' + arNum(j.page || _musPage);
   musFit();
   musSlide();
+  /* طلبُ تظليلٍ معلَّق (من نتيجة بحثٍ) يُستهلَك هنا فور استقرار الصفحة */
+  if(_musPendingHL){
+    var hl = _musPendingHL; _musPendingHL = null;
+    musHighlightVerse(hl.c, hl.v);
+  }
 }
 
 /* ═══ تقليبُ الورق ═══
@@ -15183,6 +15213,182 @@ function musEdgeVerse(j, last){
   var sid = parseInt(pr[0], 10), aya = parseInt(pr[1], 10);
   var nm = (j.surahs || []).filter(function(x){ return x.id === sid; })[0];
   return { name: (nm && (nm.name_arabic || nm.name)) || ('سورة ' + sid), aya: aya };
+}
+
+/* ═══ البحث بالكلمات في كامل المصحف ═══
+   مصدران مستقلّان، لا أحدهما بديلٌ عن الآخر:
+   ١) نصُّ الصفحات نفسِه (QCF) الذي يقرؤه المصحفُ أصلًا — منه نعرف أيَّ
+      صفحةٍ تقع فيها كلُّ آية، فتُبنى منه خريطةُ الصفحات (ستّمئةٌ وأربعُ
+      نتيجاتٍ صغيرة، تُجلَب مرّةً واحدةً بتزامنٍ محدود ثم تُحفَظ في مفتاحها
+      الخاصّ، منفصلةً عن ذاكرة صفحات المصحف المحدودة بستّين صفحة).
+   ٢) نصُّ القرآن الصريح (لا حروف QCF الخاصّة بكلّ صفحة) من مستودع
+      fawazahmed0/quran-api العلنيّ (MIT، نسخةٌ موثّقةٌ من مصحف المدينة
+      عبر Tanzil) — إذ حروفُ QCF في منطقة استعمالٍ خاصّ لا تُقارَن
+      بالكتابة العاديّة، فلا يصلح البحثُ فيها مباشرة. */
+var MUS_TXT_URL = 'https://cdn.jsdelivr.net/gh/fawazahmed0/quran-api@1/editions/ara-quranuthmanihaf1.min.json';
+var MUS_PMAP_KEY = 'zahim_verse_page_map';
+var _musText = null;
+var _musPMap = null;
+var _musIndexBuilding = false;
+
+function musNormalizeAr(s){
+  return String(s || '')
+    .replace(/[\u064B-\u0652\u0670\u0640]/g, '')
+    .replace(/[إأآا]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه')
+    .replace(/[ؤئ]/g, 'ء');
+}
+function musLoadPMap(){
+  if(_musPMap) return _musPMap;
+  try{
+    var d = JSON.parse(localStorage.getItem(MUS_PMAP_KEY) || 'null');
+    if(Array.isArray(d) && d.length === 604){ _musPMap = d; return d; }
+  }catch(e){}
+  return null;
+}
+function musSavePMap(a){
+  _musPMap = a;
+  try{ localStorage.setItem(MUS_PMAP_KEY, JSON.stringify(a)); }catch(e){}
+}
+function musEdgeKey(j, last){
+  var key = null;
+  (j.lines || []).forEach(function(L){
+    (L.words || []).forEach(function(w){
+      if((w.type || 'word') !== 'word' || !w.verse_key) return;
+      if(!key || last) key = w.verse_key;
+    });
+  });
+  if(!key) return null;
+  var pr = key.split(':');
+  return { c: parseInt(pr[0],10), v: parseInt(pr[1],10) };
+}
+/* تُجلَب الصفحاتُ العشرُ في آنٍ واحدٍ كي لا تُغرَق الشبكة، ويُكتفى
+   بطرفَي كلّ صفحةٍ (أوّل آيةٍ وآخرها) — لا حاجةَ لبقيّة محتواها هنا. */
+function musBuildPMap(onProgress){
+  return new Promise(function(resolve){
+    var map = new Array(604), done = 0, next = 1, CONC = 10;
+    function worker(){
+      if(next > 604) return;
+      var n = next++;
+      musPageJson(n).then(function(j){
+        var first = musEdgeKey(j, false), last = musEdgeKey(j, true);
+        map[n-1] = { page:n,
+          fc: first ? first.c : 0, fv: first ? first.v : 0,
+          lc: last  ? last.c  : 0, lv: last  ? last.v  : 0 };
+      }).catch(function(){
+        map[n-1] = { page:n, fc:0, fv:0, lc:0, lv:0 };
+      }).then(function(){
+        done++;
+        if(onProgress) onProgress(done, 604);
+        if(next <= 604) worker();
+        else if(done === 604){ musSavePMap(map); resolve(map); }
+      });
+    }
+    for(var i = 0; i < CONC; i++) worker();
+  });
+}
+function musLoadText(){
+  if(_musText) return Promise.resolve(_musText);
+  return fetch(MUS_TXT_URL).then(function(r){ return r.json(); }).then(function(j){
+    _musText = (j.quran || []).map(function(x){
+      return { c:x.chapter, v:x.verse, t:x.text, n:musNormalizeAr(x.text) };
+    });
+    return _musText;
+  });
+}
+/* رقمُ الصفحة التي تقع فيها آيةٌ بعينها، بالمقارنة الترتيبيّة
+   (سورةٌ ثم آية) — ترتيبُ المصحف نفسُه، فلا حاجةَ لجدولٍ منفصل. */
+function musPageOf(c, v){
+  if(!_musPMap) return null;
+  for(var i = 0; i < _musPMap.length; i++){
+    var p = _musPMap[i];
+    if(!p || !p.lc) continue;
+    var afterStart = (c > p.fc) || (c === p.fc && v >= p.fv);
+    var beforeEnd  = (c < p.lc) || (c === p.lc && v <= p.lv);
+    if(afterStart && beforeEnd) return p.page;
+  }
+  return null;
+}
+/* يُحضَّر الفهرسُ بصمتٍ عند أوّل كتابةٍ في الشريط — لا رسالة تقدّمٍ
+   ظاهرة؛ النتائجُ تظهر من نفسها فور اكتمال التحضير إن كان المستخدمُ
+   لا يزال يكتب. */
+function musEnsureIndex(){
+  _musPMap = _musPMap || musLoadPMap();
+  var needPMap = !_musPMap, needText = !_musText;
+  if(!needPMap && !needText) return;
+  if(_musIndexBuilding) return;
+  _musIndexBuilding = true;
+  var p1 = needText ? musLoadText() : Promise.resolve(_musText);
+  var p2 = needPMap ? musBuildPMap(function(){}) : Promise.resolve(_musPMap);
+  Promise.all([p1, p2]).then(function(){
+    _musIndexBuilding = false;
+    musRunSearch();
+  }).catch(function(){
+    _musIndexBuilding = false;
+  });
+}
+function musHighlightRegex(q){
+  var chars = Array.prototype.slice.call(q.trim());
+  var pat = chars.map(function(ch){
+    return ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }).join('[\\u064B-\\u0652\\u0670]*');
+  try{ return new RegExp('(' + pat + ')', 'i'); }catch(e){ return null; }
+}
+var _musSearchT = null;
+function musSearchInput(){
+  musEnsureIndex();
+  clearTimeout(_musSearchT);
+  _musSearchT = setTimeout(musRunSearch, 220);
+}
+function musRunSearch(){
+  var inp = document.getElementById('musSearchInput');
+  var box = document.getElementById('musSearchResults');
+  if(!inp || !box) return;
+  var q = (inp.value || '').trim();
+  if(!q || q.length < 2){ box.classList.remove('on'); box.innerHTML = ''; return; }
+  if(!_musText || !_musPMap) return;   // لا يزال الفهرسُ قيد التحضير؛ لا نص لعرضه
+  var nq = musNormalizeAr(q);
+  var hits = [];
+  for(var i = 0; i < _musText.length && hits.length < 40; i++){
+    if(_musText[i].n.indexOf(nq) !== -1) hits.push(_musText[i]);
+  }
+  if(!hits.length){ box.classList.remove('on'); box.innerHTML = ''; return; }
+  var re = musHighlightRegex(q);
+  box.innerHTML = hits.map(function(h){
+    var pg = musPageOf(h.c, h.v);
+    var esc = musEsc(h.t);
+    var hl = re ? esc.replace(re, '<mark>$1</mark>') : esc;
+    return '<button type="button" class="mus-sr" onclick="musSearchGo(' + (pg||0) + ',' + h.c + ',' + h.v + ')">' +
+      '<div class="mus-sr-ref">سورة ' + arNum(h.c) + ' : ' + arNum(h.v) +
+        (pg ? ' · صفحة ' + arNum(pg) : '') + '</div>' +
+      '<div class="mus-sr-txt">' + hl + '</div></button>';
+  }).join('');
+  box.classList.add('on');
+}
+/* طلبُ تظليلٍ معلَّق — يُضبَط هنا، ويُستهلَك مرّةً واحدةً في نهاية
+   musPaint فور استقرار الصفحة المطلوبة. */
+var _musPendingHL = null;
+function musSearchGo(page, c, v){
+  if(!page) return;
+  var box = document.getElementById('musSearchResults');
+  if(box){ box.classList.remove('on'); box.innerHTML = ''; }
+  var inp = document.getElementById('musSearchInput');
+  if(inp) inp.value = '';
+  if(c && v) _musPendingHL = { c:c, v:v };
+  musLoad(page);
+}
+/* تظليلُ آيةٍ بعينها على الصفحة الحاليّة — بعد وصولك من نتيجة بحثٍ،
+   أو عند استدعائها مباشرةً. تخفُّ العلامةُ من نفسها بعد لحظة، فلا
+   تبقى أثرًا دائمًا يُربك القراءةَ المعتادة. */
+function musHighlightVerse(c, v){
+  var key = c + ':' + v;
+  var page = document.getElementById('musPage');
+  if(!page) return;
+  var els = page.querySelectorAll('w[data-vk="' + key + '"]');
+  if(!els.length) return;
+  els.forEach(function(el){ el.classList.add('mus-hl'); });
+  var first = els[0];
+  if(first && first.scrollIntoView) first.scrollIntoView({ block:'center', behavior:'smooth' });
+  setTimeout(function(){ els.forEach(function(el){ el.classList.remove('mus-hl'); }); }, 2600);
 }
 
 function fillDaySpan(){
@@ -15868,6 +16074,7 @@ function tsbPaint(){
 
   var wheelOn = tsbShape() === 'reel';   /* المفتاحُ المحفوظ باقٍ لئلّا يضيع اختيارُ من سبق */
   document.body.classList.toggle('tsb-wheel-on', wheelOn);
+  try{ if(typeof zxPaintTsbShape === 'function') zxPaintTsbShape(); }catch(e){}
   var wh = document.getElementById('tsbWheel');
   if(wh) wh.hidden = !wheelOn;
   if(wheelOn){
@@ -20209,27 +20416,35 @@ else boot();
 #screen-mihrab.hidden{
   transform:translateX(-50%) translateY(10px) !important;}
 
-/* ══ ليالي العشر: كلُّها تُلمس ══ */
+/* ══ ليالي العشر: قناديلُ لا مربّعات ══
+   كلُّ ليلةٍ عمودٌ في شبكةٍ ثابتةٍ من عشرة (١٠ في صفٍّ دائمًا)،
+   فقنديلُها دائريٌّ يملأ عرضَ عموده (width:100%) ويبقى مربّعًا
+   بـaspect-ratio بدل عرضٍ ثابتٍ بالبكسل يكسر الشبكة. */
 .zr-a-n button{
-  width:31px;height:31px;border-radius:10px;display:grid;place-items:center;
-  font:inherit;font-size:13px;font-weight:800;cursor:pointer;
+  width:100%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+  position:relative;
+  font:inherit;font-size:12px;font-weight:800;cursor:pointer;
   color:var(--muted);background:rgba(255,255,255,.5);
   border:1px solid rgba(201,150,58,.24);
   font-variant-numeric:tabular-nums;
   transition:transform .12s ease, background .16s ease, border-color .16s ease;
 }
-.zr-a-n button:active{ transform:scale(.988); }
+.zr-a-n button:active{ transform:scale(.92); }
 /* الوتريّةُ ذهبٌ: مظانُّ ليلة القدر لا حصرًا للعمل */
 .zr-a-n button.w{ color:#3E2D10;
   background:linear-gradient(150deg,#E8C070,#C9963A);
   border-color:rgba(255,243,218,.45); }
 .zr-a-n button.now{ outline:2px solid var(--green,#14304F);outline-offset:2px; }
-/* المُسجَّلةُ قيامًا: علامةٌ لا لون — فلا تزاحم الذهبَ معناه */
+/* المُسجَّلةُ قيامًا: توهّجٌ خافتٌ حول القنديل لا نقطةٌ صغيرة —
+   فتُقرأ الليلةُ «أُضيئت» لا مجرّد وُسمت. bottom بالنسبة المئويّة
+   يصحّ مهما صغر القنديلُ أو كبر. */
+.zr-a-n button.on{ box-shadow:0 0 0 2px rgba(232,192,112,.55),
+  0 0 10px rgba(232,192,112,.45); }
 .zr-a-n button.on::after{
-  content:'';position:absolute;width:5px;height:5px;border-radius:50%;
-  background:currentColor;transform:translateY(11px);opacity:.8;
+  content:'';position:absolute;bottom:-4px;left:50%;
+  width:4px;height:4px;border-radius:50%;
+  background:#C9963A;transform:translateX(-50%);opacity:.9;
 }
-.zr-a-n button{ position:relative; }
 .zr-a-n2{ font-size:10px;color:var(--muted);text-align:center;
   margin-top:6px;line-height:1.7;opacity:.9; }
 body.zr-ashr-on .zr-a-n button{ color:#D9C79C;background:rgba(255,255,255,.06);
@@ -20239,6 +20454,9 @@ body.zr-ashr-on .zr-a-n button.w{ color:#3E2D10;
   border-color:rgba(255,243,218,.62);
   box-shadow:0 0 14px rgba(232,192,112,.36); }
 body.zr-ashr-on .zr-a-n button.now{ outline-color:#FFF3DA; }
+body.zr-ashr-on .zr-a-n button.on{ box-shadow:0 0 0 2px rgba(255,233,176,.6),
+  0 0 12px rgba(255,233,176,.5); }
+body.zr-ashr-on .zr-a-n button.on::after{ background:#FFE9B0; }
 body.zr-ashr-on .zr-a-n2{ color:#A9A092; }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -20620,7 +20838,7 @@ global.zaToggle=function(){
   try{ localStorage.setItem(KEY_ON,next); }catch(e){}
   zaLabel();
   if(next==='0'){ global.zaStop(); }
-  else { global.zaPreview(12); }
+  else { global.zaPreview(200); }
   try{ if(typeof showToast==='function')
         showToast(next==='1' ? T('الأذان يعمل') : T('الأذان صامت')); }catch(e){}
 };
@@ -20657,7 +20875,7 @@ global.zaPick=function(v){
       /* معاينةُ صوتٍ بعينه: نمرّ بصلاةٍ نصيبُها ذلك الصوت */
       var k = v === 'auto' ? nextKey()
             : (v === '1' ? 'dhuhr' : v === '2' ? 'asr' : 'maghrib');
-      global.zaPreview(12, k);
+      global.zaPreview(200, k);
     }, 200);
   }
 };
@@ -20669,7 +20887,7 @@ global.zaVoiceToggle=function(){
 /* معاينةُ الفجر: تُمرَّر المفتاحُ صراحةً، وإلّا وقعت على أذان الصلوات */
 global.zaPreviewFajr=function(){
   unlock();
-  setTimeout(function(){ global.zaPreview(14, 'fajr'); }, 200);
+  setTimeout(function(){ global.zaPreview(200, 'fajr'); }, 200);
 };
 global.zaRefreshLabel=zaLabel;
 /* للفحص: أيُّ ملفٍّ لأيّ صلاةٍ في الوضع الحاليّ */
@@ -20964,13 +21182,15 @@ window.zxTasbihShapeToggle = function(){
         showToast(next === 'arc' ? 'قوس الإبهام' : 'عجلة الأذكار'); }catch(e){}
 };
 window.zxPaintTsbShape = function(){
-  var el = document.getElementById('zxTsbShape');
-  if(!el) return;
   var cur = 'arc';
   try{ cur = localStorage.getItem('zahim_tasbih_shape') === 'reel' ? 'reel' : 'arc'; }catch(e){}
   var t = cur === 'arc' ? 'قوس الإبهام' : 'عجلة الأذكار';
   try{ if(window.ZahimI18n && ZahimI18n.t) t = ZahimI18n.t(t); }catch(e){}
-  el.textContent = t;
+  var el = document.getElementById('zxTsbShape');
+  if(el) el.textContent = t;
+  /* الزرُّ نفسُه على شاشة التسبيح — لا في الإعدادات فقط */
+  var el2 = document.getElementById('tsbShapeLabel');
+  if(el2) el2.textContent = t;
 };
 function zxBootTsbShape(){
   zxPaintTsbShape();
