@@ -1336,9 +1336,6 @@ body.theme-dark #home-bg > .home-topbar{
   .ros-bars{ transform:scale(.88);transform-origin:center right; }
   .compass-station-label,#stationTitle{margin-top:2px !important;}
 }
-@media (max-height:900px){
-  .ros-card{padding:9px 12px !important;}
-}
 @media (max-height:800px){
   #home-bg{padding-bottom:8px;}
   .home-tagline{font-size:20px;margin:2px 16px 6px;}
@@ -18896,7 +18893,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-09-24-1930';
+  window.ZAHIM_STAMP = 'zahim-2026-10-01-0900';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
