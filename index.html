@@ -1908,6 +1908,22 @@ html:not([lang="ar"]) .matn::before{
   .home-tagline{ font-size:17px !important;margin:1px 16px 3px !important; }
   #home-bg{ padding-bottom:4px !important; }
 }
+/* الجمعةُ وحدها تضيف شريط الصلاة على النبيّ فوق ما تحمله سائرُ
+   الأيّام — فإن اجتمع ذلك مع شاشةٍ متوسّطة الارتفاع (أعلى من حدّ
+   الميدان الصغير ٦٢٠px، لكن لا تتّسع لشريطٍ إضافيّ وميدانٍ كبير معًا)
+   يُضغط الميدانُ معه، لا يوم الجمعة وحده كما كان، بل بالاشتراك مع
+   ضيق الشاشة. الأيّامُ العاديّة والشاشاتُ الطويلة لا تتأثّران. */
+@media (max-height:820px){
+  #wird-circles-wrap:has(#slwBar:not([hidden])) ~ .ros-card{
+    padding:9px 12px !important;margin-top:4px !important;
+  }
+  #wird-circles-wrap:has(#slwBar:not([hidden])) ~ .ros-card .ros{
+    width:60px !important;height:60px !important;
+  }
+  #wird-circles-wrap:has(#slwBar:not([hidden])) ~ .ros-card .ros-state{
+    font-size:15px !important;
+  }
+}
 
 /* ═══ سطرُ المطوِّر ═══
    كان أثقلَ ممّا تحته: حجمٌ أكبرُ ووزنٌ أغلظ، فبدا ناشزًا بين
@@ -7102,7 +7118,11 @@ body.theme-dark #screen-mushaf .mus-chev{
     linear-gradient(160deg, rgba(36,60,88,.62), rgba(18,34,54,.46));
   box-shadow:0 4px 11px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.18);}
 #screen-mushaf .mus-edge:active .mus-chev{opacity:1;}
+/* السهمان ظاهران في الوضعين معًا — العاديّ وملءِ الشاشة — فلا يبقى
+   التنقّلُ على السحب وحده، إذ لا يعمل على حاسوبٍ بلا لمس. أخفتُ قليلًا
+   في ملء الشاشة (٣٥٪ بدل ٥٠٪) حتى لا يُزاحما صفاءَ القراءة. */
 #screen-mushaf:not(.bare) .mus-chev{opacity:.5;}
+#screen-mushaf.bare .mus-chev{opacity:.35;}
 #screen-mushaf.bare .mus-edge{width:26%;}
 
 /* ═══ وقفتُ هنا ═══ */
@@ -7243,6 +7263,14 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
   box-shadow:0 4px 12px rgba(20,48,79,.24), inset 0 1px 0 rgba(255,255,255,.28);
   color:#FFFDF7;font-family:inherit;font-size:12px;font-weight:800;
   padding:7px 14px;cursor:pointer;white-space:nowrap;}
+#screen-mushaf .mus-wird.mus-wird-nudge{animation:musWirdNudge .5s ease;}
+@keyframes musWirdNudge{
+  0%,100%{transform:translateX(0);}
+  25%{transform:translateX(-5px);} 75%{transform:translateX(5px);}
+}
+@media (prefers-reduced-motion: reduce){
+  #screen-mushaf .mus-wird.mus-wird-nudge{animation:none;}
+}
 
 /* ═══ شريطُ البحث بالكلمات — ظاهرٌ دائمًا، لا خلف أيقونة ═══ */
 #screen-mushaf .mus-search-bar{display:flex;align-items:center;gap:8px;margin-top:7px;
@@ -12487,9 +12515,11 @@ function zxPrayerFresh(date){
 function refreshPrayerStation(){
   try{
     const fresh = zxPrayerFresh(new Date());
+    const jn = function(key, base){ try{ return zxPrayerName(key, base); }catch(e){ return base; } };
     if(fresh){
-      COMPASS_STAGES[0].label = fresh.name;
-      COMPASS_STAGES[0].stageName = 'أذكار ما بعد ' + fresh.name;
+      var freshName = jn(fresh.key, fresh.name);
+      COMPASS_STAGES[0].label = freshName;
+      COMPASS_STAGES[0].stageName = 'أذكار ما بعد ' + freshName;
       if(PRAYER_ICON[fresh.key]) COMPASS_STAGES[0].icon = PRAYER_ICON[fresh.key];
       return;
     }
@@ -12498,8 +12528,9 @@ function refreshPrayerStation(){
        فيبقى «العشاء» على الميناء الليلَ كلَّه، والسطرُ تحته يقول «الفجر».
        اسمان على شاشةٍ واحدة. فصارا واحدًا: القادمة. */
     const np = ZahimDay.nextPrayer(new Date());
-    COMPASS_STAGES[0].label = np.name;
-    COMPASS_STAGES[0].stageName = 'القادمة ' + np.name;
+    var npName = jn(np.key, np.name);
+    COMPASS_STAGES[0].label = npName;
+    COMPASS_STAGES[0].stageName = 'القادمة ' + npName;
     if(PRAYER_ICON[np.key]) COMPASS_STAGES[0].icon = PRAYER_ICON[np.key];
   }catch(e){}
 }
@@ -14999,7 +15030,22 @@ function musLoad(n){
     .catch(function(){ musOffline(n); });
 }
 
-function mushafGo(step){ musLoad(_musPage + step); }
+/* لا تقدّمَ إلى ما بعد آخر صفحة الوِرد المحدَّد دون تسجيل إتمامه —
+   كان يُسمح بالمتابعة صامتًا إلى صفحاتٍ خارج الوِرد (وِرد غدٍ مثلًا)
+   بلا علمٍ ولا تسجيل. التراجعُ للخلف (step<0) يبقى حرًّا دائمًا. */
+function mushafGo(step){
+  if(step > 0 && _musFrom && _musTo && _musPage >= _musTo){
+    var bar = document.getElementById('musWird');
+    if(bar){
+      bar.classList.remove('mus-wird-nudge'); void bar.offsetWidth;
+      bar.classList.add('mus-wird-nudge');
+      bar.scrollIntoView({ block:'nearest', behavior:'smooth' });
+    }
+    try{ if(navigator.vibrate) navigator.vibrate([10,40,10]); }catch(e){}
+    return;
+  }
+  musLoad(_musPage + step);
+}
 
 /* تلميحةٌ أولَ مرّة: طبقةٌ عائمة تظهر وتنطفئ ولا تحرّك سطرًا */
 var MUS_HINT = 'zahim_mushaf_hint';
@@ -15042,6 +15088,7 @@ function musTurn(step){
   var h = document.getElementById('musHint');
   if(h) h.classList.remove('show');
   if(_turning) return;
+  if(step > 0 && _musFrom && _musTo && _musPage >= _musTo){ mushafGo(step); return; }
   musBeginTurn(step, function(){ mushafGo(step); });
 }
 
@@ -15098,9 +15145,11 @@ function musSetMarks(a){
   try{ localStorage.setItem(MUS_BM, JSON.stringify(a.slice(0, 30))); }catch(e){}
 }
 function musToggleMark(){
-  var a = musMarks(), i = a.indexOf(_musPage);
-  if(i === -1){ a.push(_musPage); a.sort(function(x,y){ return x - y; }); }
-  else a.splice(i, 1);
+  /* علامةٌ واحدةٌ — «وصلتُ هنا» — لا مجموعةٌ تتراكم. علامةٌ جديدةٌ
+     تُنسي القديمة، ولمسُ الصفحة المعلَّمة نفسِها يزيل العلامةَ كليًّا. */
+  var a = musMarks();
+  var alreadyOnlyThis = (a.length === 1 && a[0] === _musPage);
+  a = alreadyOnlyThis ? [] : [_musPage];
   musSetMarks(a);
   musDrawMarks();
 }
@@ -15111,7 +15160,7 @@ function musDrawMarks(){
   if(!bar) return;
   if(!a.length){ bar.style.display = 'none'; bar.innerHTML = ''; return; }
   bar.style.display = 'flex';
-  bar.innerHTML = '<b>علاماتك</b>' + a.map(function(n){
+  bar.innerHTML = '<b>علامتك</b>' + a.map(function(n){
     return '<button class="mus-mark' + (n === _musPage ? ' cur' : '')
          + '" type="button" onclick="musLoad(' + n + ')">' + arNum(n) + '</button>';
   }).join('');
@@ -15426,10 +15475,36 @@ function musWird(){
 }
 
 function musDone(){
-  try{ if(typeof markQuranDayDone === 'function') markQuranDayDone(); }catch(e){}
+  /* اليومُ الذي يُسجَّل تامًّا هو ما تدلّ عليه صفحاتُ الوِرد المفتوحة
+     فعلًا (_musFrom)، لا اليومَ «الحاليّ» بحساب التقويم — فإن كان
+     القارئُ يقرأ سابقًا ليومه بيومٍ أو أكثر، يُسجَّل اليومُ الصحيح. */
+  var dayIdx = null, nextFrom = 0, nextTo = 0, planDone = false;
+  try{
+    if(_quranPlan && _musFrom){
+      dayIdx = Math.max(0, Math.round((_musFrom - 1) / _quranPlan.pagesPerDay));
+      if(typeof markQuranDayDone === 'function') markQuranDayDone(dayIdx);
+      var nextIdx = dayIdx + 1;
+      if(nextIdx < _quranPlan.days){
+        nextFrom = (nextIdx * _quranPlan.pagesPerDay) + 1;
+        nextTo = Math.min(nextFrom + _quranPlan.pagesPerDay - 1, 604);
+      } else {
+        planDone = true;
+      }
+    } else if(typeof markQuranDayDone === 'function'){
+      markQuranDayDone();
+    }
+  }catch(e){}
+
   _musFrom = _musTo = 0;
   musWird();
-  closeMushaf();
+
+  if(nextFrom && nextTo){
+    /* وِردُ الغد يُفتح في المصحف نفسِه مباشرةً — رحلةٌ متّصلة لا توقّف */
+    openMushaf(nextFrom, nextTo);
+  } else {
+    if(planDone){ try{ showToast('تقبّل اللهُ ختمتك'); }catch(e){} }
+    closeMushaf();
+  }
 }
 
 function openMushaf(from, to){
@@ -15512,8 +15587,8 @@ document.addEventListener('change', function(e){
   if(e.target && e.target.id === 'musJump') musLoad(parseInt(e.target.value, 10) || 1);
 });
 
-function markQuranDayDone(){
-  const idx = getCurrentQuranDay();
+function markQuranDayDone(explicitIdx){
+  const idx = (typeof explicitIdx === 'number') ? explicitIdx : getCurrentQuranDay();
   if(!_quranDone.includes(idx)){
     _quranDone.push(idx);
     quranSave();
@@ -18900,7 +18975,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-01-1015';
+  window.ZAHIM_STAMP = 'zahim-2026-10-02-1610';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
