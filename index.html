@@ -17732,6 +17732,9 @@ function hex2rgb(h){
 
   /* نافذةُ ما بين الأذان والإقامة — تُقرأ من البوصلة لترسم قوسَ العدّ */
   window.zxIqamaWindow = function(){
+    /* إن لم يُبنَ الجدولُ بعد (أوّل استدعاءٍ قبل أيّ تحديثٍ آخر)،
+       يُبنى الآن — فلا تغيب الدائرةُ بانتظار تحديثٍ من مكانٍ آخر. */
+    if(!T || T.fajr == null) refreshTimes();
     var d = new Date(), now = d.getHours() * 60 + d.getMinutes() + d.getSeconds() / 60;
     var keys = ['fajr','dhuhr','asr','maghrib','isha'];
     for(var i = 0; i < keys.length; i++){
@@ -18975,7 +18978,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-02-1610';
+  window.ZAHIM_STAMP = 'zahim-2026-10-02-1815';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -19004,11 +19007,16 @@ window.addEventListener('popstate', function(){
     var el = document.getElementById('zxVer');
     if(!el) return;
     var v = (window.ZAHIM_STAMP || '').replace(/^zahim-/, '');
-    var m = v.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    /* الخاتمُ يحمل الساعة والدقيقة أصلًا (zahim-YYYY-MM-DD-HHMM)،
+       لكنّ العرض كان يقتصّ التاريخ فقط ويُسقط الوقت — فلا يميّز
+       صاحبُه بين نسختين من اليوم نفسِه. الآن يظهران معًا. */
+    var m = v.match(/^(\d{4})-(\d{2})-(\d{2})(?:-(\d{2})(\d{2}))?/);
     /* تحويلٌ محلّيّ: toAr تعيش في نطاقٍ آخر، ونداؤها من هنا يرمي */
     var A = function(x){ return String(x).replace(/[0-9]/g, function(d){
       return '٠١٢٣٤٥٦٧٨٩'[+d]; }); };
-    el.textContent = m ? (A(m[3]) + '/' + A(m[2]) + '/' + A(m[1])) : (v || '—');
+    if(!m){ el.textContent = v || '—'; return; }
+    var dateStr = A(m[3]) + '/' + A(m[2]) + '/' + A(m[1]);
+    el.textContent = (m[4] != null) ? (dateStr + ' · ' + A(m[4]) + ':' + A(m[5])) : dateStr;
   };
   window.zxPaintWho = function(){
     var el = document.getElementById('zxWho');
@@ -21190,6 +21198,12 @@ window.zxBackToGrid = function(){
       var d = new Date(), n = d.getHours() * 60 + d.getMinutes();
       var Tm = ZahimDay.times(d);
       var r = window.zxNextLine(Tm, n);
+      /* بين الأذان والإقامة: خطُّ الإقامة أسفل البوصلة (zxIqamaLine)
+         يعرض العدَّ نفسَه بتسميةٍ صحيحة («الإقامة بعد»). فلو عرض هذا
+         السطرُ أيضًا «فلانة بعد ١٣ دقيقة» في نفس اللحظة، بدا الأمرُ
+         وكأنّ الأذان لم يُؤذَّن بعد — وهو عدُّ الإقامة نفسُه بتسميةٍ
+         موهِمة. فيُترك هذا السطرُ فارغًا في هذه المرحلة بعينها. */
+      if(r.mode === 'adhan'){ el.innerHTML = ''; return; }
       var name = ZahimDay.PRAYER_NAMES[r.key] || r.key;
       try{ if(r.key === 'dhuhr' && typeof zxIsJumua === 'function' && zxIsJumua()) name = 'الجُمُعة'; }catch(e){}
       el.innerHTML = '<b>' + T(name) + '</b>' +
