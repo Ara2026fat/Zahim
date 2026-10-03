@@ -17130,21 +17130,13 @@ function showToast(msg){
     <p class="zx-hint">ما يخصّ التطبيقَ نفسَه: هويّتك فيه، وأثرُ أيّامك، وطريقُ التواصل.</p>
     <div class="zx-row" onclick="zxEditWho()">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="3.4"/><path d="M5 19.4c0-3.3 3.1-5.4 7-5.4s7 2.1 7 5.4"/></svg></span><span class="zx-row-label">اسمك ودولتك<i>يظهران في التحيّة وحدها</i></span><span class="zx-row-value" id="zxWho">—</span></div>
-      <!-- ختمُ الإصدار: ليُعرف تاريخُ النسخة التي بين يديك -->
-      <div class="zx-row">
-        <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.6V12l3 1.8"/></svg></span><span class="zx-row-label">إصدار زاحِم<i>تاريخُ النسخة التي بين يديك</i></span><span class="zx-row-value" id="zxVer">—</span>
-      </div>
       <!-- تنزيلٌ صريحٌ لا صامت: يرى المستخدمُ أنّ هناك شيئًا يُنزَّل
            لتعمل ميزتا البحث والآيات المتشابهة فورًا، بدل انتظارٍ غير
            مفسَّرٍ أوّل مرّةٍ يلمس فيها العلامة داخل المصحف. -->
-      <div class="zx-row" onclick="zxDownloadExtras()">
-        <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0 3.4-3.4M12 14 8.6 10.6"/><path d="M5 17.6h14"/></svg></span><span class="zx-row-label">بيانات البحث والمتشابهات<i>تُستخدَم للبحث بالكلمات وعرض الآيات المتشابهة — نزّلها الآن ليعملا فورًا</i></span><span class="zx-row-value" id="zxExtrasStatus">—</span>
-      </div>
-      <!-- تنزيلٌ كاملٌ اختياريّ: المصحفُ كلُّه (٦٠٤ صفحة وخطوطُها) على
-           الجهاز دفعةً واحدة، فتُقرأ كلُّ صفحةٍ بلا اتصالٍ لاحقًا —
-           بمعزلٍ عن ذاكرة آخر ستّين صفحةً المحدودة أصلًا. -->
-      <div class="zx-row" onclick="zxDownloadMushafFull()">
-        <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4.5h8l4 4v11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-14a1 1 0 0 1 1-1z"/><path d="M14 4.5V9h4"/></svg></span><span class="zx-row-label">المصحفُ كاملًا بلا اتصال<i>٦٠٤ صفحة — تنزيلٌ واحدٌ يكفي كلَّ قراءةٍ لاحقة</i></span><span class="zx-row-value" id="zxMushafStatus">—</span>
+      <!-- بطاقةٌ واحدةٌ تجمع تنزيلَي المصحف كاملًا وبيانات البحث
+           والمتشابهات معًا — كانا بطاقتين فشغلا خانةً كاملةً زائدة. -->
+      <div class="zx-row" onclick="zxDownloadAll()">
+        <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0 3.4-3.4M12 14 8.6 10.6"/><path d="M5 17.6h14"/></svg></span><span class="zx-row-label">تنزيلاتٌ اختياريّة<i>المصحفُ كاملًا (٦٠٤ صفحة) وبياناتُ البحث والمتشابهات — تعمل بلا اتصال فورًا</i></span><span class="zx-row-value" id="zxAllDLStatus">—</span>
       </div>
       <!-- مِقودُ رمضان: التقويمُ الهجريُّ يختلف يومًا بين البلدان،
            فيبدأ الوضعُ آليًّا ويُعطى صاحبُه ما يُقدّمُه أو يُؤخّره. -->
@@ -17164,8 +17156,10 @@ function showToast(msg){
           <rect x="6.4" y="2.6" width="11.2" height="18.8" rx="2.4"/><path d="M10.6 18.6h2.8"/></svg>
       </span>
       <!-- حُذفت «يعمل دون إنترنت»: لا أحدَ يمسك جوّالًا بلا شبكة،
-           وهي تناقض التحديثَ الذي يأتي منها. -->
-      <span class="zx-row-label">التطبيق<i>على شاشتك كأيّ تطبيق</i></span>
+           وهي تناقض التحديثَ الذي يأتي منها.
+           تاريخُ الإصدار مدمَجٌ هنا الآن (كان بطاقةً مستقلّة) — لا
+           يُلمس زرُّ التثبيت لأنّ هذا سطرٌ فرعيٌّ لا هدفَ نقرٍ آخر. -->
+      <span class="zx-row-label">التطبيق<i>على شاشتك كأيّ تطبيق · إصدار <span id="zxVer">—</span></i></span>
       <span class="zx-row-value" id="zxInstallState">—</span>
     </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(openInsightsScreen, 300);">
@@ -19241,7 +19235,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-03-2300';
+  window.ZAHIM_STAMP = 'zahim-2026-10-03-2330';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -19281,110 +19275,91 @@ window.addEventListener('popstate', function(){
     var dateStr = A(m[3]) + '/' + A(m[2]) + '/' + A(m[1]);
     el.textContent = (m[4] != null) ? (dateStr + ' · ' + A(m[4]) + ':' + A(m[5])) : dateStr;
   };
-  window.zxPaintExtrasStatus = function(){
-    var el = document.getElementById('zxExtrasStatus');
-    if(!el) return;
-    if(window._zxExtrasDownloading) return;   // تقدّمٌ جارٍ — لا يُكتب فوقه
-    try{ if(typeof musLoadPMap === 'function') musLoadPMap(); }catch(e){}   // يُزامن _musPMap مع المخزَّن محليًّا
-    var pmOk = !!(typeof _musPMap !== 'undefined' && _musPMap);
-    var mtsOk = !!(typeof _mtsGroups !== 'undefined' && _mtsGroups);
-    el.textContent = (pmOk && mtsOk) ? 'محمَّلٌ ✓' : 'نزّل الآن';
-  };
-  /* تنزيلٌ صريحٌ: فهرسُ أرقام الصفحات (٦٠٤ طلبًا صغيرًا) وبيانات
-     الآيات المتشابهة (ملفٌّ واحد) معًا، بتقدّمٍ مرئيٍّ مجموع. */
-  window.zxDownloadExtras = function(){
-    var el = document.getElementById('zxExtrasStatus');
-    if(window._zxExtrasDownloading) return;
+  /* بطاقةٌ واحدةٌ تجمع ثلاثة عناصر: فهرسُ أرقام الصفحات، بياناتُ
+     الآيات المتشابهة، والمصحفُ كاملًا — بحالةٍ وتقدّمٍ موحَّدين. */
+  window.zxPaintAllStatus = function(){
+    var el = document.getElementById('zxAllDLStatus');
+    if(!el || window._zxAllDownloading) return;
     try{ if(typeof musLoadPMap === 'function') musLoadPMap(); }catch(e){}
     var pmOk = !!(typeof _musPMap !== 'undefined' && _musPMap);
     var mtsOk = !!(typeof _mtsGroups !== 'undefined' && _mtsGroups);
-    if(pmOk && mtsOk){ if(el) el.textContent = 'محمَّلٌ ✓'; return; }
-    window._zxExtrasDownloading = true;
-    if(el) el.textContent = 'جارٍ التنزيل… ٠٪';
-    var pmDone = pmOk ? 604 : 0, mtsDone = mtsOk ? 1 : 0, total = 605;
-    function paint(){
-      var pct = Math.round(((pmDone + mtsDone) / total) * 100);
-      if(el) el.textContent = 'جارٍ التنزيل… ' + pct + '٪';
+    if(!window.indexedDB){
+      el.textContent = pmOk && mtsOk ? 'جزئيًّا ✓' : 'نزّل الآن';
+      return;
     }
-    paint();
-    var p1 = pmOk ? Promise.resolve() :
-      musBuildPMap(function(done){ pmDone = done; paint(); });
-    var p2 = mtsOk ? Promise.resolve() :
-      (typeof mtsEnsureIndex === 'function' ? (function(){
-        mtsEnsureIndex();
-        return new Promise(function(resolve){
-          var check = setInterval(function(){
-            if(typeof _mtsGroups !== 'undefined' && _mtsGroups){
-              clearInterval(check); mtsDone = 1; paint(); resolve();
-            }
-          }, 300);
-        });
-      })() : Promise.resolve());
-    Promise.all([p1, p2]).then(function(){
-      window._zxExtrasDownloading = false;
-      if(el) el.textContent = 'محمَّلٌ ✓';
-    }).catch(function(){
-      window._zxExtrasDownloading = false;
-      if(el) el.textContent = 'تعذّر التنزيل — حاول مجدّدًا';
-    });
-  };
-  window.zxPaintMushafStatus = function(){
-    var el = document.getElementById('zxMushafStatus');
-    if(!el || window._zxMushafDownloading) return;
-    if(!window.indexedDB){ el.textContent = 'غيرُ متاحٍ على هذا المتصفّح'; return; }
     el.textContent = '…';
     musIdbCount().then(function(n){
-      el.textContent = (n >= 604) ? 'محمَّلٌ ✓' : 'نزّل الآن';
+      var mushafOk = n >= 604;
+      el.textContent = (pmOk && mtsOk && mushafOk) ? 'محمَّلٌ ✓' :
+        ((pmOk || mtsOk || n > 0) ? 'جزئيًّا — أكمل التنزيل' : 'نزّل الآن');
     });
   };
-  /* تنزيلٌ كاملٌ: ٦٠٤ صفحةٍ (تزامنٌ محدودٌ) ثم خطوطُها المجمَّعة من
-     كلّ الصفحات — تخزَّن في IndexedDB، منفصلةً عن ذاكرة آخر ستّين
-     صفحةً المحدودة أصلًا، فلا تُطرَد أبدًا. */
-  window.zxDownloadMushafFull = function(){
-    var el = document.getElementById('zxMushafStatus');
-    if(window._zxMushafDownloading) return;
-    if(!window.indexedDB){ if(el) el.textContent = 'غيرُ متاحٍ على هذا المتصفّح'; return; }
+  window.zxDownloadAll = function(){
+    var el = document.getElementById('zxAllDLStatus');
+    if(window._zxAllDownloading) return;
+    window._zxAllDownloading = true;
+    try{ if(typeof musLoadPMap === 'function') musLoadPMap(); }catch(e){}
+    var pmOk = !!(typeof _musPMap !== 'undefined' && _musPMap);
+    var mtsOk = !!(typeof _mtsGroups !== 'undefined' && _mtsGroups);
+    var fontSet = {};
     musIdbCount().then(function(have){
-      if(have >= 604){ if(el) el.textContent = 'محمَّلٌ ✓'; return; }
-      window._zxMushafDownloading = true;
-      var done = have, total = 604, fontSet = {};
-      function paint(){ if(el) el.textContent = 'جارٍ تنزيل المصحف… ' + Math.round(done / total * 100) + '٪'; }
+      var mushafDone = have, mushafTotal = window.indexedDB ? 604 : 0;
+      var pmDone = pmOk ? 604 : 0, mtsDone = mtsOk ? 1 : 0;
+      var total = 604 /*pmap*/ + 1 /*mts*/ + mushafTotal;
+      function paint(){
+        var pct = Math.round(((pmDone + mtsDone + mushafDone) / total) * 100);
+        if(el) el.textContent = 'جارٍ التنزيل… ' + pct + '٪';
+      }
       paint();
-      var next = 1, CONC = 8, active = 0, finished = false;
-      new Promise(function(resolve){
+      var pPM = pmOk ? Promise.resolve() : musBuildPMap(function(done){ pmDone = done; paint(); });
+      var pMts = mtsOk ? Promise.resolve() :
+        (typeof mtsEnsureIndex === 'function' ? (function(){
+          mtsEnsureIndex();
+          return new Promise(function(resolve){
+            var check = setInterval(function(){
+              if(typeof _mtsGroups !== 'undefined' && _mtsGroups){
+                clearInterval(check); mtsDone = 1; paint(); resolve();
+              }
+            }, 300);
+          });
+        })() : Promise.resolve());
+      var pMushaf = (!window.indexedDB || have >= 604) ? Promise.resolve() : new Promise(function(resolve){
+        var next = 1, CONC = 8, active = 0, finished = false;
         function settle(){ if(!finished && next > 604 && active === 0){ finished = true; resolve(); } }
         function tryFill(){
           while(active < CONC && next <= 604){
             (function(n){
               active++;
               musIdbGet(n).then(function(already){
-                if(already){ done++; paint(); active--; settle(); tryFill(); return; }
+                if(already){ mushafDone++; paint(); active--; settle(); tryFill(); return; }
                 musFetchJSON(n).then(function(j){
                   (j.lines || []).forEach(function(L){
                     (L.words || []).forEach(function(w){ if(w.font) fontSet[w.font] = 1; });
                   });
                   return musIdbPut(n, j);
                 }).catch(function(){}).then(function(){
-                  done++; paint(); active--; settle(); tryFill();
+                  mushafDone++; paint(); active--; settle(); tryFill();
                 });
               });
             })(next++);
           }
         }
         tryFill();
-      }).then(function(){
-        if(el) el.textContent = 'جارٍ تنزيل الخطوط…';
+      });
+      Promise.all([pPM, pMts, pMushaf]).then(function(){
         var names = Object.keys(fontSet);
+        if(!names.length){ return; }
+        if(el) el.textContent = 'جارٍ تنزيل الخطوط…';
         return Promise.all(names.map(function(nm){
           return fetch(MUS_CDN + '/' + nm + '_W.woff2').catch(function(){
             return fetch(MUS_CDN + '/' + nm + '.woff2').catch(function(){});
           });
         }));
       }).then(function(){
-        window._zxMushafDownloading = false;
+        window._zxAllDownloading = false;
         if(el) el.textContent = 'محمَّلٌ ✓';
       }).catch(function(){
-        window._zxMushafDownloading = false;
+        window._zxAllDownloading = false;
         if(el) el.textContent = 'تعذّر التنزيل — حاول مجدّدًا';
       });
     });
@@ -21466,8 +21441,7 @@ window.zxTile = function(key){
   /* ختمُ الإصدار يُرسم عند فتح لوحته لا عند الإقلاع وحدَه */
   if(key === 'about'){ try{ zxPaintVer(); }catch(e){}
                        try{ zrPaintShift(); }catch(e){}
-                       try{ zxPaintExtrasStatus(); }catch(e){}
-                       try{ zxPaintMushafStatus(); }catch(e){} }
+                       try{ zxPaintAllStatus(); }catch(e){} }
   try{ zxTileify(document.getElementById('zxPane-' + key)); }catch(e){}
   /* العنوانُ يقول أين أنت، فلا يحتاج المرءُ أن يتذكّر أيَّ بلاطةٍ ضغط */
   zxSetTitle(ZX_TITLES[key] || 'الإعدادات');
