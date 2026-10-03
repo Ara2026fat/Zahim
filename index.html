@@ -7305,10 +7305,12 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
    المصدر: كتابا «هداية المرتاب» و«تتمة البيان» (GPL-3.0). البياناتُ
    في ملفٍّ منفصل (mutashabihat-data.json)، تُجلَب مرّةً واحدةً كما
    يُجلَب نصُّ صفحات المصحف وخطُّه تمامًا — لا تُثقِل هذا الملفّ. */
-#screen-mushaf .mts-marker{display:inline-grid;place-items:center;width:15px;height:15px;
-  margin:0 3px;vertical-align:middle;cursor:pointer;opacity:.6;}
+#screen-mushaf .mts-marker{display:inline-grid;place-items:center;width:23px;height:23px;
+  margin:0 1px;vertical-align:middle;cursor:pointer;border-radius:50%;
+  background:color-mix(in srgb, var(--green,#14304F) 12%, transparent);}
 #screen-mushaf .mts-marker svg{width:13px;height:13px;}
-#screen-mushaf .mts-marker path{fill:var(--gold-ink,#7A5E22);}
+#screen-mushaf .mts-marker path{fill:var(--green,#14304F);}
+#screen-mushaf .mts-marker:active{background:color-mix(in srgb, var(--green,#14304F) 22%, transparent);}
 #screen-mushaf .mts-ov{position:fixed;inset:0;z-index:60;background:rgba(20,24,18,.55);
   display:none;align-items:flex-end;justify-content:center;}
 #screen-mushaf .mts-ov.on{display:flex;}
@@ -7397,7 +7399,8 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
     <div class="mus-search-bar">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
            stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input type="search" id="musSearchInput" placeholder="" oninput="musSearchInput()" dir="rtl">
+      <input type="search" id="musSearchInput" placeholder="" oninput="musSearchInput()" dir="rtl"
+             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     </div>
     <div class="mus-search-results" id="musSearchResults"></div>
   </div>
@@ -19134,7 +19137,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-03-1900';
+  window.ZAHIM_STAMP = 'zahim-2026-10-03-2015';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
