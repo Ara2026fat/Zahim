@@ -17136,7 +17136,7 @@ function showToast(msg){
       <!-- بطاقةٌ واحدةٌ تجمع تنزيلَي المصحف كاملًا وبيانات البحث
            والمتشابهات معًا — كانا بطاقتين فشغلا خانةً كاملةً زائدة. -->
       <div class="zx-row" onclick="zxDownloadAll()">
-        <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0 3.4-3.4M12 14 8.6 10.6"/><path d="M5 17.6h14"/></svg></span><span class="zx-row-label">تنزيلاتٌ اختياريّة<i>المصحفُ كاملًا (٦٠٤ صفحة) وبياناتُ البحث والمتشابهات — تعمل بلا اتصال فورًا</i></span><span class="zx-row-value" id="zxAllDLStatus">—</span>
+        <span class="zx-row-ic green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0 3.4-3.4M12 14 8.6 10.6"/><path d="M5 17.6h14"/></svg></span><span class="zx-row-label">تنزيلاتٌ اختياريّة<i>المصحفُ، والبحثُ، والمتشابهات</i></span><span class="zx-row-value" id="zxAllDLStatus">—</span>
       </div>
       <!-- مِقودُ رمضان: التقويمُ الهجريُّ يختلف يومًا بين البلدان،
            فيبدأ الوضعُ آليًّا ويُعطى صاحبُه ما يُقدّمُه أو يُؤخّره. -->
@@ -17159,7 +17159,7 @@ function showToast(msg){
            وهي تناقض التحديثَ الذي يأتي منها.
            تاريخُ الإصدار مدمَجٌ هنا الآن (كان بطاقةً مستقلّة) — لا
            يُلمس زرُّ التثبيت لأنّ هذا سطرٌ فرعيٌّ لا هدفَ نقرٍ آخر. -->
-      <span class="zx-row-label">التطبيق<i>على شاشتك كأيّ تطبيق · إصدار <span id="zxVer">—</span></i></span>
+      <span class="zx-row-label">التطبيق<i>إصدارُ <span id="zxVer">—</span></i></span>
       <span class="zx-row-value" id="zxInstallState">—</span>
     </div>
     <div class="zx-row" onclick="closeSettings(); setTimeout(openInsightsScreen, 300);">
@@ -19235,7 +19235,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-03-2330';
+  window.ZAHIM_STAMP = 'zahim-2026-10-03-2345';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
