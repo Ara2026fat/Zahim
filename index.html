@@ -15557,7 +15557,7 @@ function mtsMarkCurrentPage(){
     mark.className = 'mts-marker';
     mark.setAttribute('aria-label', 'آياتٌ متشابهة');
     mark.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 2 L21 8.5 L21 17 L12 22 L3 17 L3 8.5 Z"/></svg>';
-    mark.onclick = (function(key){ return function(ev){ ev.stopPropagation(); mtsOpen(key); }; })(vk);
+    mark.setAttribute('data-mts-vk', vk);
     last.parentNode.insertBefore(mark, last.nextSibling);
   });
   if(order.length){
@@ -15591,8 +15591,16 @@ function mtsBand(name){
 }
 function mtsOpen(vk){
   if(!_mtsIndex || !(vk in _mtsIndex)) return;
-  /* خريطةُ الصفحات نفسُها المبنيّة أصلًا للبحث بالكلمات — لا تُبنى
-     مرّتين. إن لم تكن جاهزةً بعد، تُبنى الآن ويُعاد الفتحُ فور اكتمالها. */
+  /* الطبقةُ تُفتح فورًا دائمًا — فتُحسّ لمستك أنّها وقعت، ولا صمتَ
+     يُوهم أنّ شيئًا لم يحدث. إن كانت خريطة الصفحات (نفسُها المبنيّة
+     أصلًا للبحث، لا تُبنى مرّتين) غيرَ جاهزةٍ بعد، تظهر رسالةُ انتظارٍ
+     قصيرةٌ مكان أرقام الصفحات ريثما تكتمل — خصوصًا بعد تثبيتٍ جديدٍ
+     على شبكةٍ لم تَخزَّن له الصفحاتُ بعد. */
+  document.getElementById('mtsOv').classList.add('on');
+  var track = document.getElementById('mtsTrack');
+  document.getElementById('mtsCount').textContent = '…';
+  track.innerHTML = '<div class="mts-card"><div class="mts-folio" style="text-align:center;' +
+    'padding:40px 16px;color:var(--muted);font-size:13px;">جارٍ التحضير…</div></div>';
   if(!_musPMap){ _musPMap = musLoadPMap(); }
   if(!_musPMap){
     musBuildPMap(function(){}).then(function(){ mtsRenderOpen(vk); });
@@ -15612,7 +15620,6 @@ function mtsRenderOpen(vk){
       (pg ? '<div class="mts-pg">صفحة ' + arNum(pg) + '</div>' : '') +
       '</div></div>';
   }).join('');
-  document.getElementById('mtsOv').classList.add('on');
   requestAnimationFrame(function(){
     var card = track.children[0];
     if(card && card.scrollIntoView) card.scrollIntoView({ inline:'center', block:'nearest', behavior:'auto' });
@@ -15622,6 +15629,17 @@ function mtsClose(){
   var ov = document.getElementById('mtsOv');
   if(ov) ov.classList.remove('on');
 }
+/* مستمعٌ واحدٌ مفوَّضٌ، لا ربطٌ لكلّ علامةٍ على حدة — أضمن، ويعمل
+   مهما أُعيد رسمُ الصفحة. طورُ الالتقاط (capture) يضمن وصولَه قبل
+   مُعالج «تبديل وضع التلاوة» على الحاسوب، فلا يحتاج استثناءً هناك
+   إطلاقًا؛ وعلى اللمس، الاستثناءُ في مُعالج touchend يتولّى الأمر. */
+document.addEventListener('click', function(ev){
+  var m = ev.target && ev.target.closest && ev.target.closest('.mts-marker');
+  if(!m) return;
+  ev.stopPropagation();
+  var vk = m.getAttribute('data-mts-vk');
+  if(vk) mtsOpen(vk);
+}, true);
 
 function fillDaySpan(){
   var el = document.getElementById('qdcSpan');
@@ -19159,7 +19177,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-03-2110';
+  window.ZAHIM_STAMP = 'zahim-2026-10-03-2140';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
