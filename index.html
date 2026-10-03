@@ -7394,6 +7394,11 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
           <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
         </svg>
       </button>
+      <!-- يظهر فقط إن كانت هذه الصفحة تحمل آيةً لها نظير -->
+      <button class="mus-tool" id="mtsPageBtn" type="button" onclick="mtsOpenFirstOnPage()"
+              title="في هذه الصفحة آياتٌ متشابهة" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M12 2 L21 8.5 L21 17 L12 22 L3 17 L3 8.5 Z" fill="currentColor"/></svg>
+      </button>
     </span>
     <!-- شريطُ البحث — ظاهرٌ دائمًا، مكان أيقونة العدسة السابقة تمامًا -->
     <div class="mus-search-bar">
@@ -15285,7 +15290,8 @@ function musReleaseAwake(){
     if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.6){
       /* لمسةٌ ساكنة على الورقة: تبديلُ وضع التلاوة */
       if(Math.abs(dx) < 12 && Math.abs(dy) < 12
-         && e.target && e.target.closest && e.target.closest('#musSheet')) musToggleBare();
+         && e.target && e.target.closest && e.target.closest('#musSheet')
+         && !e.target.closest('.mts-marker')) musToggleBare();
       return;
     }
     mushafGo(dx > 0 ? 1 : -1);
@@ -15524,17 +15530,24 @@ function mtsEnsureIndex(){
 /* تُستدعى بعد كلّ رسم صفحةٍ (من musPaint) — لا أثر إن لم يكتمل
    الفهرسُ بعد؛ تُستدعى هي نفسُها فور اكتماله فتُعلِّم الصفحةَ
    المعروضةَ حينها بلا حاجةٍ لإعادة فتحها. */
+var _mtsPageFirstKey = null;
 function mtsMarkCurrentPage(){
+  /* الزرُّ يُخفى أوّلًا دائمًا — فلا يبقى ظاهرًا من صفحةٍ سابقةٍ كانت
+     فيها آيةٌ متشابهة بعد الانتقال إلى صفحةٍ لا تحمل شيئًا. */
+  var btn = document.getElementById('mtsPageBtn');
+  _mtsPageFirstKey = null;
+  if(btn) btn.style.display = 'none';
   if(!_mtsIndex) return;
   var page = document.getElementById('musPage');
   if(!page) return;
   var seen = {};
+  var order = [];
   page.querySelectorAll('w[data-vk]').forEach(function(w){
     var vk = w.getAttribute('data-vk');
     if(!vk || seen[vk] || !(vk in _mtsIndex)) return;
-    seen[vk] = true;
+    seen[vk] = true; order.push(vk);
   });
-  Object.keys(seen).forEach(function(vk){
+  order.forEach(function(vk){
     var els = page.querySelectorAll('w[data-vk="' + vk + '"]');
     var last = els[els.length - 1];
     if(!last) return;
@@ -15547,6 +15560,14 @@ function mtsMarkCurrentPage(){
     mark.onclick = (function(key){ return function(ev){ ev.stopPropagation(); mtsOpen(key); }; })(vk);
     last.parentNode.insertBefore(mark, last.nextSibling);
   });
+  if(order.length){
+    _mtsPageFirstKey = order[0];
+    if(btn) btn.style.display = '';
+  }
+}
+/* زرّ شريط الأدوات — يفتح أوّل آيةٍ متشابهةٍ في الصفحة الحاليّة */
+function mtsOpenFirstOnPage(){
+  if(_mtsPageFirstKey) mtsOpen(_mtsPageFirstKey);
 }
 function mtsHighlight(text, changes){
   var e = musEsc(text);
@@ -15735,6 +15756,7 @@ document.addEventListener('click', function(e){
   var s = document.getElementById('screen-mushaf');
   if(!s || s.classList.contains('hidden')) return;
   if(e.target && e.target.closest && e.target.closest('#musSheet')
+     && !e.target.closest('.mts-marker')
      && !('ontouchstart' in window)) musToggleBare();
 });
 addEventListener('online', function(){
@@ -19137,7 +19159,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-03-2015';
+  window.ZAHIM_STAMP = 'zahim-2026-10-03-2110';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
