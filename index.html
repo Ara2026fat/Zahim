@@ -7300,6 +7300,42 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
   border-radius:3px;padding:0 1px;}
 /* تظليلُ الآية المقصودة على ورقة المصحف نفسها — لمسةٌ عابرة لا علامةٌ دائمة */
 #screen-mushaf .mus-page w.mus-hl{background:rgba(201,150,58,.34);border-radius:4px;}
+
+/* ═══ الآياتُ المتشابهة — علامةٌ هادئةٌ بعد الآية، وورقةٌ مصغّرةٌ عند لمسها ═══
+   المصدر: كتابا «هداية المرتاب» و«تتمة البيان» (GPL-3.0). البياناتُ
+   في ملفٍّ منفصل (mutashabihat-data.json)، تُجلَب مرّةً واحدةً كما
+   يُجلَب نصُّ صفحات المصحف وخطُّه تمامًا — لا تُثقِل هذا الملفّ. */
+#screen-mushaf .mts-marker{display:inline-grid;place-items:center;width:15px;height:15px;
+  margin:0 3px;vertical-align:middle;cursor:pointer;opacity:.6;}
+#screen-mushaf .mts-marker svg{width:13px;height:13px;}
+#screen-mushaf .mts-marker path{fill:var(--gold-ink,#7A5E22);}
+#screen-mushaf .mts-ov{position:fixed;inset:0;z-index:60;background:rgba(20,24,18,.55);
+  display:none;align-items:flex-end;justify-content:center;}
+#screen-mushaf .mts-ov.on{display:flex;}
+#screen-mushaf .mts-sheet{width:100%;max-width:520px;background:var(--cream);border-radius:22px 22px 0 0;
+  padding:14px 0 26px;animation:mtsUp .28s cubic-bezier(.22,1,.36,1);}
+@keyframes mtsUp{from{transform:translateY(24px);opacity:.4;}to{transform:none;opacity:1;}}
+#screen-mushaf .mts-sheet-hd{display:flex;align-items:center;justify-content:space-between;padding:0 16px 8px;}
+#screen-mushaf .mts-count{font-size:11px;color:var(--muted);font-weight:700;}
+#screen-mushaf .mts-close{width:30px;height:30px;border-radius:50%;border:0;background:var(--cream-2);
+  color:var(--muted);font-size:15px;cursor:pointer;}
+#screen-mushaf .mts-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;
+  padding:4px 16px 2px;scrollbar-width:none;}
+#screen-mushaf .mts-track::-webkit-scrollbar{display:none;}
+#screen-mushaf .mts-card{flex:0 0 calc(100% - 28px);scroll-snap-align:center;}
+#screen-mushaf .mts-folio{background:var(--mpage);border:5px solid var(--mband2);border-radius:5px;
+  padding:16px 16px 18px;box-shadow:0 1px 2px rgba(20,30,40,.08),0 10px 26px rgba(20,30,40,.14);position:relative;}
+#screen-mushaf .mts-folio::after{content:'';position:absolute;inset:6px;border:1.2px solid var(--mhair);
+  border-radius:2px;pointer-events:none;}
+#screen-mushaf .mts-band{position:relative;margin:0 0 12px;line-height:0;}
+#screen-mushaf .mts-band svg{display:block;width:100%;height:auto;}
+#screen-mushaf .mts-band span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--mink);font-family:'Amiri',serif;font-size:13.5px;line-height:1;}
+#screen-mushaf .mts-ayah{font-family:'Amiri',serif;font-size:18px;line-height:2.05;color:var(--mink);
+  text-align:justify;position:relative;z-index:1;}
+#screen-mushaf .mts-ayah mark{background:none;color:inherit;font-weight:700;
+  border-bottom:2.5px solid var(--gold);padding-bottom:1px;}
+#screen-mushaf .mts-pg{margin-top:10px;text-align:center;font-size:10.5px;color:var(--gold-ink);font-weight:800;}
 </style>
 
 <!-- ═══ فهرسُ السور ═══ بابُ القراءة الحرّة إلى المصحف -->
@@ -7369,6 +7405,16 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
     <span class="mus-resume-txt" id="musResumeTxt">—</span>
     <button type="button" onclick="musGoResume()">تابِع</button>
     <button type="button" class="ghost" onclick="musHideResume()">✕</button>
+  </div>
+  <!-- ═══ طبقةُ الآيات المتشابهة ═══ -->
+  <div class="mts-ov" id="mtsOv" onclick="if(event.target===this) mtsClose()">
+    <div class="mts-sheet">
+      <div class="mts-sheet-hd">
+        <span class="mts-count" id="mtsCount"></span>
+        <button type="button" class="mts-close" onclick="mtsClose()">✕</button>
+      </div>
+      <div class="mts-track" id="mtsTrack"></div>
+    </div>
   </div>
   <div class="mus-marks" id="musMarks" style="display:none;"></div>
   <div class="mus-wird" id="musWird" style="display:none;"></div>
@@ -14809,6 +14855,9 @@ function musPaint(j){
     var hl = _musPendingHL; _musPendingHL = null;
     musHighlightVerse(hl.c, hl.v);
   }
+  /* علاماتُ الآيات المتشابهة — لا أثر إن لم يكتمل الفهرسُ بعد؛
+     mtsEnsureIndex تعيد رسمها بنفسها فور اكتمال الجلب. */
+  try{ if(typeof mtsMarkCurrentPage === 'function') mtsMarkCurrentPage(); }catch(e){}
 }
 
 /* ═══ تقليبُ الورق ═══
@@ -15444,6 +15493,112 @@ function musHighlightVerse(c, v){
   setTimeout(function(){ els.forEach(function(el){ el.classList.remove('mus-hl'); }); }, 2600);
 }
 
+/* ═══ الآياتُ المتشابهة ═══
+   المصدر: كتابا «هداية المرتاب» و«تتمة البيان»
+   (github.com/ambaqasah/mutashabihat، GPL-3.0). البياناتُ في ملفٍّ
+   منفصل (mutashabihat-data.json، بجانب index.html على الاستضافة
+   نفسِها) لا داخل هذا الملفّ — يُجلَب مرّةً واحدةً فقط، كما يُجلَب
+   نصُّ صفحات المصحف وخطُّه تمامًا، لا يُثقِل التطبيقَ على من لا يفتح
+   هذه الميزة. */
+var _mtsGroups = null, _mtsIndex = null, _mtsLoading = false;
+function mtsEnsureIndex(){
+  if(_mtsGroups || _mtsLoading) return;
+  _mtsLoading = true;
+  fetch('./mutashabihat-data.json').then(function(r){
+    if(!r.ok) throw 0;
+    return r.json();
+  }).then(function(groups){
+    _mtsGroups = groups;
+    var idx = {};
+    groups.forEach(function(g, gi){
+      g.verses.forEach(function(v){ idx[v.key] = gi; });
+    });
+    _mtsIndex = idx;
+    _mtsLoading = false;
+    mtsMarkCurrentPage();
+  }).catch(function(){ _mtsLoading = false; });
+}
+/* تُستدعى بعد كلّ رسم صفحةٍ (من musPaint) — لا أثر إن لم يكتمل
+   الفهرسُ بعد؛ تُستدعى هي نفسُها فور اكتماله فتُعلِّم الصفحةَ
+   المعروضةَ حينها بلا حاجةٍ لإعادة فتحها. */
+function mtsMarkCurrentPage(){
+  if(!_mtsIndex) return;
+  var page = document.getElementById('musPage');
+  if(!page) return;
+  var seen = {};
+  page.querySelectorAll('w[data-vk]').forEach(function(w){
+    var vk = w.getAttribute('data-vk');
+    if(!vk || seen[vk] || !(vk in _mtsIndex)) return;
+    seen[vk] = true;
+  });
+  Object.keys(seen).forEach(function(vk){
+    var els = page.querySelectorAll('w[data-vk="' + vk + '"]');
+    var last = els[els.length - 1];
+    if(!last) return;
+    var nxt = last.nextSibling;
+    if(nxt && nxt.classList && nxt.classList.contains('mts-marker')) return;   // عُلِّمت من قبل
+    var mark = document.createElement('span');
+    mark.className = 'mts-marker';
+    mark.setAttribute('aria-label', 'آياتٌ متشابهة');
+    mark.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 2 L21 8.5 L21 17 L12 22 L3 17 L3 8.5 Z"/></svg>';
+    mark.onclick = (function(key){ return function(ev){ ev.stopPropagation(); mtsOpen(key); }; })(vk);
+    last.parentNode.insertBefore(mark, last.nextSibling);
+  });
+}
+function mtsHighlight(text, changes){
+  var e = musEsc(text);
+  (changes || []).forEach(function(c){
+    if(!c) return;
+    try{
+      var re = new RegExp(musEsc(c).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+      e = e.replace(re, '<mark>' + musEsc(c) + '</mark>');
+    }catch(err){}
+  });
+  return e;
+}
+function mtsBand(name){
+  return '<div class="mts-band"><svg viewBox="0 0 966 112" preserveAspectRatio="none" aria-hidden="true">' +
+    '<defs><linearGradient id="mtsbg" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0" stop-color="var(--mband1)"/><stop offset="1" stop-color="var(--mband2)"/></linearGradient></defs>' +
+    '<rect x="1.5" y="1.5" width="963" height="109" fill="url(#mtsbg)" stroke="#000" stroke-width="3"/>' +
+    '<path d="M363,17 H603 Q637,17 685,56 Q637,95 603,95 H363 Q329,95 281,56 Q329,17 363,17 Z"' +
+    ' fill="var(--mpage)" stroke="var(--medge)" stroke-width="3"/>' +
+    '</svg><span>' + musEsc(name) + '</span></div>';
+}
+function mtsOpen(vk){
+  if(!_mtsIndex || !(vk in _mtsIndex)) return;
+  /* خريطةُ الصفحات نفسُها المبنيّة أصلًا للبحث بالكلمات — لا تُبنى
+     مرّتين. إن لم تكن جاهزةً بعد، تُبنى الآن ويُعاد الفتحُ فور اكتمالها. */
+  if(!_musPMap){ _musPMap = musLoadPMap(); }
+  if(!_musPMap){
+    musBuildPMap(function(){}).then(function(){ mtsRenderOpen(vk); });
+    return;
+  }
+  mtsRenderOpen(vk);
+}
+function mtsRenderOpen(vk){
+  var g = _mtsGroups[_mtsIndex[vk]];
+  if(!g) return;
+  var track = document.getElementById('mtsTrack');
+  document.getElementById('mtsCount').textContent = arNum(g.verses.length) + ' آية';
+  track.innerHTML = g.verses.map(function(v){
+    var pg = musPageOf(v.surah_no, v.ayah);
+    return '<div class="mts-card"><div class="mts-folio">' + mtsBand('سورة ' + v.surah) +
+      '<div class="mts-ayah">' + mtsHighlight(v.text, v.changes) + '</div>' +
+      (pg ? '<div class="mts-pg">صفحة ' + arNum(pg) + '</div>' : '') +
+      '</div></div>';
+  }).join('');
+  document.getElementById('mtsOv').classList.add('on');
+  requestAnimationFrame(function(){
+    var card = track.children[0];
+    if(card && card.scrollIntoView) card.scrollIntoView({ inline:'center', block:'nearest', behavior:'auto' });
+  });
+}
+function mtsClose(){
+  var ov = document.getElementById('mtsOv');
+  if(ov) ov.classList.remove('on');
+}
+
 function fillDaySpan(){
   var el = document.getElementById('qdcSpan');
   if(!el) return;
@@ -15538,6 +15693,7 @@ function openMushaf(from, to){
   var _res = musReadResume();
   musLoad(start);
   musHint();
+  try{ if(typeof mtsEnsureIndex === 'function') mtsEnsureIndex(); }catch(e){}
   setTimeout(function(){
     if(_res && _res.p !== start){
       var bar = document.getElementById('musResume');
@@ -18978,7 +19134,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-02-1815';
+  window.ZAHIM_STAMP = 'zahim-2026-10-03-1900';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
