@@ -6,7 +6,15 @@
 <!-- ═══ بوّابةُ أوّل زيارة ═══
      التعريفُ صفحةٌ قائمةٌ بذاتها، فالتحويلُ إليها يقع في أوّل سطرٍ يُقرأ:
      لو أُخّر إلى ما بعد البناء لَلمَح الزائرُ التطبيقَ ثوانيَ ثم انتُزع منه.
-     و replace بدل href فلا يعلق الزائرُ بين صفحتين بزرّ الرجوع. -->
+     و replace بدل href فلا يعلق الزائرُ بين صفحتين بزرّ الرجوع.
+
+     مُلاحظةٌ لمن يصون هذا الكود: زائرٌ ثبّتَ التطبيقَ من قبل قد يفتح
+     رابطًا مشتركًا (واتساب مثلًا) في تبويب متصفّحٍ عاديّ، لا من أيقونة
+     التطبيق — فلا يُجدي كشفُ display-mode وحده. أضفنا هنا ترادفًا
+     (كعكة + تخزين محلّي) يحمي من محو أحدهما، ثمّ سؤالًا مباشرًا
+     للمتصفّح نفسه (getInstalledRelatedApps، أندرويد/كروم فقط) يخترق
+     محوَ التخزين كلّه — لكنّه يحتاج سطرًا في manifest.webmanifest
+     (related_applications) ليعمل؛ راجع التعليمات المرفقة. -->
 <script>
 (function(){
   try{
@@ -16,12 +24,48 @@
        window.navigator.standalone === true ||
        (window.matchMedia && window.matchMedia('(display-mode: fullscreen)').matches) ||
        (window.matchMedia && window.matchMedia('(display-mode: minimal-ui)').matches)) return;
-    if(localStorage.getItem('zahim_tour_seen_v1') === '1') return;   // زارَ من قبل
-    if(localStorage.getItem('zahim_intro_shown_v1') === '1') return; // رأى التعريف
-    localStorage.setItem('zahim_intro_shown_v1', '1');
-    var l = localStorage.getItem('zahim_lang_v1');
-    if(l) localStorage.setItem('zahim_intro_lang', l);   // وإلّا اهتدى التعريفُ بنفسه
-    location.replace('intro.html?g=1');   // علامةُ المجيء من البوّابة
+
+    function zxCookieHas(name){
+      try{ return document.cookie.split('; ').some(function(c){ return c.indexOf(name+'=1') === 0; }); }
+      catch(e){ return false; }
+    }
+    function zxCookieSet(name){
+      try{ document.cookie = name+'=1; path=/; max-age=34560000; SameSite=Lax'; }catch(e){}
+    }
+    function zxMarkSeen(flag){
+      try{ localStorage.setItem(flag, '1'); }catch(e){}
+      zxCookieSet(flag);
+    }
+    function zxSeen(flag){
+      try{ if(localStorage.getItem(flag) === '1') return true; }catch(e){}
+      return zxCookieHas(flag);
+    }
+
+    if(zxSeen('zahim_tour_seen_v1') || zxSeen('zahim_intro_shown_v1')){
+      /* ترميمٌ ذاتيّ: ما نجا في أحد المخزنين يُعاد زرعُه في الآخر */
+      zxMarkSeen('zahim_tour_seen_v1');
+      return;
+    }
+
+    function zxShowGate(){
+      zxMarkSeen('zahim_intro_shown_v1');
+      var l = localStorage.getItem('zahim_lang_v1');
+      if(l) localStorage.setItem('zahim_intro_lang', l);   // وإلّا اهتدى التعريفُ بنفسه
+      location.replace('intro.html?g=1');   // علامةُ المجيء من البوّابة
+    }
+
+    /* قبل إظهار بوّابة التثبيت: اسأل المتصفّح نفسه — هل هذا الجهازُ
+       مثبَّتٌ عليه التطبيقُ أصلًا؟ هذا يصحّ حتى إذا مُحي كلُّ تخزيننا.
+       (أندرويد/كروم فقط؛ آيفون لا يملك هذه الواجهة ولا بديل لها —
+       عزلُ التخزين هناك عزلٌ من نظام التشغيل، لا يملك كودُ الصفحة حلًّا له) */
+    if(navigator.getInstalledRelatedApps){
+      navigator.getInstalledRelatedApps().then(function(apps){
+        if(apps && apps.length > 0) zxMarkSeen('zahim_tour_seen_v1');
+        else zxShowGate();
+      })['catch'](zxShowGate);
+    } else {
+      zxShowGate();
+    }
   }catch(e){}   // تخزينٌ ممنوع (تصفّحٌ خاصّ): يمضي كما كان
 })();
 /* ديمومةُ التخزين: تُقلّل محوَ النظام لبياناتنا عند ضيق المساحة.
@@ -14695,8 +14739,8 @@ function renderQuranProgress(wrap){
         <span class="qd-m-txt"><b>افتح المصحف</b><i>صفحة ${arNum(pageStart)}</i></span>
         <span class="qd-m-go">←</span>
       </button>
-      ${isTodaySelected ? `<button class="qdc-btn ${isDoneToday?'completed':''}" onclick="markQuranDayDone()">
-        ${isDoneToday ? '✓ أتممت ورد اليوم' : 'سجّل إتمام ورد اليوم'}
+      ${(!isDoneToday || isTodaySelected) ? `<button class="qdc-btn ${isDoneToday?'completed':''}" onclick="markQuranDayDone(${selIdx})">
+        ${isDoneToday ? '✓ أتممت ورد اليوم' : (isTodaySelected ? 'سجّل إتمام ورد اليوم' : 'سجّل إتمام هذا الورد')}
       </button>` : ''}
       <div class="qdc-reset" onclick="resetQuranPlan()">إعادة ضبط الجدول</div>
     </div>`;
@@ -19111,7 +19155,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-09-24-1930').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-10-09-1300').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19235,7 +19279,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-03-2345';
+  window.ZAHIM_STAMP = 'zahim-2026-10-09-1330';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;

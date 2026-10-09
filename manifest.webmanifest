@@ -14,6 +14,12 @@
     "lifestyle",
     "education"
   ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://zahim.app/manifest.webmanifest"
+    }
+  ],
   "icons": [
     {
       "src": "icons/icon-192.png",
