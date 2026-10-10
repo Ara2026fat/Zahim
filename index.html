@@ -7363,6 +7363,7 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
 @keyframes mtsUp{from{transform:translateY(24px);opacity:.4;}to{transform:none;opacity:1;}}
 #screen-mushaf .mts-sheet-hd{display:flex;align-items:center;justify-content:space-between;padding:0 16px 8px;}
 #screen-mushaf .mts-count{font-size:11px;color:var(--muted);font-weight:700;}
+#screen-mushaf .mts-mode{margin-inline-start:auto;margin-inline-end:8px;border:1px solid var(--line,rgba(20,48,79,.18));background:transparent;color:var(--muted);font-size:11px;font-weight:700;font-family:inherit;padding:5px 10px;border-radius:999px;cursor:pointer;}
 #screen-mushaf .mts-close{width:30px;height:30px;border-radius:50%;border:0;background:var(--cream-2);
   color:var(--muted);font-size:15px;cursor:pointer;}
 #screen-mushaf .mts-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;
@@ -7463,6 +7464,7 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
     <div class="mts-sheet">
       <div class="mts-sheet-hd">
         <span class="mts-count" id="mtsCount"></span>
+        <button type="button" class="mts-mode" id="mtsMode" onclick="mtsToggleBroad()">توسيع المتشابه</button>
         <button type="button" class="mts-close" onclick="mtsClose()">✕</button>
       </div>
       <div class="mts-track" id="mtsTrack"></div>
@@ -15605,7 +15607,41 @@ function musHighlightVerse(c, v){
    نفسِها) لا داخل هذا الملفّ — يُجلَب مرّةً واحدةً فقط، كما يُجلَب
    نصُّ صفحات المصحف وخطُّه تمامًا، لا يُثقِل التطبيقَ على من لا يفتح
    هذه الميزة. */
-var _mtsGroups = null, _mtsIndex = null, _mtsLoading = false;
+var _mtsGroups = null, _mtsIndex = null, _mtsLoading = false, _mtsAll = null;
+/* التشابه المقصود: آيةٌ تكاد تطابق أخرى إلا في كلمةٍ أو تقديمِها وتأخيرها.
+   الكتابان المرجعان (هداية المرتاب، وتتمّة البيان) أوسعُ من هذا — يجمعان
+   كلَّ ما اشترك في جملةٍ أو افتتاح — فلو علّمنا كلَّ ذلك لحملت أغلبُ
+   صفحات المصحف علامة (٨٠٪)، ويضيع المقصود. لذا لكلّ آيةٍ حقلُ sim:
+   أعلى نسبةِ تطابقٍ كلميٍّ مرتَّبٍ مع آيةٍ أخرى في مجموعتها (٠–١).
+   الافتراضُ ≥ ٠٫٦٥ (نحو ٢٢٪ من الصفحات)، ويُوسَّع من داخل الطبقة. */
+var MTS_NEAR = 0.65;
+function mtsBroad(){ try{ return localStorage.getItem('zahim_mts_broad') === '1'; }catch(e){ return false; } }
+function mtsBuildIndex(){
+  if(!_mtsAll) return;
+  var broad = mtsBroad(), out = [];
+  _mtsAll.forEach(function(g){
+    var vs = broad ? g.verses : g.verses.filter(function(v){ return (v.sim || 0) >= MTS_NEAR; });
+    if(vs.length >= 2){
+      var c = {}; for(var k in g) c[k] = g[k]; c.verses = vs; out.push(c);
+    }
+  });
+  var idx = {};
+  out.forEach(function(g, gi){ g.verses.forEach(function(v){ idx[v.key] = gi; }); });
+  _mtsGroups = out; _mtsIndex = idx;
+}
+function mtsToggleBroad(){
+  try{ localStorage.setItem('zahim_mts_broad', mtsBroad() ? '0' : '1'); }catch(e){}
+  mtsBuildIndex();
+  mtsClose();
+  document.querySelectorAll('#musPage .mts-marker').forEach(function(m){ m.remove(); });
+  mtsMarkCurrentPage();
+  mtsPaintMode();
+  try{ showToast(mtsBroad() ? 'عرضُ المتشابه الأوسع (يشمل ما اشترك في جملة)' : 'عرضُ الأقرب لفظًا فقط'); }catch(e){}
+}
+function mtsPaintMode(){
+  var b = document.getElementById('mtsMode');
+  if(b) b.textContent = mtsBroad() ? 'الأقرب لفظًا فقط' : 'توسيع المتشابه';
+}
 function mtsEnsureIndex(){
   if(_mtsGroups || _mtsLoading) return;
   _mtsLoading = true;
@@ -15613,12 +15649,8 @@ function mtsEnsureIndex(){
     if(!r.ok) throw 0;
     return r.json();
   }).then(function(groups){
-    _mtsGroups = groups;
-    var idx = {};
-    groups.forEach(function(g, gi){
-      g.verses.forEach(function(v){ idx[v.key] = gi; });
-    });
-    _mtsIndex = idx;
+    _mtsAll = groups;
+    mtsBuildIndex();
     _mtsLoading = false;
     mtsMarkCurrentPage();
   }).catch(function(){ _mtsLoading = false; });
@@ -15686,6 +15718,7 @@ function mtsBand(name){
     '</svg><span>' + musEsc(name) + '</span></div>';
 }
 function mtsOpen(vk){
+  mtsPaintMode();
   if(!_mtsIndex || !(vk in _mtsIndex)) return;
   /* الطبقةُ تُفتح فورًا دائمًا — فتُحسّ لمستك أنّها وقعت، ولا صمتَ
      يُوهم أنّ شيئًا لم يحدث. إن كانت خريطة الصفحات (نفسُها المبنيّة
@@ -19155,7 +19188,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-10-09-1300').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-10-10-1640').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19279,7 +19312,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-09-1330';
+  window.ZAHIM_STAMP = 'zahim-2026-10-10-1640';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
