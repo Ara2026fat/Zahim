@@ -16901,6 +16901,10 @@ function showToast(msg){
 #zqCaption{position:absolute;left:0;right:0;bottom:.9rem;text-align:center;
   font-size:.95rem;color:var(--zqi);opacity:.62;transition:opacity .4s,color .4s}
 #zqCaption.zq-lit{color:var(--zqb);opacity:1}
+#zqKarrow{position:absolute;display:none;transform:translate(-50%,-50%);pointer-events:none;z-index:2}
+#zqKaaba{position:absolute;display:none;transform:translate(-50%,-50%);border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 6px 18px rgba(20,48,79,.28);pointer-events:none;z-index:2}
+#zqCaption.zq-far{opacity:1;font-size:1.15rem;font-weight:800;color:var(--zqi)}
+#zqCaption.zq-far small{font-size:.9rem;font-weight:700;color:var(--gold)}
 #zqCaption small{display:block;font-size:.78rem;font-weight:400;color:var(--zqm);margin-top:.25rem}
 .zq-deck{border-top:1px solid var(--zql);padding:.85rem 1.1rem 1.2rem}
 .zq-deck .zq-row{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;
@@ -16929,6 +16933,8 @@ function showToast(msg){
     <div class="zq-layer" id="zqRugLayer">
       <div id="zqRug"><svg id="zqRugSvg" viewBox="0 0 400 600" role="img" aria-label="سجّادة صلاة"></svg></div>
     </div>
+    <svg id="zqKarrow" viewBox="-12 -14 26 28" width="28" height="30" aria-hidden="true"><path d="M-4 -12 Q14 -2 -4 10" fill="none" stroke="var(--gold)" stroke-width="2.6" stroke-linecap="round"/><path d="M-9 6 L-4 10.5 L-0.5 4.5" fill="none" stroke="var(--gold)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <img id="zqKaaba" alt="الكعبة المشرفة" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCACQAJADASIAAhEBAxEB/8QAHAAAAQQDAQAAAAAAAAAAAAAABgIEBQcBAwgA/8QAQhAAAQMDAgIIAwQIBAYDAAAAAQIDBAAFERIhBjEHEyJBUWFxgRSRoRUysdEIIyRCUnKCwRYz4fA1Q2JzdJKU0vH/xAAaAQACAwEBAAAAAAAAAAAAAAADBAABAgUG/8QAKREAAgIBBAEEAQQDAAAAAAAAAQIAEQMEEhMhMSIyQVFxBRRhwUKB4f/aAAwDAQACEQMRAD8AL4yb5KmJZtsJtuPoX1acAlZAVjmfIU7kRJUeEPteCI0xTIdS42nAKirGg+Y2J3p1aJiHJjLDshLA6pbvZVgpQgdpXtt86lOKXlRrJGjokqlMTMOIUvBKcYIIPgQRU02I/uggFd/fczmccBY99QNxSgmvAUsJr2k81MJFL0ishNLCaqWIkJpWnNKSmtFxuUGzxFS7jLYiR083HlhI9vE+QqE0LMn4m8JpQFVFxd+kBCghcfhyJ8U4MgSZIKWx5pRzPvj0p/wv0xB9hlF7YGpSEkvNAJOSBzTy+WKTbXYQ224yNJlK7qlnaayEmm9susC8M9dAlNvp7wk9pPqOYp4E0yGBFiAIINGJArOmlBOKUBUuSawnxpaRWcVkbVJJCXR2XHkpaiRS7JdbUovqSVhGM4SBsBT+w2ziKY209KjIUxqWJOpKdSBpBTjScfjTh4lpaVI0hS+zqP4CpWxSW3rQ9Pj3BaXkKWEJQ52XdONQx5Z3ryGqxkahk8m/kz0WnYcIb+Jt4OiNKukcqaQSWnCcjOQRuD5eVOekKIxGTbgy2Ea0KJA5baUj5AAe1e4O0i5NkqSNLCuZ9KX0jkfEW1Hgwo/NQ/KnNHR1t/n+4vqetNX4/qBiU0oJzSgnNRl/4psvCzHW3ae1GOMpbJy4v+VI3P4V6QsALM4gBJoSUCcU0vF9tXD0b4m7TmIbWNi6rdX8o5n2FU1xX0/zJOuNw5EENvl8S+At0+ifup+pqq7ldp94lLlXCW9KfWd3HVlSj7mudm/UkXrH3HMWiZu26lv8V/pAhOuNw1Cx3fFyk5Pqlv8A+x9qqS9cRXXiCUZVznPynTyU4rOnyA5AeQxTDFYO1cvNqcmX3GdHFgTH7RNax2TRnGIMRnGMdUjbv5CgxWSDRiycxWsYP6pI29BS5hhJCDdplrdS9DkOtLQdilRBqxOG+mV5opYvcfrk7DrkYSsevcfpVX9Zsfasp7Sj699bxZnxm0NTGTEmQUwnTlov1rv7XWW2Y2/tko5LT6pO9P8AFcuRJ0m3PJeivuMuI3BSog86sThvplmRCli9MiW0NuuTs4P7H3+ddXD+pA9ZBU5+XQkdp3LfxmvaaYWTiO08RMh22zG3jjJbOy0+qalMADJ5eNdAZFI3A9RIqQdpHcbS2EOBlS05LbmtPkocjRJwzFYXw7eEBlvU2CpBCRlOUHOPDON/GoOU3hsDG4VvRHwgkKg3hnIOpoHH9Kq4Gu61O78TsaTvBX5gvZ5l1tDzj/wzKlON9WEB4Ao7QOc6CM4HfmtHSLx1Bh29u8XKO/Djxk9USNLhWpR7KU4Przx9KjmbfxFNvUdxh2b8C11aHtKgA4pX72PADOfQ0J/pICfD4RagyFsvR/imOrdCMKKgF6sHvFc/TZ8mPKHHmNZcKuhUnqV5xV073W4ao9hZ+zY/LrlELfV555J9vnVZS5kme+uRKfdfeWcqW4oqUo+ZNasYr1NPld/cbglxqvgTGK9nHKvbZrxNYm5isHFScDhq63MBbMRaW+fWOdhOPU8/ap2HwM2kJXKcdkZxsyNCP/Ygk+woT50TyYRMLt4EDFAqOkAknkBRagLabbStKkLDaQUqBBGw8aI4drZtrIXEYjtE7aUoyVeSlE5+tWDKgs3BsMzmGHVJSlAbdZ1JTsN9Q3yeec99KnWr9dRj9ofvuU5rBByKWFEE799Hlx6OorpPwxeiLUMjH61B/Aj60Mz+DrxAQp1LPxTQ3K4514HmOY+VHTUI/gwL4XX4kYFk8+e/Ol7Z2OfKmuvTlJGCCcjwrYlQA2O9Ggo8iy5EB1D0Z5xlxJyCg4xR1aul65oYTDu2ZDWf89AAc9+4+9V5qIGM7VnII22rQYgEA9GZKgkEjxOlEcSxuILJGes7ip+MBQDXVlOOaVkbZHrvsal+HOIZ1rfkGTbj1LygCA42NCQdx55GfOq16Ip0lnhhbSUtpj/HKQtw79pSU4T7+OKOLOqXc1SupW8Cy2dBWkDWrTkFA/e5Utkd/FeIRUHm5O2G9uvtyEW5xohJSVgoOO/HP0NVx+lFd5p4Ks9vnsNJdVOLiVpUDkBtWeXmqrctlkt1gjFCVhr4haApTzmkqJ+6kEnxJx3mqp/SbtMi+xOHGA4Gi248FqIzkBKcaR47nOdqEhUNZPUMVJFAdzlvOPOnMG1zrmrESM49jmoDsj1J2FHlt4Kt0UBxaA8oc1P9r5JG341KvSYsFBVKLDTadhqISlPoDt8qy+uHjGLm10h8uagdB4FUUB64S0oRj7jA1knw1cvlmiKFw9b7cEKjtNIVjJcI1r5bdpQwPYCmdy47trY0MNuSlDlp7KQfInn8qjvtDii9gLhx/hGVgKStIxkHkQo7/IVg87i3O0Qg4kNKLMKpTkGGkrfeS2k57bpxnbxJ3qBmcbW+KnSwp2QvGCWxhJ91flWhjgN2QovXOetxfMgEk49TvTG0222f4huTbxS3FjtrCULOo4xgnJ8Nznzqlx4qJJ3VLZ8tjqrmP8SXq8KW1bYyGtKcqUntFKc4yVK2A3oyc4i4n4bMdu6xkOhxALZdA1LAONlpPjQRwdIiw5k51+WhllLOAVqCS4NWwHie/FWXf75Z5XEXD0741qTGSntKQrdk5ABUO7uP18q29K+wL1/yDWyu4t3MW/pKt68NzGnox+6c9tJ28Rg/SiOLdoV1BXElsukqBKG1nOBvuOdQnC7cCV9ststtyYjk9RQXEBQxpB5H5fKnEzgGzyVFyOlcN0clRlFOD/Krb5YpdxiDUbEMpyV9yRuXDtvvCOskxWnlK/eOy0j+Yb/PNCF36OSyom3y06hkll/u/rAx8wKkVW7iuwhSok9q4MtgktSOyvA8z+dJtfSVCcwJ7LsZ0/8ANGVpUPDHMVtOVReM2Jl+NunFGBE+1z7WvTNiuM9wUR2T6EbGm4WDz2q5o8q23iPriusvoP3glQWDy2UPPzqEunR3b7kVuREmK8Sf8oEI5/wnb5EUdNYPDioFtMf8Tcmug55tuw3JS9QCJiTkYA+4OZPvVm2e7qduqEW5LTkhklaO1k7Dfy8arXo94an2ez3CE6plSXJjbiXUgk4DZGySOfLnR3DP2K+zMYS0VpyMKTkKyMEK8jv9aYam9SnzACwaIk/xS3a5C0Q7gwFFKwhIAcCS4oak4ByBy5g89qqn9IfiuPblWLAckl1EgjSpBCyFpSdwTtkY5d1Xp9t8Oz3YqGLglrSoFaZOpJCe7GQd845kVQn6UUq1w71w1ofjSG2/1yksYzo61ZOAPAiliikfcMrm/qU+zc+JOJAtUENxWEL0FQPaSfDJ3+QFO43ASVq+Iuk16SvOSATv77nFRMDjBu2mc61EKnJUlbwSVYQlJ5Dx8aaTOMbxKPYkdQM5w1sfnU4sxNJSia5MdW/ZimW7Yiy3pThSJJeS3Hb5qQAokEZ5jmD6VOQuL7dabPEjBxch5DSchsHCVY5ZPeOVA6iVKKlHJJySe+sbb0dtOre43ArnK+2FE3j+c8gtxmkNIPes6iaGpUh2ZIckvK1OuqKlKxjJPkKRzG1Y9aKmJE9omHyM/uMe2SK3MubLbqsIGVn23ou4piMwL06llSSlwBwADlnw/H3oGjtuPSWmmCQ6tQCTnG9EdybkRJzrElZW82cKOcgnxrJHru/iaB9FVLC6NyVWqUBtiUD80JA+tHRefCcOdU8EKKSCNyfWq+6OlpVaX+2pP7TupJxp7A3ouROUFYTLSs5yEup0Eq9652fGGc3HcTEIKm6etK46m221NpKFg6lZGcHahaxN2PiBbDDcVDqW7ay2+haRltYUQN+ffuR5UTuuuPNaXmNGyjrByF7VSDbi21BTS1IKeSgcEe9awYQwIUzOXJtIJEsmX0dNMOl+3XB6EoFWlWSQMbncb4+daW7zxfw+lKpkf46NzCwO0R543PuDQ3buN7zbcAviS3yKHt8jwyN6K7T0mwFgIuUJxsDYFHbSPb/SrdMyimG4TKvjJ6O2F/BXE8ficSSx10V9hKS6hZOcE7eRORz2qWZtsFq9yLmJrrk15sJUjrOyWzy7PgNIx6VDcAOWC6vXl8SFKdW/rKmklS3NRGNIA1acYG/I6qNRYLU28Et2mU+6AAZKiU9xGx8gceFHwj00oIgcvmybkBF6SmJU4QnLe2XdaUr1MdWckZBThW+wPviqg6f3GzxRbkpipiq+AStTaVFXNasHfly5Vdb0KLJZD6kJW2RkYTyNUD02NMx+NiyylKQmI0VafElR39iK1jVtwuYYijUAs1nNI7q8DvzpqBis14nnWBWakk9msHvrGa9Ukj6yzmrdcESHQSkAjIGSk9xoj4uuzF3u5kRxhAbSnOMaj3n60NWe3G6XFqNjKSdS98dkedT3FFo+xLy9EA/VjtIGc4B7s/OgELyX81DAts/iGXRwjrLDLSNiqVz55/Vj/fvRo7LZcTglGTnSCSnHzwKDOjQ5tDg7zMIAzj9xNF90lJtcdt1ThdC32YwB2T216c4OT4/7NKZCQ5jWMWoigELdSlpCUpIUTpxjA5HI/CqP14UpOMYJH1q91RDGWpYbQkKUAFDAzvjzqhlgB50bjC1D60XTNZJgtQKAm5CvA71sSrx+VNhzOCKWlRA5EU3FpZnQhOTD4jnftUeOpcPAW6CcgOJJAx34/CrnXe4ynSld1U4FdlKWmur0q8lHbFc0cIyIzN4CpU6RCa6leXI5IUeW2wJx3+1WZC4Ws1yjIeRMmTmiP8xcpSgrfPzB+VCcm+ptaqFvR/Eus7hVsKiSXjHw04oJ1EKAHPx/1qhOm1xxXSNcUOtLaWy2w2UqGCMNg8veuxo93nWoBlp5pbaioALaBT7n86446cpbk3pV4iddDYUJCUYb2SMNpG1B02rTMdqwmbTtjFmAmc1kDekd9KFOxeLFZ7qT4V7uqSVM94rGede5V7bFVJHEGc7b5KX2d1DYp/iB5ipq83N+7zVSpA0rICQPADu/1pjwxGbk3hkOEhLY6zbyqf47iMQuIZCWF6kuAOHwyf8A8z70EsvJVd1DBTsv4hb0Yf8ABXSCkL+KWQVDIB6tP+80+6RJcpqxx3XXGnnPj2XCpIxjTk7ju/1pp0YJB4eeUVFKfinMqHMdhNS/G0QS+GEnIWQ8CDp5ZBG9c7UOVcn4jmEAqIQKcW6lKDGUGgQ4h1KgSrJ7x3J3P0qg5mETZSdxh1wY/qNXtaHi/bIj2UkOxmyTk6uSdvnVGXgFN3uCR3SXR6ds0fRkkkGC1Q6E075JyDSgcetadRB96yFEb+lPxOO2HAl1JIzsckd1SPRzxhNtHEzLDi8w5Kgw6nOySThK/UHv7waVwRHjzuLbXFlrCGHHilSlDI+6rH1xV623hThOLauskB5c5aUhKEJISEhWRvnY9+TzrDMqn1GaVWI6Ea3fiO7SZzsktyWlpdC2EpScNtk4CflknxrnvpDnquXHF8lq0guTHDgcttv7Vc3EaGIssoZ7KUyCggDchOeZ+VU5euGLvKu86Q622lTj7i1AupJGVHnik9NiGNif9RnM5dRBvPnXh61ODgu4kgFUdOfF3l9KV/g6Sg4XIjjsk/eJ/tT3IsW2mQeRtXtSccqnm+EnCcKktp/pP51tTwinPak+PJv8zVcqybDB3UPAVnVjNEg4TZSklb6+QxjSN63I4Yt4PaccUM7ZcAzWeVZfGYLJdU2tLjayhaTkEHcVMS5Di5K+vdLjpyVK1Zyc1OQuFLc8+2yOqDijstyRpA88+NEM3gpxTmInEUaQUbFSlJWjSO8HvFZ5lua42kn0Xyo7PDDoXLaYcVLWoBShkpwkZIP++dEfEjXxPDjyVPKeUpaN9WE/eUeQ798VXUbg6W2+X5MqG9Faw4rqUo6xSgQQE+9XJe5kG8xn2WXiytSNIUsJO4Od8H1FcnXKSbQXcd07gCm6qQXDjRXaLfqbaU0ykowodrZWNqpO+p0X24pUTqEp7Jz/ANZo/v3D9/SqAuE+HXUF0LMaSptsAlJTnl2ue9DEzgq9LUqQ7a3nVrUpSlplBSlE7knIprR+hbc9wOoO40og0OWyu/wr2SBzByPGpV7hW4MgKXbrggHwCVd+3h41pesMuN2XI89Gr+KNn8DXQDqfmKbTN3DEwwOJ7VJUOy3KQSfAZwfxq67tdhHSlpDoUuSjrAST90AZwe7aqRgW6U1cI5CHlKRIbJSWFg7KGRyxyo8k3R1Vs4dlLUltbyxFU2nI1pDqkY28gDn86W1GPeQRD4X2ggzouT0YcOXWVIQ7CeRiQkrcS2jTkg5307YFctX51DF7uAYcQ6hMh0IwRyCyM++auKPZOIg4CqBLIBzoURhRHvWsQbnnJtLufDqE7UfZcFuqUcXynKQtJPLnWtb6gr7wV7+Rq+xHuSRj7KcT59Qmlpj3TT2bRII/8fNXxybpQGspJCiDyz862sFUp9pkLCS6pKEqIJAyQMnHrV/obuySNNmkenw1PmTdEbm0Sgf+xvmqOOWGnOD7xiyVMhQcCU6tSdvbB76S2+V7kKG2Tsd66Zakz2ynXbJQIO5+FO/yparjLBP7DK/+Kvb6VjYamt0oHhaN8feY6TBflNIOtzqweyO5R28cetFXFNscs18lxvsZyGhx0lKUqXp0ZACk5HI8x4Zx3VardxLy0tGNIQSpO5ZUAdx5VcbzSHCoKU2eeCrfFCOH1brmw/pqcZpQpLclsRHRhIWMubgHHfipxTgSCOrcPPfUPH0rqr4FspwVsHxOkb0r4JgnlGxn+AcqnHKLTkS6BstlWVoQEq1L1ABNLYccjANuvBwTEKWNCjlATgd4xv5V1uq3RlAZREO+46oYP0pP2dFxpU3EJH3SWU9keA2rLYifmWHoTkeXLBbUoKwkOBQx947+taUXAoUVqdWS4pRTt9wHGM7118bTAIz8PAz3n4dP5Uk2S1lWfgrd384yfyquES+SclmWV6muuVkntBZASo+ududTznBtqcTbFLeU0hv9ojNBJGkrOo/vbjJ2rpb7BtCgR8BbSDzzFQf7UKdJVrQpq1mE3Ga0dY390JAGEkAYHrRMKbWuYdtwqf/Z">
     <div id="zqCaption">—</div>
   </div>
 
@@ -16940,6 +16946,7 @@ function showToast(msg){
     </div>
     <p class="zq-note" id="zqCalNote">لا معايرة — تُستعمل قراءةُ الحسّاس كما هي.</p>
     <p class="zq-note" id="zqBearing"></p>
+    <p class="zq-note" id="zqNoSensor" style="display:none;color:#B8862B;font-weight:700"></p>
     <!-- صدقٌ في حدود الأداة: الحسابُ دقيقٌ والحسّاسُ يُخدَع -->
     <p class="zq-honest">
       <strong class="zq-h1">الاتّجاهُ محسوبٌ بدقّة من موقعك إلى الكعبة.</strong>
@@ -19188,7 +19195,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-10-10-1640').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-10-12-0250').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19312,7 +19319,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-10-1640';
+  window.ZAHIM_STAMP = 'zahim-2026-10-12-0250';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -20601,6 +20608,19 @@ function ar(n){
   return String(n).replace(/[0-9]/g,function(d){ return '\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669'[+d]; });
 }
 function sgn(d){return (d+540)%360-180;}
+/* الفرقُ بين القبلة واتجاهك، بإشارةٍ تثبت قربَ ١٨٠°: عند الاستدارة التامّة
+   يقع الفرقُ على حافّة الإشارة فيقفز بين «يمينًا» و«يسارًا» كلَّ لحظة،
+   فلا يعرف المصلّي أيَّ جهةٍ يدور. نذكر آخرَ جهةٍ كانت واضحةً ونبقى عليها. */
+var _dlSide=1;
+function dlNow(){
+  var d=sgn(Q.qibla-Q.heading);
+  if(Math.abs(d)<=165) _dlSide = d>=0?1:-1;
+  else d = _dlSide*Math.abs(d);
+  return d;
+}
+/* جهةُ القبلة بالاسم من موقعك: يدلّك أين تدور لا كم فقط */
+var _CARD=['الشمال','الشمال الشرقي','الشرق','الجنوب الشرقي','الجنوب','الجنوب الغربي','الغرب','الشمال الغربي'];
+function qiblaRegion(){ return _CARD[Math.round(Q.qibla/45)%8]; }
 function T(k){ try{ if(global.ZahimI18n && ZahimI18n.t) return ZahimI18n.t(k); }catch(e){} return k; }
 function bearing(lat,lon){
   var p1=lat*RAD,l1=lon*RAD,p2=KL*RAD,l2=KG*RAD;
@@ -20627,9 +20647,11 @@ function archD(cx,base,w,h){
   var sh=(base-h*0.48).toFixed(1), sq=(base-h*0.80).toFixed(1), ap=(base-h).toFixed(1);
   return 'M'+l+' '+base+' L'+l+' '+sh+' Q'+l+' '+sq+' '+c+' '+ap+' Q'+r+' '+sq+' '+r+' '+sh+' L'+r+' '+base;
 }
+var _kgeo=null, _kkey='';
+window.addEventListener('resize',function(){ _kgeo=null; _kkey=''; });
 function paintGate(){
   var host=$('zqGate'); if(!host) return;
-  var dl=sgn(Q.qibla-Q.heading), a=Math.min(Math.abs(dl),75), t=1-a/75, lit=Math.abs(dl)<=3;
+  var dl=dlNow(), a=Math.min(Math.abs(dl),75), t=1-a/75, lit=Math.abs(dl)<=3;
   var o='<defs><radialGradient id="zqgg" cx="50%" cy="42%">'
    +/* ضوءُ السجّادة كان يتبع --green-light؛ وهو كحليٌّ الآن، لكن نُصرّح
      به لئلّا يتبدّل بتبدّل القالب — فالسجّادةُ إطارٌ ثابتُ الهويّة */
@@ -20651,9 +20673,51 @@ function paintGate(){
   o+='<path d="'+archD(150,272,96,190)+'" fill="none" stroke="var(--green-light)" stroke-width=".9" opacity="'+(0.2+0.6*t).toFixed(2)+'"/>';
   o+='</g>';
   o+='<line x1="72" y1="272" x2="228" y2="272" stroke="var(--gold)" stroke-width="1.3" opacity=".6"/>';
-  if(!lit){var sd=dl>0?1:-1;
-    o+='<g transform="translate('+(150+sd*118)+',170) scale('+sd+',1)" opacity=".7">'
-     +'<path d="M-6 -17 Q11 0 -6 17" fill="none" stroke="var(--gold)" stroke-width="2.3" stroke-linecap="round"/></g>';}
+  /* الكعبةُ علامةُ الجهة — الصورةُ المعتمدةُ وحدها (لا رسمَ بديلٌ عنها):
+     على الجانب إن كانت القبلةُ بين ٢٠° و١٢٠°، وفي أسفل المشهد — أي خلفَك —
+     إن زادت. الصورةُ عنصرٌ ثابتٌ خارج الـSVG يُنقَل موضعُه فقط، فلا يُعاد
+     بناؤها ولا ترتجف كلَّ ١٤٠ms. */
+  var kimg=$('zqKaaba'), karr=$('zqKarrow');
+  if(kimg){
+    if(!lit && Math.abs(dl)>20){
+      var sd0=dl>0?1:-1, behind=Math.abs(dl)>=120;
+      /* الأبعادُ تُقاس مرّةً وتُحفظ — القياسُ كلَّ إطارٍ يُجبر المتصفّحَ على
+         إعادة التخطيط ستّين مرّةً في الثانية مع كلّ قراءةِ حسّاس، فيتجمّد
+         المشهدُ على جوّالٍ بطيء. يُعاد القياسُ عند الفتح وتدوير الشاشة فقط. */
+      if(!_kgeo){
+        var gr=host.getBoundingClientRect(), sc0=$('zqScene').getBoundingClientRect();
+        _kgeo={gl:gr.left-sc0.left, gt:gr.top-sc0.top, gw:gr.width, gh:gr.height, sw:sc0.width, sh:sc0.height};
+      }
+      var G=_kgeo, kd, kx, ky;
+      if(behind){
+        /* خلفَك: أسفلَ المشهد فوق النصّ مباشرةً، لا على حدود الرسم (قد يقصّه) */
+        kd=Math.min(52, G.sw*0.14);
+        kx=G.sw/2; ky=G.sh-96-kd/2;
+      }else{
+        kd=44/300*G.gw;
+        kx=G.gl+(150+sd0*86)/300*G.gw;
+        ky=G.gt+186/322*G.gh;
+      }
+      var kkey=kd.toFixed(0)+'|'+kx.toFixed(0)+'|'+ky.toFixed(0);
+      if(kkey!==_kkey){
+        _kkey=kkey;
+        kimg.style.width=kimg.style.height=kd.toFixed(1)+'px';
+        kimg.style.left=kx.toFixed(1)+'px'; kimg.style.top=ky.toFixed(1)+'px';
+        if(karr && behind){
+          karr.style.left=(kx+sd0*(kd/2+22)).toFixed(1)+'px'; karr.style.top=ky.toFixed(1)+'px';
+          karr.style.transform='translate(-50%,-50%) scaleX('+sd0+')';
+        }
+      }
+      if(kimg.style.display!=='block') kimg.style.display='block';
+      if(karr){ var want=behind?'block':'none'; if(karr.style.display!==want) karr.style.display=want; }
+    }else{
+      if(kimg.style.display!=='none'){ kimg.style.display='none'; _kkey=''; }
+      if(karr && karr.style.display!=='none') karr.style.display='none';
+    }
+  }
+  if(!lit){var sd=dl>0?1:-1, far=Math.abs(dl)>20, k=far?1.7:1;
+    if(Math.abs(dl)<120) o+='<g transform="translate('+(150+sd*(far?136:118))+',170) scale('+(sd*k)+','+k+')" opacity="'+(far?0.95:0.7)+'">'
+     +'<path d="M-6 -17 Q11 0 -6 17" fill="none" stroke="var(--gold)" stroke-width="'+(far?2.8:2.3)+'" stroke-linecap="round"/></g>';}
   host.innerHTML=o;
 }
 
@@ -20728,7 +20792,7 @@ function open_(){ return $('screen-qibla') && !$('screen-qibla').classList.conta
 
 function paint(){
   if(!open_()) return;
-  var dl=sgn(Q.qibla-Q.heading), lit=Math.abs(dl)<=3, now=Date.now();
+  var dl=dlNow(), lit=Math.abs(dl)<=3, now=Date.now();
   if(lit){
     leaveAt=null;
     if(arriveAt===null) arriveAt=now;
@@ -20746,11 +20810,24 @@ function paint(){
   if(cap){
     if(Q.state==='settled'){ cap.className='zq-lit'; cap.innerHTML=T('أنت على القبلة'); }
     else if(lit){ cap.className='zq-lit'; cap.innerHTML=T('أنت على القبلة')+'<small>'+T('اثبت لحظة')+'</small>'; }
-    else { cap.className=''; cap.innerHTML=ar(Math.abs(dl))+'° '+T(dl>0?'يمينًا':'يسارًا'); }
+    else {
+      var far=Math.abs(dl)>20;
+      cap.className = far ? 'zq-far' : '';
+      var turn = Math.abs(dl)>=120 ? T('استدر — القبلة خلفك') : (ar(Math.abs(dl))+'° '+T(dl>0?'يمينًا':'يسارًا'));
+      if(Math.abs(dl)>=120) turn += ' · ' + ar(Math.abs(dl))+'° '+T(dl>0?'يمينًا':'يسارًا');
+      cap.innerHTML = turn + '<small>'+T('القبلة نحو')+' '+T(qiblaRegion())+'</small>';
+    }
   }
   wasLit=lit;
 }
-function applyRaw(raw){ Q.raw=((raw%360)+360)%360; Q.heading=(Q.raw+Q.offset)%360; paint(); }
+/* الحسّاسُ يطلق ستّين حدثًا في الثانية، والرسمُ يعيد بناءَ الرواق كلَّه —
+   فنقصره على عشرين رسمةً في الثانية؛ يكفي للسلاسة ولا يُثقل الجوّال. */
+var _lastPaint=0;
+function applyRaw(raw){
+  Q.raw=((raw%360)+360)%360; Q.heading=(Q.raw+Q.offset)%360;
+  var now=Date.now(); if(now-_lastPaint<50) return;
+  _lastPaint=now; paint();
+}
 
 /* ── الحسّاس ── */
 /* استواءٌ تامٌّ = ١، قيامٌ تامٌّ = ٠. وما بينهما يُمزج مزجًا خطّيًّا. */
@@ -20802,7 +20879,7 @@ function onOri(e){
   else if(a!==null){ h=(360-a)%360; }   /* جهازٌ لا يعطي الميل: نرجع إلى المسطَّح */
   else return;
 
-  if(!Q.sensor){ Q.sensor=true;
+  if(!Q.sensor){ Q.sensor=true; var ns=$('zqNoSensor'); if(ns) ns.style.display='none';
     var c=$('zqSrc'); if(c){ c.textContent=T('الحسّاس يعمل'); c.className='zq-chip zq-on'; } }
   applyRaw(h);
 }
@@ -20836,6 +20913,19 @@ global.zqStartSensor=function(){
     window.addEventListener('deviceorientationabsolute',onOri,true);
     window.addEventListener('deviceorientation',onOri,true);
     Q.attached=true;
+    /* لا قراءةَ بعد ثانيتين ونصف: نقول السببَ بدل صمتٍ يُظنّ عطلًا في التطبيق.
+       أشيعُ سببين: صفحةٌ تُفتح من ملفٍّ محلّيّ (content:// أو file://) والمتصفّحُ
+       لا يُعطي الحسّاساتِ إلا لصفحةٍ آمنة https، أو إذنُ «مستشعرات الحركة»
+       مغلقٌ للموقع من إعدادات المتصفّح. */
+    setTimeout(function(){
+      if(Q.sensor) return;
+      var n=$('zqNoSensor'); if(!n) return;
+      n.textContent = window.isSecureContext
+        ? T('لا قراءات من الحسّاس. فعّل «مستشعرات الحركة» لهذا الموقع من إعدادات المتصفّح (القفل بجانب العنوان ← الأذونات).')
+        : T('الحسّاسُ لا يعمل والصفحةُ مفتوحةٌ من ملفٍّ محلّي. افتح زاحِم من رابطه الآمن (https) بعد رفعه.');
+      n.style.display='';
+      var c=$('zqSrc'); if(c) c.textContent=T('لا قراءات');
+    }, 2500);
     if(b){ b.classList.add('zq-live'); b.textContent=T('الحسّاس مُشغَّل'); }
     startMag();
   }
@@ -20862,7 +20952,7 @@ global.zqCalibrate=function(){
 
 /* ── الفتح والإغلاق ── */
 global.openQibla=function(){
-  pullCoords(); buildRug(); calNote(); showBearing();
+  pullCoords(); buildRug(); calNote(); showBearing(); _kgeo=null; _kkey='';
   if(typeof zxOnly==='function') zxOnly('screen-qibla');
   else{
     document.querySelectorAll('.screen').forEach(function(s){
