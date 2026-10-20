@@ -77,6 +77,130 @@
   }catch(e){}
 })();
 </script>
+<script>
+/* ═══ ذاكرةُ الهويّة: اسمُك ودولتُك ولغتُك ومدينتُك ═══
+   ثلاثةُ مخازنَ لا واحد: localStorage + كعكةٌ طويلةُ العمر + IndexedDB خاصّ.
+   كلُّ حفظٍ يُكتب في الثلاثة، وعند الإقلاع يُقرأ ما نجا ويُرمَّم الباقي بصمت.
+   الكعكةُ تحمل الاسمَ والدولةَ واللغةَ فقط؛ أمّا إعدادُ المدينة (وفيه الإحداثيّات)
+   فلا يغادر الجهازَ في كعكة، ويبقى في localStorage وIndexedDB.
+   حدٌّ صادق: محوُ كلِّ بيانات الموقع معًا، أو إزالةُ التطبيق من شاشة آيفون،
+   يمحو الثلاثةَ — ولا حيلةَ لموقعٍ بلا خادمٍ في ذلك. وعندها تبقى «النسخةُ الاحتياطيّة». */
+(function(){
+  'use strict';
+  var KEYS = ['zahim_user_name','zahim_user_country','zahim_lang_v1','zahim_day_v1'];
+  var CK = ['zahim_user_name','zahim_user_country','zahim_lang_v1'];   /* ما يدخل الكعكة */
+  var COOKIE = 'zahim_id', DB = 'zahim-identity', ST = 'kv';
+  var ls = null; try{ ls = window.localStorage; }catch(e){}
+
+  function lget(k){ try{ return ls ? ls.getItem(k) : null; }catch(e){ return null; } }
+  function readCookie(){
+    try{
+      var m = document.cookie.split('; ');
+      for(var i=0;i<m.length;i++){
+        if(m[i].indexOf(COOKIE+'=') === 0){
+          var o = JSON.parse(decodeURIComponent(m[i].slice(COOKIE.length+1)));
+          return (o && typeof o === 'object') ? o : {};
+        }
+      }
+    }catch(e){}
+    return {};
+  }
+  function writeCookie(o){
+    try{
+      document.cookie = COOKIE+'='+encodeURIComponent(JSON.stringify(o))
+        +'; path=/; max-age=34560000; SameSite=Lax'
+        +(location.protocol === 'https:' ? '; Secure' : '');
+    }catch(e){}
+  }
+  function openDB(cb){
+    try{
+      var r = indexedDB.open(DB, 1);
+      r.onupgradeneeded = function(){ try{ r.result.createObjectStore(ST); }catch(e){} };
+      r.onsuccess = function(){ cb(r.result); };
+      r.onerror = r.onblocked = function(){ cb(null); };
+    }catch(e){ cb(null); }
+  }
+
+  /* نسخُ ما في localStorage إلى الكعكة وIndexedDB. المفتاحُ الغائب (null) لا يمحو شيئًا؛
+     أمّا الفارغُ '' فقرارٌ صريحٌ من المستخدم ويُكتب كما هو. */
+  var pending = false;
+  function mirror(){
+    if(pending) return; pending = true;
+    setTimeout(function(){
+      pending = false;
+      var ck = readCookie(), any = false, vals = {};
+      KEYS.forEach(function(k){
+        var v = lget(k); if(v === null) return;
+        vals[k] = v;
+        if(CK.indexOf(k) !== -1){ ck[k] = v; any = true; }
+      });
+      if(any) writeCookie(ck);
+      openDB(function(db){
+        if(!db) return;
+        try{
+          var tx = db.transaction(ST, 'readwrite'), s = tx.objectStore(ST);
+          Object.keys(vals).forEach(function(k){ s.put(vals[k], k); });
+          tx.oncomplete = tx.onerror = tx.onabort = function(){ try{ db.close(); }catch(e){} };
+        }catch(e){ try{ db.close(); }catch(_){} }
+      });
+    }, 0);
+  }
+
+  /* كلُّ مسارات الحفظ (التعديل، الجولة، اللغة، المدينة، استرجاع النسخة الاحتياطيّة)
+     تمرّ بـ setItem، فنلتقطها من موضعٍ واحد دون المساس بها. */
+  try{
+    var _set = Storage.prototype.setItem;
+    Storage.prototype.setItem = function(k){
+      var r = _set.apply(this, arguments);
+      try{ if(this === ls && KEYS.indexOf(k) !== -1) mirror(); }catch(e){}
+      return r;
+    };
+  }catch(e){}
+
+  /* 1) الترميم المتزامن من الكعكة — قبل أن يُرسم أيُّ شيء أو تُقرأ اللغة */
+  var ck0 = readCookie();
+  CK.forEach(function(k){
+    if(lget(k) === null && typeof ck0[k] === 'string'){ try{ ls && ls.setItem(k, ck0[k]); }catch(e){} }
+  });
+
+  /* 2) الترميم غير المتزامن من IndexedDB لما ما زال ناقصًا */
+  function heal(){
+    openDB(function(db){
+      if(!db){ mirror(); return; }
+      var got = {};
+      try{
+        var tx = db.transaction(ST, 'readonly'), s = tx.objectStore(ST);
+        KEYS.forEach(function(k){
+          var q = s.get(k);
+          q.onsuccess = function(){ if(typeof q.result === 'string') got[k] = q.result; };
+        });
+        tx.oncomplete = tx.onerror = tx.onabort = function(){
+          try{ db.close(); }catch(e){}
+          var needReload = false, who = false;
+          KEYS.forEach(function(k){
+            if(got[k] !== undefined && lget(k) === null){
+              try{ ls.setItem(k, got[k]); }catch(e){ return; }
+              if(k === 'zahim_user_name' || k === 'zahim_user_country') who = true;
+              else needReload = true;     /* اللغة والمدينة تُقرآن عند الإقلاع */
+            }
+          });
+          if(needReload){
+            var done = false;
+            try{ done = sessionStorage.getItem('zahim_id_reloaded') === '1'; sessionStorage.setItem('zahim_id_reloaded','1'); }catch(e){ done = true; }
+            if(!done){ location.reload(); return; }
+          }
+          if(who){
+            var go = function(){ try{ window.zxPaintWho && window.zxPaintWho(); }catch(e){} };
+            go(); document.addEventListener('DOMContentLoaded', go);
+          }
+          mirror();
+        };
+      }catch(e){ try{ db.close(); }catch(_){} mirror(); }
+    });
+  }
+  heal();
+})();
+</script>
 <!-- ═══ تطبيقٌ قابل للتثبيت ═══ -->
 <link rel="manifest" href="manifest.webmanifest">
 <!-- نتولّى ألوانَنا بأنفسنا: بلا هذا يقلب أندرويدُ الصفحةَ قسرًا -->
@@ -7026,10 +7150,10 @@ var ZahimHadithID = {
   align-items:baseline;justify-content:space-between;font-size:12px;color:var(--muted);}
 #screen-mushaf .mus-head .mus-search-bar{flex:0 0 100%;}
 #screen-mushaf .mus-surah{font-family:'Amiri',serif;font-size:15px;color:var(--text);}
-#screen-mushaf .mus-sheet{flex:1 1 auto;overflow:auto;display:flex;
+#screen-mushaf .mus-sheet{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;display:flex;
   justify-content:center;align-items:stretch;padding:4px 8px;}
 #screen-mushaf .mus-page{display:flex;flex-direction:column;justify-content:space-between;
-  width:100%;max-width:540px;background:var(--mpage);
+  width:100%;max-width:1000px;background:var(--mpage);
   border:5px solid var(--mband2);border-radius:4px;padding:22px 18px;
   box-shadow:0 1px 2px rgba(20,30,40,.05),0 8px 26px rgba(20,30,40,.09);}
 #screen-mushaf .ln{display:flex;justify-content:space-between;align-items:center;
@@ -7040,7 +7164,7 @@ var ZahimHadithID = {
    سطورٌ موسَّطةٌ متقاربة، وعمودٌ أضيق، والكتلةُ في وسط الورقة لا في أعلاها. */
 #screen-mushaf .mus-sheet.framed-sheet{align-items:stretch;}
 #screen-mushaf .mus-page.framed{
-  padding:26px 22px;
+  max-width:540px;padding:26px 22px;
   display:flex;flex-direction:column;justify-content:center;}
 #screen-mushaf .mus-page.framed .ln{
   justify-content:center;gap:.3em;
@@ -7064,24 +7188,27 @@ var ZahimHadithID = {
   opacity:0;max-height:0;padding-top:0;padding-bottom:0;
   margin-top:0;margin-bottom:0;overflow:hidden;pointer-events:none;border-top-width:0;}
 /* في وضع التلاوة لا يُترك إلّا ما تفرضه حوافُّ الجهاز — والباقي للورقة */
-#screen-mushaf.bare .mus-sheet{
+/* الورقةُ لا تتحرّك ولا تتغيّر مقاييسُها في الوضعين: الأدواتُ تطفو فوقها
+   وتغيب، فلا يُعاد قياسُ الخطّ عند اللمس (كان يصغر ٢٥٪ كلَّ لمسة). */
+#screen-mushaf .mus-sheet{
+  position:absolute;inset:0;z-index:1;
   padding-top:calc(2px + env(safe-area-inset-top,0px));
   padding-bottom:calc(2px + env(safe-area-inset-bottom,0px));
-  padding-left:2px;padding-right:2px;
-  height:100dvh;max-height:100dvh;}
-/* حاشيةٌ أضيقُ في وضع التلاوة: كلُّ بكسلٍ يُوفَّر من الحاشية يذهب
-   إلى عرض السطر، فيكبر الخطُّ ويطول النصُّ ويقلّ الفراغ. */
-/* وضعُ التجرّد كان يرفع الحدَّ فتمتدّ الصفحةُ بعرض النافذة.
-   وصفحةُ المصحف الورقيّ لا تتجاوز شبرًا — فالحدُّ يبقى. */
-#screen-mushaf.bare .mus-page{padding:12px 9px;}
-#screen-mushaf.bare{height:100dvh;}
+  padding-left:2px;padding-right:2px;}
+#screen-mushaf .mus-top{position:relative;z-index:6;background:var(--cream);}
+#screen-mushaf:not(.bare) .mus-top{box-shadow:0 6px 16px rgba(20,30,40,.08);}
+#screen-mushaf .mus-foot{position:absolute;left:0;right:0;bottom:0;z-index:6;}
+#screen-mushaf .mus-page{padding:12px 9px;}
 /* إطارُ الورقة: خطٌّ أخضرُ عريضٌ يحصر، ورفيعٌ يهدّئ.
    حدودٌ حقيقية لا رسمٌ ممدود — فلا تدخل النصَّ مهما طالت الصفحة. */
 /* الورقةُ تُقاس وهي محجوبة، ثم تُكشف مستقرّة — فلا يقفز النصُّ تحت العين */
 #screen-mushaf .mus-page{opacity:1;backface-visibility:hidden;
-  transition:font-size .18s ease;}
-#screen-mushaf .mus-sheet{position:relative;}
+  transition:font-size .18s ease, opacity .2s ease;}
+/* انتظارٌ طويل: الورقةُ القديمةُ تخفت قليلًا بدل أن تُستبدل برسالة */
+#screen-mushaf .mus-page.mus-wait{opacity:.6;}
 /* الشبح: نسخةُ الصفحة الخارجة، تمضي فوق الداخلة كالورق */
+/* .mus-page.mus-ghost: أشدُّ نوعيّةً من .mus-page{position:relative} فلا يدخل الشبحُ التخطيطَ ويعصر الورقة */
+#screen-mushaf .mus-page.mus-ghost,
 #screen-mushaf .mus-ghost{position:absolute;pointer-events:none;z-index:2;
   margin:0;backface-visibility:hidden;will-change:transform,opacity;}
 @media (prefers-reduced-motion:reduce){
@@ -7128,7 +7255,6 @@ M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/></svg>");
 body.theme-dark .brand-wrap::after{border-color:#161D19;}
 #screen-mushaf .mus-tools{display:flex;align-items:center;gap:7px;}
 /* ═══ حافّتا القلب ═══ الثلثان الجانبيّان للقلب، والوسطُ للاتّساع */
-#screen-mushaf .mus-sheet{position:relative;}
 #screen-mushaf .mus-edge{position:absolute;top:0;bottom:0;width:22%;border:0;padding:0;
   background:transparent;cursor:pointer;z-index:4;display:flex;align-items:center;
   -webkit-tap-highlight-color:transparent;}
@@ -7420,6 +7546,18 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
 </div>
 
 <div class="screen hidden" id="screen-mushaf">
+  <!-- ═══ طبقةُ الآيات المتشابهة ═══ -->
+  <div class="mts-ov" id="mtsOv" onclick="if(event.target===this) mtsClose()">
+    <div class="mts-sheet">
+      <div class="mts-sheet-hd">
+        <span class="mts-count" id="mtsCount"></span>
+        <button type="button" class="mts-mode" id="mtsMode" onclick="mtsToggleBroad()">توسيع المتشابه</button>
+        <button type="button" class="mts-close" onclick="mtsClose()">✕</button>
+      </div>
+      <div class="mts-track" id="mtsTrack"></div>
+    </div>
+  </div>
+  <div class="mus-top" id="musTop">
   <div class="topbar">
     <button class="back-btn" onclick="closeMushaf()">↩ رجوع</button>
     <!-- بابُ الفهرس: من فتح المصحفَ يتنقّل فيه. وموضعُه شريطُ
@@ -7462,19 +7600,9 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
     <button type="button" onclick="musGoResume()">تابِع</button>
     <button type="button" class="ghost" onclick="musHideResume()">✕</button>
   </div>
-  <!-- ═══ طبقةُ الآيات المتشابهة ═══ -->
-  <div class="mts-ov" id="mtsOv" onclick="if(event.target===this) mtsClose()">
-    <div class="mts-sheet">
-      <div class="mts-sheet-hd">
-        <span class="mts-count" id="mtsCount"></span>
-        <button type="button" class="mts-mode" id="mtsMode" onclick="mtsToggleBroad()">توسيع المتشابه</button>
-        <button type="button" class="mts-close" onclick="mtsClose()">✕</button>
-      </div>
-      <div class="mts-track" id="mtsTrack"></div>
-    </div>
-  </div>
   <div class="mus-marks" id="musMarks" style="display:none;"></div>
   <div class="mus-wird" id="musWird" style="display:none;"></div>
+  </div>
   <div class="mus-sheet" id="musSheet">
     <div class="mus-page" id="musPage"><div class="mus-msg">…يُحمَّل</div></div>
     <!-- حافّتان تُلمسان فتُقلَّب الورقة، والوسطُ يُلمس فتتّسع الصفحة.
@@ -9574,9 +9702,41 @@ window.zxPrayerName = function(key, base){
 
   /* ═══ الإعدادات ═══ */
   var KEY='zahim_day_v1';
-  var cfg={lat:21.4225,lng:39.8262,city:'مكة المكرمة',method:'makkah',madhab:'shafii',located:false};
+  var cfg={lat:21.4225,lng:39.8262,city:'مكة المكرمة',method:'makkah',madhab:'shafii',located:false,auto:false};
   try{ var raw=global.localStorage&&localStorage.getItem(KEY); if(raw) cfg=Object.assign(cfg,JSON.parse(raw)); }catch(e){}
   function save(){ try{ localStorage.setItem(KEY,JSON.stringify(cfg)); }catch(e){} }
+
+  /* ═══ متابعة الموقع: أدواتٌ مساعدة ═══ */
+  var AUTO_MIN_KM=8, AUTO_EVERY_MS=600000, _autoAt=0, _geoAt=0;
+  function distKm(a,b,c,d){            // هافرساين
+    var R=6371, r=Math.PI/180, dl=(c-a)*r, dg=(d-b)*r;
+    var h=Math.sin(dl/2)*Math.sin(dl/2)+Math.cos(a*r)*Math.cos(c*r)*Math.sin(dg/2)*Math.sin(dg/2);
+    return 2*R*Math.asin(Math.min(1,Math.sqrt(h)));
+  }
+  // يستخلص اسم المدينة من ردّ bigdatacloud؛ وإلا null
+  function parseGeo(j){
+    if(!j||typeof j!=='object') return null;
+    var n=j.city||j.locality||j.principalSubdivision||'';
+    n=String(n).trim();
+    if(!n||n.length>60) return null;
+    return n;
+  }
+  /* الاسم: عكس الترميز (مرّةً كلَّ ١٠ دقائق كحدٍّ أقصى، ومهلته ٤ ثوانٍ) ثم القائمة المحلية ثم «موقعك».
+     لا يُرسَل إلا الإحداثيان، ولا يحدث إلا بعد انتقالٍ فعليّ. */
+  function resolveName(la,lo,cb){
+    var fb=function(){ cb(nearestCity(la,lo)||'موقعك'); };
+    try{
+      if(typeof fetch!=='function'||(global.navigator&&navigator.onLine===false)||Date.now()-_geoAt<AUTO_EVERY_MS) return fb();
+      _geoAt=Date.now();
+      var ctl=(typeof AbortController!=='undefined')?new AbortController():null, fin=false;
+      var t=setTimeout(function(){ if(!fin){ fin=true; try{ctl&&ctl.abort();}catch(e){} fb(); } },4000);
+      fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+la+'&longitude='+lo+'&localityLanguage=ar',
+            ctl?{signal:ctl.signal}:{})
+        .then(function(r){ return r.ok?r.json():null; })
+        .then(function(j){ if(fin) return; fin=true; clearTimeout(t); var n=parseGeo(j); n?cb(n):fb(); })
+        .catch(function(){ if(fin) return; fin=true; clearTimeout(t); fb(); });
+    }catch(e){ fb(); }
+  }
 
   /* ═══ أحوال اليوم السبعة ═══
      هي نفسها التي يرسمها المحراب — وهنا مصدرها، لا نسخةٌ منها. */
@@ -9650,33 +9810,61 @@ window.zxPrayerName = function(key, base){
     config:function(){ return Object.assign({},cfg); },
     setConfig:function(p){ Object.assign(cfg,p); _cacheDay=null; save(); notify(); return Object.assign({},cfg); },
     /* طلبُ المستخدم: قراءةٌ طازجةٌ عالية الدقّة، لا مخزَّنةٌ عمرُها ساعة */
-    locate:function(cb){
+    locate:function(cb,opts){
       if(!global.navigator||!navigator.geolocation){ cb&&cb(false); return; }
       navigator.geolocation.getCurrentPosition(function(pos){
         cfg.lat=pos.coords.latitude; cfg.lng=pos.coords.longitude; cfg.located=true;
         cfg.city = nearestCity(cfg.lat,cfg.lng) || 'موقعك';
+        if(!(opts&&opts.silent)) cfg.auto=true;   // المسُ «تحديد موقعي» موافقةٌ صريحةٌ على المتابعة التلقائية
         _cacheDay=null; save(); notify(); cb&&cb(true);
       }, function(){ cb&&cb(false); },
          {enableHighAccuracy:true, timeout:14000, maximumAge:0});
     },
 
-    /* مراجعةٌ صامتةٌ عند الفتح: من سافر وجد مدينتَه قد تبدّلت وحدَها.
-       ولا تُبدَّل إلّا إن تغيّرت المدينةُ فعلًا — فلا وميضَ بلا سبب.
-       ولا تعمل إلّا لمن سبق أن حدّد موقعَه، فلا نسأل أحدًا لم يسأل. */
-    autoLocate:function(cb){
-      if(!cfg.located){ cb&&cb(false); return; }
-      if(!global.navigator||!navigator.geolocation){ cb&&cb(false); return; }
-      navigator.geolocation.getCurrentPosition(function(pos){
-        var city = nearestCity(pos.coords.latitude, pos.coords.longitude) || 'موقعك';
-        if(city === cfg.city){ cb&&cb(false); return; }
-        cfg.lat=pos.coords.latitude; cfg.lng=pos.coords.longitude;
-        cfg.city=city; _cacheDay=null; save(); notify(); cb&&cb(true);
-      }, function(){ cb&&cb(false); },
-         {enableHighAccuracy:false, timeout:9000, maximumAge:120000});
+    /* متابعةُ الموقع تلقائيًّا — لمن وافق صراحةً فقط (cfg.auto).
+       • لا تطلب إذنًا: إن لم يكن الإذن ممنوحًا مسبقًا صمتت.
+       • قراءةٌ منخفضة الطاقة، ولا أكثر من مرّةٍ كلَّ ١٠ دقائق.
+       • لا يتبدّل شيءٌ ما لم يبعد المستخدم نحو ٨ كم عن الموقع المحفوظ.
+       • الاسمُ من خدمة عكس الترميز إن توفّرت، وإلا أقربُ مدينةٍ معروفة، وإلا «موقعك». */
+    autoLocate:function(cb, force){
+      function done(v,c){ try{ cb&&cb(v,c); }catch(e){} }
+      try{
+        if(!cfg.located || cfg.auto!==true){ done(false); return; }
+        if(!global.navigator||!navigator.geolocation){ done(false); return; }
+        var now=Date.now();
+        if(!force && _autoAt && now-_autoAt<AUTO_EVERY_MS){ done(false); return; }
+        var go=function(){
+          _autoAt=Date.now();
+          navigator.geolocation.getCurrentPosition(function(pos){
+            try{
+              var la=pos.coords.latitude, lo=pos.coords.longitude;
+              if(distKm(cfg.lat,cfg.lng,la,lo) < AUTO_MIN_KM){ done(false); return; }
+              resolveName(la,lo,function(city){
+                // قد يكون المستخدم اختار مدينةً يدويًّا أثناء انتظار الاسم
+                if(cfg.auto!==true){ done(false); return; }
+                cfg.lat=la; cfg.lng=lo; cfg.city=city; cfg.located=true;
+                _cacheDay=null; save(); notify();
+                try{ global.dispatchEvent(new CustomEvent('zahim-location',{detail:{city:city,lat:la,lng:lo}})); }catch(e){}
+                done(true,city);
+              });
+            }catch(e){ done(false); }
+          }, function(){ done(false); },
+             {enableHighAccuracy:false, timeout:8000, maximumAge:force?0:600000});
+        };
+        // لا نُظهر نافذة الإذن أبدًا من هنا: نمضي فقط إن كان الإذن ممنوحًا
+        if(navigator.permissions && navigator.permissions.query){
+          navigator.permissions.query({name:'geolocation'}).then(function(r){
+            if(r&&r.state==='granted') go(); else done(false);
+          }, function(){ done(false); });
+        } else go();
+      }catch(e){ done(false); }
     },
+    isAuto:function(){ return cfg.auto===true; },
+    setAuto:function(on){ cfg.auto=!!on; save(); return cfg.auto; },
+    _distKm:distKm, _parseGeo:parseGeo,
     CITIES:CITIES, nearestCity:nearestCity,
     setCity:function(name,lat,lng){
-      cfg.city=name; cfg.lat=lat; cfg.lng=lng; cfg.located=true;
+      cfg.city=name; cfg.lat=lat; cfg.lng=lng; cfg.located=true; cfg.auto=false;  // الاختيار اليدوي يُوقف المتابعة التلقائية
       _cacheDay=null; save(); notify(); return Object.assign({},cfg);
     },
     times:times, state:state, currentPrayer:currentPrayer, nextPrayer:nextPrayer,
@@ -14375,6 +14563,7 @@ window.slwBump = function(){
     var ash = document.getElementById('zrAshr');
     if(!box) return;
     var on = (typeof zrIsRam === 'function') && zrIsRam();
+    document.body.classList.toggle('zr-ram-on', !!on);
     if(!on){ box.hidden = true; if(ash) ash.hidden = true;
              document.body.classList.remove('zr-ashr-on'); return; }
     var T, r;
@@ -14847,25 +15036,42 @@ var _musPage = 1, _musFonts = {}, _musFrom = 0, _musTo = 0, _musCache = {};
 /* ما قُرئ يبقى محفوظًا، فلا يُطلب مرّةً أخرى.
    نحفظ آخر ستّين صفحة — أكثرُ من ذلك يملأ مساحةَ التخزين. */
 var MUS_KEEP = 60;
+/* الخريطةُ تُقرأ من التخزين مرّةً واحدة وتبقى في الذاكرة — كان كلُّ تقليبٍ
+   يفكّ ما يقارب ميغابايتين من JSON خمس مرّات فيتقطّع الإصبع. والكتابةُ
+   تُؤجَّل إلى لحظة هدوء ولا تُنفَّذ في أثناء التقليب. */
+var _musDiskMem = null, _musFlushT = null;
 function musDisk(){
-  try{ return JSON.parse(localStorage.getItem(MUS_CK) || '{}'); }catch(e){ return {}; }
+  if(_musDiskMem) return _musDiskMem;
+  try{ _musDiskMem = JSON.parse(localStorage.getItem(MUS_CK) || '{}') || {}; }
+  catch(e){ _musDiskMem = {}; }
+  return _musDiskMem;
 }
-function musSave(n, j){
+function musFlush(){
+  clearTimeout(_musFlushT); _musFlushT = null;
+  if(!_musDiskMem) return;
   try{
-    var d = musDisk();
-    d[n] = j;
-    var keys = Object.keys(d);
-    if(keys.length > MUS_KEEP){
-      /* نُسقط الأبعدَ عن الصفحة الحاليّة */
-      keys.sort(function(a,b){ return Math.abs(b-n) - Math.abs(a-n); });
-      for(var i = 0; i < keys.length - MUS_KEEP; i++) delete d[keys[i]];
-    }
-    localStorage.setItem(MUS_CK, JSON.stringify(d));
+    localStorage.setItem(MUS_CK, JSON.stringify(_musDiskMem));
   }catch(e){
     /* امتلأت المساحة — نُفرغ ونبدأ من جديد بلا إزعاج */
+    _musDiskMem = {};
     try{ localStorage.removeItem(MUS_CK); }catch(e2){}
   }
 }
+function musSave(n, j){
+  var d = musDisk();
+  d[n] = j;
+  var keys = Object.keys(d);
+  if(keys.length > MUS_KEEP){
+    /* نُسقط الأبعدَ عن الصفحة الحاليّة */
+    keys.sort(function(a,b){ return Math.abs(b-n) - Math.abs(a-n); });
+    for(var i = 0; i < keys.length - MUS_KEEP; i++) delete d[keys[i]];
+  }
+  if(!_musFlushT) _musFlushT = setTimeout(musFlush, 1500);
+}
+addEventListener('pagehide', function(){ if(_musFlushT) musFlush(); });
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'hidden' && _musFlushT) musFlush();
+});
 
 /* ═══ مخزنٌ كاملٌ غيرُ محدود (IndexedDB) — للمصحف كاملًا بلا اتصال ═══
    منفصلٌ عن ذاكرة الستّين صفحةً الأخيرة أعلاه (تلك محدودةٌ عمدًا؛
@@ -14960,15 +15166,15 @@ function musFontsReady(names, cb){
            function(){ clearTimeout(t); fin(); });
 }
 
-function musRender(j){
+function musRender(j, req){
+  var _r = (req === undefined) ? _musReq : req;
   var _want = [j.font];
   (j.lines || []).forEach(function(L){
     (L.words || []).forEach(function(w){ if(w.font) _want.push(w.font); });
   });
   _want.forEach(musFont);
-  var _n = _musPage;
   musFontsReady(_want, function(){
-    if(_musPage !== _n) return;   // قلّب القارئُ قبل أن يصل الخطّ
+    if(_musReq !== _r) return;   // قلّب القارئُ قبل أن يصل الخطّ
     musPaint(j);
   });
 }
@@ -14999,6 +15205,7 @@ function musPaint(j){
 
   /* لا إخفاء: الورقةُ تبقى ظاهرةً، والتبديلُ يُغطّيه الشبح لا الشفافيّة */
   page.classList.add('settled');
+  page.classList.remove('mus-wait');
   page.innerHTML = html + musFrame();
   /* في المصحف المطبوع تقعان داخل إطار، فسطورُهما موسَّطةٌ لا ممدودة */
   page.classList.toggle('framed', _musPage <= 2);
@@ -15009,6 +15216,8 @@ function musPaint(j){
   document.getElementById('musPageNo').textContent = 'صفحة ' + arNum(j.page || _musPage);
   musFit();
   musSlide();
+  /* الجارتان تُجلبان بعد استقرار هذه الورقة وفي لحظة هدوء */
+  musAhead(_musPage);
   /* طلبُ تظليلٍ معلَّق (من نتيجة بحثٍ) يُستهلَك هنا فور استقرار الصفحة */
   if(_musPendingHL){
     var hl = _musPendingHL; _musPendingHL = null;
@@ -15029,16 +15238,19 @@ function musPaint(j){
      الشبحُ الخارج فوقها. فلا تُرى الورقةُ فارغةً لحظةً واحدة.
    ومنها أخذتُ: القفلَ ضدّ التقليب المتسارع، والإطارين المتداخلين،
    وتنظيفَ will-change، ومنحنيَي الخروج المتسارع والدخول المتباطئ. */
-var _turning = false, _musGhost = null, _musGhostT = null, _musDir = 0;
+var _turning = false, _musGhost = null, _musGhostT = null, _musDir = 0, _musVis = -1, _musTurnId = 0;
 
 function musEndTurn(){
+  _musTurnId++;   /* تُبطل كلَّ مؤقّتٍ معلَّقٍ من حركةٍ سابقة */
   clearTimeout(_musGhostT);
+  var _el = document.getElementById('musPage');
+  if(_el){ _el.style.willChange = ''; _el.style.transition = ''; _el.style.transform = ''; }
   if(_musGhost && _musGhost.parentNode) _musGhost.parentNode.removeChild(_musGhost);
   _musGhost = null; _turning = false; _musDir = 0;
 }
 
 /* يُلتقط الشبحُ قبل التبديل، ثم يُستدعى apply. */
-function musBeginTurn(step, apply){
+function musBeginTurn(step, apply, vis){
   var el = document.getElementById('musPage'), sheet = document.getElementById('musSheet');
   var reduce = window.matchMedia &&
                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -15046,6 +15258,9 @@ function musBeginTurn(step, apply){
 
   _turning = true;
   _musDir  = step > 0 ? 1 : -1;
+  /* جهةُ خروج الورقة القديمة: افتراضًا التاليةُ إلى اليسار؛ وفي السحب جهةُ الإصبع */
+  _musVis  = vis ? (vis > 0 ? 1 : -1) : -_musDir;
+  _musTurnId++;
 
   var g = el.cloneNode(true);
   g.removeAttribute('id');
@@ -15056,6 +15271,8 @@ function musBeginTurn(step, apply){
   g.style.top    = el.offsetTop    + 'px';
   sheet.appendChild(g);
   _musGhost = g;
+  /* ما أزاحه الإصبعُ بقي على الشبح، والجديدةُ تبدأ من موضعها */
+  el.style.transition = 'none'; el.style.transform = '';
 
   /* شبكةُ أمان: إن لم تصل الصفحة (انقطاعٌ مثلًا) لا يبقى الشبحُ معلّقًا */
   _musGhostT = setTimeout(musEndTurn, 1800);
@@ -15068,8 +15285,9 @@ function musSlide(){
   var el = document.getElementById('musPage'), g = _musGhost;
   if(!el || !g) return;
   /* إزاحةٌ أقصر: ‎٤٪‎ تكفي للدلالة على الجهة، و‎٦٪‎ كانت تُبطئ الإحساس */
-  var out = _musDir > 0 ? '-4%' : '4%';   /* التالية: تخرج الحاليّة إلى اليسار */
-  var inn = _musDir > 0 ? '4%'  : '-4%';
+  var out = _musVis > 0 ? '4%' : '-4%';   /* التالية افتراضًا: تخرج الحاليّة إلى اليسار */
+  var inn = _musVis > 0 ? '-4%' : '4%';
+  var id  = _musTurnId;
 
   el.style.willChange = 'transform';
   el.style.transition = 'none';
@@ -15078,6 +15296,7 @@ function musSlide(){
   /* إطاران متداخلان: بإطارٍ واحد يدمج المتصفّح التغييرين فلا تظهر حركة */
   requestAnimationFrame(function(){
     requestAnimationFrame(function(){
+      if(id !== _musTurnId) return;   /* قلّب القارئُ ثانيةً قبل بدء الحركة */
       /* أسرعُ وأخفّ: الحركةُ تُشعِر بالانتقال ولا تُنتظَر.
          الخارجةُ تسبق الداخلةَ قليلًا فلا تتزاحمان في العين. */
       g.style.transition  = 'transform .15s cubic-bezier(.4,0,1,1), opacity .12s ease';
@@ -15086,6 +15305,7 @@ function musSlide(){
       el.style.transition = 'transform .17s cubic-bezier(.16,1,.3,1)';
       el.style.transform  = 'translateX(0)';
       setTimeout(function(){
+        if(id !== _musTurnId) return;
         el.style.willChange = ''; el.style.transition = ''; el.style.transform = '';
         musEndTurn();
       }, 180);
@@ -15108,7 +15328,7 @@ function musFsMap(){
 }
 function musFsKey(n){
   var scr = document.getElementById('screen-mushaf');
-  var bare = scr && scr.classList.contains('bare') ? 'b' : 'n';
+  var bare = 'b';   /* القياسُ واحدٌ في الوضعين */
   /* الطولُ يُقرَّب إلى عشرين بكسلًا: يكفي للتفريق بين الحالين، ولا يُنشئ
      مفتاحًا جديدًا لكلّ بكسلٍ يتغيّر بظهور شريط المتصفّح واختفائه. */
   var h = Math.round((window.innerHeight || 800) / 20) * 20;
@@ -15122,13 +15342,15 @@ function musFsSave(n, v){
 }
 
 function musFit(){
-  _musW = window.innerWidth;
+  _musW = window.innerWidth; window._musH = window.innerHeight;
   var page = document.getElementById('musPage');
   var sheet = document.getElementById('musSheet');
 
   // قياسٌ محفوظ؟ يُطبَّق فورًا وتُكشف الورقة بلا انتظار
   var cached = musFsMap()[musFsKey(_musPage)];
   if(cached){
+    var cw = musFsMap()[musFsKey(_musPage) + 'w'];
+    page.style.maxWidth = cw ? cw + 'px' : '';
     page.style.setProperty('--mfs', cached + 'px');
     page.classList.add('settled');
     return;
@@ -15136,7 +15358,8 @@ function musFit(){
 
   var run = function(){
     if(!page.getElementsByClassName('ln').length) return;
-    var lo = 11, hi = 34, best = 11, box = page.clientWidth - 24;
+    page.style.maxWidth = '';   /* يُعاد القياسُ من أوسع عرضٍ مسموح */
+    var lo = 11, hi = 64, best = 11, box = page.clientWidth - 24;
     for(var i = 0; i < 9; i++){
       var mid = (lo + hi) / 2;
       page.style.setProperty('--mfs', mid + 'px');
@@ -15158,7 +15381,22 @@ function musFit(){
     }
     page.classList.add('settled');   /* استقرّ القياس، فتُكشف الورقة */
     var fin = parseFloat(page.style.getPropertyValue('--mfs'));
-    if(fin > 0) musFsSave(_musPage, fin);
+    /* شاشةٌ عريضةٌ قصيرة: الطولُ هو القيد فيصغر الخطّ، والورقةُ تبقى عريضةً
+       فتتباعد الكلمات. تُضيَّق الورقةُ بنسبة الخطّ فتحتفظ بهيئة المصحف المطبوع. */
+    var fw = 0;
+    if(fin > 0 && best > 0 && fin < best - 0.4 && !page.classList.contains('framed')){
+      var l0 = page.getElementsByClassName('ln')[0];
+      var content = l0 ? l0.clientWidth : 0, pw = page.getBoundingClientRect().width;
+      if(content > 0){
+        fw = Math.ceil(pw - content + content * (fin / best)) + 2;
+        page.style.maxWidth = fw + 'px';
+      }
+    }
+    if(fin > 0){
+      musFsSave(_musPage, fin);
+      var mw = musFsMap(); mw[musFsKey(_musPage) + 'w'] = fw;
+      try{ localStorage.setItem(MUS_FS, JSON.stringify(mw)); }catch(e){}
+    }
   };
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(run).catch(run);
   else setTimeout(run, 240);
@@ -15168,6 +15406,7 @@ function musFit(){
 function musOffline(n){
   var pg = document.getElementById('musPage');
   pg.classList.add('settled');
+  pg.classList.remove('mus-wait');
   pg.innerHTML =
     '<div class="mus-msg"><b>الصفحة تحتاج اتصالاً</b>'
     + 'صفحاتُ المصحف وخطُّها تُنزَّل عند أول فتح.<br>'
@@ -15175,72 +15414,117 @@ function musOffline(n){
     + '<br><button type="button" onclick="musLoad(' + n + ')">أعِد المحاولة</button></div>';
 }
 
-/* جارتان في كلّ اتّجاه: الإصبعُ أسرعُ من جارةٍ واحدة */
-function musAhead(n){ musPrefetch(n+1); musPrefetch(n-1); musPrefetch(n+2); musPrefetch(n-2); }
-/* جلبٌ صامتٌ للصفحات المجاورة */
-function musPrefetch(n){
-  if(n < 1 || n > 604) return;
-  if(_musCache[n] || musDisk()[n]) return;
-  if(navigator.onLine === false) return;
-  musFetchJSON(n)
-    .then(function(j){
+/* حالُ الشبكة: ٠ لا جلب (توفير البيانات أو شبكة ضعيفة جدًّا)، ١ الجارتان فقط، ٢ كاملٌ */
+function musNetLevel(){
+  var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if(!c) return 2;
+  if(c.saveData) return 0;
+  var t = c.effectiveType;
+  if(t === 'slow-2g' || t === '2g') return 0;
+  if(t === '3g') return 1;
+  return 2;
+}
+/* يُطلب خطُّ الصفحة المجاورة أيضًا، فلا ينتظره القارئُ عند التقليب */
+function musWarm(j, net){
+  try{
+    var names = [j.font];
+    (j.lines||[]).forEach(function(L){ (L.words||[]).forEach(function(w){ names.push(w.font); }); });
+    var seen = {};
+    names.forEach(function(f){
+      if(!f || seen[f]) return; seen[f] = 1;
+      musFont(f);
+      if(net && document.fonts && document.fonts.load){
+        document.fonts.load("16px '" + f + "'").catch(function(){});
+      }
+    });
+  }catch(e){}
+}
+/* جلبٌ صامتٌ لصفحةٍ مجاورة. net=false: يُقرأ المحليُّ فقط ولا تُمسّ الشبكة */
+function musPrefetch(n, net){
+  if(n < 1 || n > 604) return Promise.resolve();
+  if(_musCache[n]){ musWarm(_musCache[n], net); return Promise.resolve(); }
+  var d = musDisk()[n];
+  if(d){ _musCache[n] = d; musWarm(d, net); return Promise.resolve(); }
+  return musIdbGet(n).then(function(full){
+    if(full){ _musCache[n] = full; musWarm(full, net); return; }
+    if(!net || navigator.onLine === false) return;
+    return musFetchJSON(n).then(function(j){
       if(!j) return;
-      _musCache[n] = j; musSave(n, j);
-      // وخطُّ الجارة يُطلب أيضًا، فلا ينتظره القارئُ عند التقليب
-      try{ musFont(j.font); (j.lines||[]).forEach(function(L){
-        (L.words||[]).forEach(function(w){ musFont(w.font); }); }); }catch(e){}
-    })
-    .catch(function(){});
+      _musCache[n] = j; musSave(n, j); musWarm(j, net);
+    });
+  }).catch(function(){});
+}
+/* بعد أن تستقرّ الورقةُ وفي لحظة هدوء: التاليةُ ثم السابقةُ ثم الأبعدان،
+   واحدةً بعد واحدة لا دفعةً واحدة، وعلى قدر الشبكة. */
+var _musAheadH = null, _musAheadT = null;
+function musAhead(n){
+  clearTimeout(_musAheadT);
+  try{ if(_musAheadH && window.cancelIdleCallback) cancelIdleCallback(_musAheadH); }catch(e){}
+  _musAheadH = null;
+  var go = function(){
+    if(_musPage !== n) return;
+    var lv = musNetLevel(), net = lv > 0;
+    var order = [n + 1, n - 1];
+    if(lv >= 2) order.push(n + 2, n - 2);
+    var chain = Promise.resolve();
+    order.forEach(function(k){
+      chain = chain.then(function(){ return _musPage === n ? musPrefetch(k, net) : null; });
+    });
+    /* ذاكرةُ الجلسة لا تنتفخ: ما بَعُد عن الصفحة الحاليّة يُسقط */
+    Object.keys(_musCache).forEach(function(k){ if(Math.abs(k - n) > 30) delete _musCache[k]; });
+  };
+  if(window.requestIdleCallback) _musAheadH = requestIdleCallback(go, { timeout: 2000 });
+  else _musAheadT = setTimeout(go, 350);
 }
 
-var _musWaitT = null;
+var _musWaitT = null, _musReq = 0;
 function musLoad(n){
   n = Math.max(1, Math.min(604, n | 0));
   clearTimeout(_musWaitT);
+  var req = ++_musReq;   /* رمزُ الطلب: نتيجةٌ أقدمُ لا تكتب فوق أحدث */
   _musPage = n;
+  var pg0 = document.getElementById('musPage');
+  if(pg0) pg0.classList.remove('mus-wait');
   musSaveResume(n);
   document.getElementById('musJump').value = n;
   try{ localStorage.setItem(MUS_KEY, String(n)); }catch(e){}
   musWird();
   try{ musDrawMarks(); }catch(e){}
 
-  if(_musCache[n]){ musRender(_musCache[n]); musAhead(n); return; }
+  if(_musCache[n]){ musRender(_musCache[n], req); return; }
   var saved = musDisk()[n];
-  if(saved){ _musCache[n] = saved; musRender(saved); musAhead(n); return; }
+  if(saved){ _musCache[n] = saved; musRender(saved, req); return; }
 
   /* المخزنُ الكامل (IndexedDB) — يُفحص قبل الشبكة. فحصٌ سريعٌ محليٌّ،
      لا يُبطئ شيئًا إن لم يكن المصحفُ مُنزَّلًا كاملًا (يعود بلا شيءٍ فورًا). */
   musIdbGet(n).then(function(full){
-    if(full && _musPage === n){
-      _musCache[n] = full; musRender(full); musAhead(n);
+    if(req !== _musReq) return;
+    if(full){
+      _musCache[n] = full; musRender(full, req);
       return;
     }
-    musLoadFromNetwork(n);
-  }).catch(function(){ musLoadFromNetwork(n); });
+    musLoadFromNetwork(n, req);
+  }).catch(function(){ if(req === _musReq) musLoadFromNetwork(n, req); });
 }
-function musLoadFromNetwork(n){
-  if(_musPage !== n) return;   // تنقّل القارئُ إلى صفحةٍ أخرى أثناء الفحص
-  /* التقليبُ السريعُ كان يُري «يُحمَّل» في كلّ ومضة، والصفحةُ تصل بعدها
-     بأجزاءٍ من الثانية. فلا تُعرض الرسالةُ إلّا إن طال الانتظارُ حقًّا. */
+function musLoadFromNetwork(n, req){
+  if(req === undefined) req = _musReq;
+  if(req !== _musReq) return;   // تنقّل القارئُ إلى صفحةٍ أخرى أثناء الفحص
   if(navigator.onLine === false){ musOffline(n); return; }
+  /* الورقةُ القديمةُ تبقى ظاهرةً حتى تصل الجديدة — لا ومضةَ فراغ.
+     إن طال الانتظارُ حقًّا خفتت قليلًا دلالةً على أنّ شيئًا يُحمَّل. */
   clearTimeout(_musWaitT);
   _musWaitT = setTimeout(function(){
-    if(_musPage !== n) return;
+    if(req !== _musReq) return;
     var lp = document.getElementById('musPage');
-    if(!lp) return;
-    lp.classList.add('settled');
-    lp.innerHTML = '<div class="mus-msg">…يُحمَّل</div>';
-  }, 420);
+    if(lp) lp.classList.add('mus-wait');
+  }, 450);
 
   musFetchJSON(n)
     .then(function(j){
       _musCache[n] = j; musSave(n, j);
-      if(_musPage === n) musRender(j);
-      /* نجلب المجاورتين بهدوء — التاليةَ والسابقة — فلا ينتظر القارئ عند التقليب
-         في الاتجاهين، ولا عند العودة إلى ما قرأ */
-      musPrefetch(n + 1); musPrefetch(n - 1); musPrefetch(n + 2);
+      if(req === _musReq) musRender(j, req);
     })
-    .catch(function(){ musOffline(n); });
+    .catch(function(){ if(req === _musReq) musOffline(n); });
 }
 
 /* لا تقدّمَ إلى ما بعد آخر صفحة الوِرد المحدَّد دون تسجيل إتمامه —
@@ -15249,6 +15533,10 @@ function musLoadFromNetwork(n){
 function mushafGo(step){
   if(step > 0 && _musFrom && _musTo && _musPage >= _musTo){
     var bar = document.getElementById('musWird');
+    /* في وضع التلاوة الشريطُ محجوب، فتُظهَر الأدواتُ ليُرى التنبيه
+       (الأدواتُ تطفو فوق الورقة ولا تزحزحها) */
+    var _scr = document.getElementById('screen-mushaf');
+    if(_scr && _scr.classList.contains('bare')) _scr.classList.remove('bare');
     if(bar){
       bar.classList.remove('mus-wird-nudge'); void bar.offsetWidth;
       bar.classList.add('mus-wird-nudge');
@@ -15297,12 +15585,13 @@ function musToggleBare(){
 }
 
 /* ═══ قلبُ الورقة من الحافّة ═══ */
-function musTurn(step){
+function musTurn(step, vis){
   var h = document.getElementById('musHint');
   if(h) h.classList.remove('show');
-  if(_turning) return;
+  /* تقليبٌ متتابعٌ والحركةُ قائمة: تُقطع ويُنتقل فورًا — الأحدثُ يغلب ولا يضيع لمسٌ */
+  if(_turning){ musEndTurn(); mushafGo(step); return; }
   if(step > 0 && _musFrom && _musTo && _musPage >= _musTo){ mushafGo(step); return; }
-  musBeginTurn(step, function(){ mushafGo(step); });
+  musBeginTurn(step, function(){ mushafGo(step); }, vis);
 }
 
 /* ═══ «وقفتُ هنا» ═══
@@ -15433,24 +15722,56 @@ function musReleaseAwake(){
 
 /* السحبُ يقلّب الورقة — كما تُقلَّب في المصحف: من اليسار إلى اليمين للتالية */
 (function(){
-  var x0 = 0, y0 = 0, on = false;
+  var x0 = 0, y0 = 0, on = false, drag = false, inSheet = false;
+  function reduced(){
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+  function settleBack(){
+    var el = document.getElementById('musPage');
+    if(!el || !el.style.transform) return;
+    el.style.transition = 'transform .16s cubic-bezier(.16,1,.3,1)';
+    el.style.transform = '';
+    setTimeout(function(){ if(!_turning) el.style.transition = ''; }, 190);
+  }
   document.addEventListener('touchstart', function(e){
     var s = document.getElementById('screen-mushaf');
     if(!s || s.classList.contains('hidden') || e.touches.length !== 1){ on = false; return; }
-    on = true; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    on = true; drag = false;
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    inSheet = !!(e.target && e.target.closest && e.target.closest('#musSheet'));
+  }, {passive:true});
+  /* الورقةُ تتبع الإصبعَ خفيفًا (٣٥٪ من المسافة، وحدٌّ أقصى ٣٦px) —
+     لا أكثر، فلا تُزاح عن مكانها ولا يتغيّر قياسُها */
+  document.addEventListener('touchmove', function(e){
+    if(!on || !inSheet || _turning || reduced() || e.touches.length !== 1) return;
+    var dx = e.touches[0].clientX - x0, dy = e.touches[0].clientY - y0;
+    if(!drag){
+      if(Math.abs(dx) > 14 && Math.abs(dx) > Math.abs(dy) * 1.6) drag = true; else return;
+    }
+    var el = document.getElementById('musPage');
+    if(!el) return;
+    el.style.transition = 'none';
+    el.style.transform = 'translateX(' + Math.max(-36, Math.min(36, dx * 0.35)).toFixed(1) + 'px)';
+  }, {passive:true});
+  document.addEventListener('touchcancel', function(){
+    on = false; if(drag){ drag = false; settleBack(); }
   }, {passive:true});
   document.addEventListener('touchend', function(e){
     if(!on) return; on = false;
+    var wasDrag = drag; drag = false;
     var t = e.changedTouches[0];
     var dx = t.clientX - x0, dy = t.clientY - y0;
     if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.6){
+      if(wasDrag) settleBack();
       /* لمسةٌ ساكنة على الورقة: تبديلُ وضع التلاوة */
       if(Math.abs(dx) < 12 && Math.abs(dy) < 12
          && e.target && e.target.closest && e.target.closest('#musSheet')
          && !e.target.closest('.mts-marker')) musToggleBare();
       return;
     }
-    mushafGo(dx > 0 ? 1 : -1);
+    /* الاتجاهُ كما كان: يمينٌ = التالية. والورقةُ تمضي مع الإصبع */
+    musTurn(dx > 0 ? 1 : -1, dx > 0 ? 1 : -1);
+    if(!_turning) settleBack();   /* مُنعت (حدُّ الوِرد) فتعود الورقةُ إلى مكانها */
   }, {passive:true});
 })();
 
@@ -15958,8 +16279,10 @@ var _musW = 0;
 addEventListener('resize', function(){
   var s = document.getElementById('screen-mushaf');
   if(!s || s.classList.contains('hidden')) return;
-  var w = window.innerWidth;
-  if(w === _musW) return;
+  var w = window.innerWidth, hh = window.innerHeight;
+  /* الارتفاعُ يعني شيئًا على الحاسوب (تكبير النافذة)، ولا يُعاد القياسُ لشريط المتصفّح (<80px) */
+  if(w === _musW && Math.abs(hh - (window._musH || hh)) < 80) return;
+  window._musH = hh;
   _musW = w;
   musFit();
 });
@@ -16913,7 +17236,7 @@ function showToast(msg){
   });
   // نطلب الموقع مرة واحدة إن لم يُحدَّد بعد
   try{ if(!ZahimDay.config().located) ZahimDay.locate(function(ok){
-        if(ok && typeof buildCompass==='function') buildCompass(); }); }catch(e){}
+        if(ok && typeof buildCompass==='function') buildCompass(); }, {silent:true}); }catch(e){}
 })();
 </script>
 
@@ -17207,6 +17530,9 @@ function showToast(msg){
 
     </div>
 
+    <div class="zx-row" onclick="zxToggleAuto()" id="zxAutoRow">
+      <span class="zx-row-label">تحديد موقعي تلقائيًّا<i>يتبدّل موقعك إن سافرتَ؛ ويحتاج إذن الموقع</i></span><span class="zx-row-value" id="zxAuto">متوقّف</span>
+    </div>
     <div class="zx-note" id="zxPlaceNote" hidden></div>
   </div>
   <div class="zx-cities" id="zxCities">
@@ -17420,6 +17746,7 @@ function zxPaintSettings(){
   try{
     var c = ZahimDay.config();
     document.getElementById('zxCity').textContent = c.city || 'موقعك';
+    var _a = document.getElementById('zxAuto'); if(_a) _a.textContent = c.auto===true ? 'مفعَّل' : 'متوقّف';
     document.getElementById('zxMethod').textContent = ZahimDay.METHODS[c.method].name;
     document.getElementById('zxMadhab').textContent = c.madhab==='hanafi' ? 'الحنفية' : 'الجمهور';
   }catch(e){}
@@ -17456,12 +17783,14 @@ document.addEventListener('keydown', function(e){
 /* تُنادى مرّةً عند الفتح: تُصحّح المدينةَ لمن انتقل، وتصمت لمن لم ينتقل */
 function zxAutoLocate(){
   try{
-    ZahimDay.autoLocate(function(changed){
+    ZahimDay.autoLocate(function(changed, city){
       if(!changed) return;
       try{ zxPaintSettings(); }catch(e){}
       try{ if(typeof buildCompass==='function') buildCompass(); }catch(e){}
+      try{ if(typeof window.mihrabActivate==='function'
+              && document.getElementById('screen-mihrab').classList.contains('active')) window.mihrabActivate(); }catch(e){}
       try{ if(typeof showToast==='function')
-             showToast(ZahimDay.config().city); }catch(e){}
+             showToast('تحدّث موقعك إلى ' + (city || ZahimDay.config().city)); }catch(e){}
     });
   }catch(e){}
 }
@@ -17493,6 +17822,19 @@ function zxLocate(){
         ? 'تحديد الموقع يعمل داخل التطبيق، لا على ملفٍ محفوظ.'
         : 'تعذّر الوصول إلى الموقع.';
     }
+  });
+}
+/* تفعيل المتابعة التلقائية: موافقةٌ صريحة. التفعيل يستدعي طلب الإذن (بلمسة المستخدم)، والإيقاف فوري. */
+function zxToggleAuto(){
+  var on = ZahimDay.isAuto();
+  if(on){ ZahimDay.setAuto(false); zxPaintSettings(); return; }
+  var cell = document.getElementById('zxAuto'); if(cell) cell.textContent = 'جارٍ التحديد…';
+  ZahimDay.locate(function(ok){
+    zxPaintSettings();
+    if(ok){ if(typeof buildCompass==='function') buildCompass();
+      try{ window.dispatchEvent(new CustomEvent('zahim-location')); }catch(e){} return; }
+    var note = document.getElementById('zxPlaceNote');
+    if(note){ note.hidden = false; note.textContent = 'تعذّر الوصول إلى الموقع — يبقى التحديد التلقائي متوقّفًا.'; }
   });
 }
 function zxCycleMethod(){
@@ -19260,7 +19602,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-10-13-0700').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-10-20-0800').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19384,7 +19726,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-13-0700';
+  window.ZAHIM_STAMP = 'zahim-2026-10-20-0800';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -19986,6 +20328,8 @@ body.theme-dark .zx-sw{
         introShown = localStorage.getItem('zahim_intro_shown_v1') === '1';
       }catch(e){}
       if(seen) return;
+      /* من له اسمٌ أو دولةٌ محفوظان (ولو رُمِّما من كعكةٍ أو IndexedDB) ليس زائرًا جديدًا */
+      try{ if(getSavedUserName() || getSavedUserCountry()){ localStorage.setItem(KEY, '1'); return; } }catch(e){}
       if(introShown) ztOpenSetup(); else ztOpen();
     }, 1400);
   });
@@ -20664,7 +21008,7 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
 "use strict";
 var RAD=Math.PI/180, DEG=180/Math.PI, KL=21.4225, KG=39.8262;
 var Q={lat:24.7136,lon:46.6753,qibla:0,heading:0,raw:0,offset:0,
-       sensor:false,attached:false,state:'seek',field:null,calField:null,stale:false,built:false,magOk:null};
+       sm:null,sensor:false,attached:false,state:'seek',field:null,calField:null,stale:false,built:false,magOk:null};
 var ARRIVE_MS=1100, LEAVE_DEG=9, arriveAt=null, leaveAt=null, wasLit=false;
 function $(i){return document.getElementById(i);}
 function ar(n){
@@ -20714,41 +21058,75 @@ function archD(cx,base,w,h){
 }
 var _kgeo=null, _kkey='';
 window.addEventListener('resize',function(){ _kgeo=null; _kkey=''; });
-function paintGate(){
-  var host=$('zqGate'); if(!host) return;
-  var dl=dlNow(), a=Math.min(Math.abs(dl),75), t=1-a/75, lit=Math.abs(dl)<=3;
+/* الرواقُ يُبنى مرّةً واحدة ثم تُحدَّث سماتُه فقط (opacity/transform):
+   إعادةُ innerHTML كلَّ رسمةٍ كانت تهدم العقدَ وتبنيها وتُجمّد الجوّالَ البطيء.
+   الأقواسُ الخلفيّةُ تُزاح بـtranslate بدل إعادة كتابة d. */
+var _G=null, _gq=NaN;
+function buildGate(host){
   var o='<defs><radialGradient id="zqgg" cx="50%" cy="42%">'
    +/* ضوءُ السجّادة كان يتبع --green-light؛ وهو كحليٌّ الآن، لكن نُصرّح
      به لئلّا يتبدّل بتبدّل القالب — فالسجّادةُ إطارٌ ثابتُ الهويّة */
-  '<stop offset="0%" stop-color="#2E6E9E" stop-opacity="'+(0.5*t*t*t).toFixed(3)+'"/>'
+  '<stop offset="0%" stop-color="#2E6E9E" stop-opacity="0"/>'
    +'<stop offset="70%" stop-color="#2E6E9E" stop-opacity="0"/></radialGradient></defs>';
   o+='<rect width="300" height="322" fill="url(#zqgg)"/>';
   for(var i=5;i>=1;i--){
-    var dep=i/5, vis=Math.max(0,Math.min(1,(t-dep*0.46)/0.40));
-    if(vis<=0.01) continue;
-    var sc=1-dep*0.46, cx=150+dl*dep*1.5, bb=272-dep*44, op=(0.16+0.52*(1-dep))*vis;
-    o+='<path d="'+archD(cx,bb,116*sc,212*sc)+'" fill="none" stroke="var(--gold)" stroke-width="'
-      +(1.5-dep*0.75).toFixed(2)+'" opacity="'+op.toFixed(3)+'" stroke-linejoin="round"/>';
-    o+='<line x1="'+(cx-116*sc/2-8*sc).toFixed(1)+'" y1="'+bb+'" x2="'+(cx+116*sc/2+8*sc).toFixed(1)+'" y2="'+bb
-      +'" stroke="var(--gold)" stroke-width="'+(1.1-dep*0.5).toFixed(2)+'" opacity="'+(op*0.7).toFixed(3)+'"/>';
+    var dep=i/5, sc=1-dep*0.46, bb=272-dep*44;
+    o+='<path d="'+archD(150,bb,116*sc,212*sc)+'" fill="none" stroke="var(--gold)" stroke-width="'
+      +(1.5-dep*0.75).toFixed(2)+'" opacity="0" stroke-linejoin="round"/>';
+    o+='<line x1="'+(150-116*sc/2-8*sc).toFixed(1)+'" y1="'+bb+'" x2="'+(150+116*sc/2+8*sc).toFixed(1)+'" y2="'+bb
+      +'" stroke="var(--gold)" stroke-width="'+(1.1-dep*0.5).toFixed(2)+'" opacity="0"/>';
   }
-  var sx=(0.56+0.44*t), skew=Math.max(-7,Math.min(7,dl*0.07));
-  o+='<g transform="translate(150,180) skewX('+skew.toFixed(2)+') scale('+sx.toFixed(3)+',1) translate(-150,-180)">';
-  o+='<path d="'+archD(150,272,116,212)+'" fill="none" stroke="var(--gold)" stroke-width="'+(1.6+1.7*t).toFixed(2)+'" stroke-linejoin="round"/>';
-  o+='<path d="'+archD(150,272,96,190)+'" fill="none" stroke="var(--green-light)" stroke-width=".9" opacity="'+(0.2+0.6*t).toFixed(2)+'"/>';
+  o+='<g>';
+  o+='<path d="'+archD(150,272,116,212)+'" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linejoin="round"/>';
+  o+='<path d="'+archD(150,272,96,190)+'" fill="none" stroke="var(--green-light)" stroke-width=".9" opacity=".2"/>';
   o+='</g>';
   o+='<line x1="72" y1="272" x2="228" y2="272" stroke="var(--gold)" stroke-width="1.3" opacity=".6"/>';
+  host.innerHTML=o;
+  var ps=host.getElementsByTagName('path'), ls=host.getElementsByTagName('line'), back=[], k;
+  /* ترتيبُ العقد: خمسةُ أقواسٍ خلفيّة (i=5..1) ثم قوسا الواجهة؛ وخمسةُ خطوطٍ ثم خطُّ الأرض */
+  for(k=0;k<5;k++) back.push({p:ps[k], l:ls[k], dep:(5-k)/5, op:-1, dx:NaN});
+  _G={host:host, stop:host.getElementsByTagName('stop')[0], back:back, g:host.getElementsByTagName('g')[0],
+      f1:ps[5], f2:ps[6], gtr:'', sw:NaN, o2:NaN, so:NaN};
+  _gq=NaN;
+}
+function paintGate(dl){
+  var host=$('zqGate'); if(!host) return;
+  if(!_G || _G.host!==host) buildGate(host);
+  /* الرسمُ على دقّةِ نصف درجة: ما لم يتغيّر لا نلمس الـDOM (إلا الكعبةُ عند تغيّر الهندسة) */
+  var dq=Math.round(dl*2)/2;
+  if(dq===_gq) return;
+  _gq=dq;
+  dl=dq;
+  var a=Math.min(Math.abs(dl),75), t=1-a/75, lit=Math.abs(dl)<=3, G0=_G;
+  var so=(0.5*t*t*t).toFixed(3);
+  if(so!==G0.so){ G0.so=so; G0.stop.setAttribute('stop-opacity',so); }
+  for(var i=0;i<5;i++){
+    var B=G0.back[i], dep=B.dep, vis=Math.max(0,Math.min(1,(t-dep*0.46)/0.40));
+    var op = vis<=0.01 ? 0 : (0.16+0.52*(1-dep))*vis;
+    var ops=op.toFixed(3);
+    if(ops!==B.op){
+      B.op=ops; B.p.setAttribute('opacity',ops); B.l.setAttribute('opacity',(op*0.7).toFixed(3));
+    }
+    if(op>0){
+      var dx=(dl*dep*1.5).toFixed(1);
+      if(dx!==B.dx){ B.dx=dx; var tr='translate('+dx+',0)'; B.p.setAttribute('transform',tr); B.l.setAttribute('transform',tr); }
+    }
+  }
+  var sx=(0.56+0.44*t), skew=Math.max(-7,Math.min(7,dl*0.07));
+  var gtr='translate(150,180) skewX('+skew.toFixed(2)+') scale('+sx.toFixed(3)+',1) translate(-150,-180)';
+  if(gtr!==G0.gtr){ G0.gtr=gtr; G0.g.setAttribute('transform',gtr); }
+  var sw=(1.6+1.7*t).toFixed(2), o2=(0.2+0.6*t).toFixed(2);
+  if(sw!==G0.sw){ G0.sw=sw; G0.f1.setAttribute('stroke-width',sw); }
+  if(o2!==G0.o2){ G0.o2=o2; G0.f2.setAttribute('opacity',o2); }
   /* الكعبةُ علامةُ الجهة — الصورةُ المعتمدةُ وحدها (لا رسمَ بديلٌ عنها):
      على الجانب إن كانت القبلةُ بين ٢٠° و١٢٠°، وفي أسفل المشهد — أي خلفَك —
-     إن زادت. الصورةُ عنصرٌ ثابتٌ خارج الـSVG يُنقَل موضعُه فقط، فلا يُعاد
-     بناؤها ولا ترتجف كلَّ ١٤٠ms. */
+     إن زادت. الصورةُ عنصرٌ ثابتٌ خارج الـSVG يُنقَل موضعُه فقط. */
   var kimg=$('zqKaaba'), karr=$('zqKarrow');
   if(kimg){
     if(!lit && Math.abs(dl)>20){
       var sd0=dl>0?1:-1, behind=Math.abs(dl)>=120;
-      /* الأبعادُ تُقاس مرّةً وتُحفظ — القياسُ كلَّ إطارٍ يُجبر المتصفّحَ على
-         إعادة التخطيط ستّين مرّةً في الثانية مع كلّ قراءةِ حسّاس، فيتجمّد
-         المشهدُ على جوّالٍ بطيء. يُعاد القياسُ عند الفتح وتدوير الشاشة فقط. */
+      /* الأبعادُ تُقاس مرّةً وتُحفظ — القياسُ في كلّ رسمةٍ يُجبر المتصفّحَ على
+         إعادة التخطيط. يُعاد القياسُ عند الفتح وتدوير الشاشة فقط. */
       if(!_kgeo){
         var gr=host.getBoundingClientRect(), sc0=$('zqScene').getBoundingClientRect();
         _kgeo={gl:gr.left-sc0.left, gt:gr.top-sc0.top, gw:gr.width, gh:gr.height, sw:sc0.width, sh:sc0.height};
@@ -20781,7 +21159,6 @@ function paintGate(){
       if(karr && karr.style.display!=='none') karr.style.display='none';
     }
   }
-  host.innerHTML=o;
 }
 
 /* ── السجّادة ── */
@@ -20853,6 +21230,7 @@ function calNote(){
 }
 function open_(){ return $('screen-qibla') && !$('screen-qibla').classList.contains('hidden'); }
 
+var _rugQ=NaN, _capKey='';
 function paint(){
   if(!open_()) return;
   var dl=dlNow(), lit=Math.abs(dl)<=3, now=Date.now();
@@ -20867,29 +21245,69 @@ function paint(){
       if(Q.state==='settled' && now-leaveAt>=450) seek();
     }else leaveAt=null;
   }
-  paintGate();
-  var rug=$('zqRug'); if(rug) rug.style.setProperty('--zqrz',(-dl).toFixed(1)+'deg');
+  paintGate(dl);
+  /* دورانُ السجّادة: لا يُكتب إلا إن تغيّر نصفُ الدرجة */
+  var rq=Math.round(dl*2)/2;
+  if(rq!==_rugQ){
+    _rugQ=rq;
+    var rug=$('zqRug'); if(rug) rug.style.setProperty('--zqrz',(-rq).toFixed(1)+'deg');
+  }
+  /* النصُّ: يُبنى ويُكتب فقط عند تغيّر مفتاحه (الحالة + الدرجة الصحيحة) */
   var cap=$('zqCaption');
   if(cap){
-    if(Q.state==='settled'){ cap.className='zq-lit'; cap.innerHTML=T('أنت على القبلة'); }
-    else if(lit){ cap.className='zq-lit'; cap.innerHTML=T('أنت على القبلة')+'<small>'+T('اثبت لحظة')+'</small>'; }
-    else {
-      var far=Math.abs(dl)>20;
-      cap.className = far ? 'zq-far' : '';
-      var turn = Math.abs(dl)>=120 ? T('استدر — القبلة خلفك') : (ar(Math.abs(dl))+'° '+T(dl>0?'يمينًا':'يسارًا'));
-      if(Math.abs(dl)>=120) turn += ' · ' + ar(Math.abs(dl))+'° '+T(dl>0?'يمينًا':'يسارًا');
-      cap.innerHTML = turn + '<small>'+T('القبلة نحو')+' '+T(qiblaRegion())+'</small>';
+    var rd=Math.round(Math.abs(dl)), k;
+    if(Q.state==='settled') k='S';
+    else if(lit) k='L';
+    else k='D'+rd+(dl>0?'r':'l')+(Math.abs(dl)>20?'f':'n')+(Math.abs(dl)>=120?'b':'')+Math.round(Q.qibla/45)%8;
+    if(k!==_capKey){
+      _capKey=k;
+      if(k==='S'){ cap.className='zq-lit'; cap.innerHTML=T('أنت على القبلة'); }
+      else if(k==='L'){ cap.className='zq-lit'; cap.innerHTML=T('أنت على القبلة')+'<small>'+T('اثبت لحظة')+'</small>'; }
+      else {
+        var far=Math.abs(dl)>20;
+        cap.className = far ? 'zq-far' : '';
+        var turn = Math.abs(dl)>=120 ? T('استدر — القبلة خلفك') : (ar(Math.abs(dl))+'° '+T(dl>0?'يمينًا':'يسارًا'));
+        if(Math.abs(dl)>=120) turn += ' · ' + ar(Math.abs(dl))+'° '+T(dl>0?'يمينًا':'يسارًا');
+        cap.innerHTML = turn + '<small>'+T('القبلة نحو')+' '+T(qiblaRegion())+'</small>';
+      }
     }
   }
   wasLit=lit;
 }
-/* الحسّاسُ يطلق ستّين حدثًا في الثانية، والرسمُ يعيد بناءَ الرواق كلَّه —
-   فنقصره على عشرين رسمةً في الثانية؛ يكفي للسلاسة ولا يُثقل الجوّال. */
-var _lastPaint=0;
-function applyRaw(raw){
-  Q.raw=((raw%360)+360)%360; Q.heading=(Q.raw+Q.offset)%360;
-  var now=Date.now(); if(now-_lastPaint<50) return;
-  _lastPaint=now; paint();
+/* ── حلقةُ الرسم ──
+   الحسّاسُ يطلق ستّين حدثًا في الثانية؛ الحدثُ يخزّن الهدفَ فقط (Q.raw)،
+   والرسمُ يجري في requestAnimationFrame بسقفِ عشرين رسمةً في الثانية.
+   وتتوقّف الحلقةُ تمامًا إن أُغلقت الشاشةُ أو اختفت الصفحة. */
+var _raf=0, _lastPaint=0, _smT=0;
+function live(){ return !document.hidden && open_(); }
+/* تنعيمٌ دائريٌّ للاتجاه: الفرقُ بأقصر قوس (فلا قفزةَ عند ٣٥٩°→٠°)،
+   ومعاملٌ متكيّف: ثباتٌ شديد عند السكون (τ≈٢٢٠ms) واستجابةٌ سريعة عند الدوران الكبير (τ≈٢٥ms). */
+function smoothStep(ts, snap){
+  if(Q.sm==null || snap){ Q.sm=Q.raw; _smT=ts; return; }
+  var dt=ts-_smT; _smT=ts;
+  if(!(dt>0)) return;
+  if(dt>200) dt=200;
+  var d=sgn(Q.raw-Q.sm), ad=Math.abs(d);
+  if(ad<0.02){ Q.sm=Q.raw; return; }
+  var tau = ad>=30 ? 25 : (ad<=2 ? 220 : 220-(ad-2)/28*195);
+  Q.sm=(Q.sm + d*(1-Math.exp(-dt/tau)) + 360)%360;
+}
+function loop(ts){
+  _raf=0;
+  if(!live()) return;               /* مخفيّة: لا عملَ ولا إعادةَ جدولة */
+  _raf=requestAnimationFrame(loop);
+  if(ts-_lastPaint<50) return;
+  _lastPaint=ts;
+  smoothStep(ts, false);
+  Q.heading=(Q.sm+Q.offset)%360;
+  paint();
+}
+function kick(){ if(!_raf && live()) _raf=requestAnimationFrame(loop); }
+document.addEventListener('visibilitychange',function(){ if(!document.hidden){ _smT=0; kick(); } });
+function applyRaw(raw, snap){
+  Q.raw=((raw%360)+360)%360;
+  if(Q.sm==null || snap){ Q.sm=Q.raw; Q.heading=(Q.sm+Q.offset)%360; _gq=NaN; _rugQ=NaN; _capKey=''; paint(); }
+  kick();
 }
 
 /* ── الحسّاس ── */
@@ -21005,12 +21423,12 @@ global.zqCalibrate=function(){
   if(Q.offset!==0){
     Q.offset=0; Q.calField=null; Q.stale=false;
     if(b) b.textContent=T('عايِر: أواجه القبلة الآن');
-    calNote(); applyRaw(Q.raw); return;
+    calNote(); applyRaw(Q.raw,true); return;
   }
   Q.offset=((Q.qibla-Q.raw)%360+360)%360;
   Q.calField=Q.field; Q.stale=false;
   if(b) b.textContent=T('أزِل المعايرة');
-  calNote(); applyRaw(Q.raw);
+  calNote(); applyRaw(Q.raw,true);
 };
 
 /* ── الفتح والإغلاق ── */
@@ -21025,16 +21443,23 @@ global.openQibla=function(){
   window.scrollTo(0,0);
   seek(); arriveAt=null; leaveAt=null;
   if(!Q.attached) global.zqStartSensor();
-  paint();
+  _gq=NaN; _rugQ=NaN; _capKey='';
+  if(Q.sm!=null) Q.heading=(Q.sm+Q.offset)%360;
+  paint(); kick();
 };
 global.closeQibla=function(){
   if(typeof zxOnly==='function') zxOnly('screen-home');
   window.scrollTo(0,0);
 };
 
+/* تغيّر الموقع تلقائيًّا: القبلة تُعاد من الإحداثيات الجديدة */
+window.addEventListener('zahim-location',function(){
+  try{ pullCoords(); showBearing(); _kgeo=null; _kkey=''; if(open_()) paint(); }catch(e){}
+});
 function boot(){
   pullCoords();
-  setInterval(function(){ if(Q.attached||open_()) paint(); }, 140);
+  /* لا مؤقّتَ دائم: الحلقةُ تبدأ عند الفتح وتتوقّف عند الإغلاق (انظر loop/kick) */
+  kick();
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
 else boot();
@@ -21277,6 +21702,100 @@ body.zr-ashr-on .zr-a-n2{ color:#A9A092; }
 #screen-mushaf .topbar{ display:flex;align-items:center;
   justify-content:space-between;gap:8px; }
 #screen-mushaf .fhr-open{ font-size:12.5px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   رمضان — كحليٌّ مدموج
+   ───────────────────────────────────────────────────────────────
+   كان الكحليُّ كتلًا مصمتةً على أرضيّةٍ مسطّحة، بلا ضوءٍ ولا عمق.
+   الهويّةُ نفسُها، لكنّ الأرضيّة تتدرّج، والكتلُ يسكنها توهّجٌ ذهبيٌّ
+   خافتٌ وظلٌّ ناعم وخيطٌ ذهبيٌّ رفيع — فتنتمي إلى الصفحة لا تُلصَق عليها.
+   ألوانٌ وتدرّجاتٌ وظلالٌ فقط: لا أبعادَ ولا حركة. تعمل ما دام
+   الصفُّ zr-ram-on، وخارج رمضان لا أثرَ لها.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ١ · أيّامُ رمضان (١–٢٠) في الوضع الفاتح */
+body.mode-calm.zr-ram-on:not(.zr-ashr-on) #screen-home{
+  background:
+    radial-gradient(90% 38% at 50% 30%, rgba(214,169,74,.16), rgba(214,169,74,0) 70%),
+    linear-gradient(180deg,#FBF7EC 0%,#F3ECD9 55%,#EFE6CE 100%) !important;
+}
+/* هالةٌ ذهبيّةٌ ساكنةٌ خلف القرص كأنّ الضوءَ يخرج من وراءه */
+body.zr-ram-on .compass-wrap{ isolation:isolate; }
+body.zr-ram-on .compass-wrap::before{
+  content:'';position:absolute;inset:-7%;z-index:-1;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 50% 48%, rgba(214,169,74,.42) 0%, rgba(214,169,74,.16) 46%, rgba(214,169,74,0) 70%);
+}
+body.mode-calm.zr-ram-on:not(.zr-ashr-on) .compass-wrap .compass-svg{
+  filter:drop-shadow(0 12px 22px rgba(20,48,79,.20)) drop-shadow(0 0 1px rgba(201,150,58,.55));
+}
+/* عدّادُ الإفطار: كحليٌّ متدرّج بدل الأزرق اللامع، بتوهّجٍ ذهبيٍّ من أعلاه */
+body.mode-calm.zr-ram-on:not(.zr-ashr-on) .zr-cd:not(.pre):not(.now){
+  background:
+    radial-gradient(90% 80% at 50% 0%, rgba(214,169,74,.26), rgba(214,169,74,0) 62%),
+    linear-gradient(160deg,#1B4A73 0%,#14304F 58%,#0F2440 100%);
+  border-color:rgba(214,169,74,.55);
+  box-shadow:0 12px 28px rgba(20,48,79,.26), 0 0 0 1px rgba(214,169,74,.18),
+             inset 0 1px 0 rgba(255,243,218,.22);
+}
+body.mode-calm.zr-ram-on:not(.zr-ashr-on) .zr-cd.pre{
+  background:
+    radial-gradient(90% 80% at 50% 0%, rgba(255,226,166,.20), rgba(255,226,166,0) 62%),
+    linear-gradient(150deg,#8C6A2E,#6B4F1E 50%,#4A361A);
+  box-shadow:0 12px 26px rgba(107,79,32,.26), inset 0 1px 0 rgba(255,243,218,.2);
+}
+body.mode-calm.zr-ram-on:not(.zr-ashr-on) .zr-cd.now{
+  box-shadow:0 12px 30px rgba(184,132,44,.34), inset 0 1px 0 rgba(255,243,218,.3);
+}
+body.mode-calm.zr-ram-on:not(.zr-ashr-on) .zr-cd:not(.now) .zr-cd-lab{ color:#F2D89A;opacity:1; }
+/* ميدانُ الطاعة: عاجٌ دافئٌ بحدٍّ ذهبيٍّ رفيع وظلٍّ أنعم */
+body.mode-calm.zr-ram-on:not(.zr-ashr-on) .ros-card{
+  background:linear-gradient(158deg,rgba(255,252,243,.98),rgba(243,236,217,.82));
+  border-color:rgba(201,150,58,.34);
+  box-shadow:0 12px 28px rgba(120,90,42,.14), inset 0 1px 0 rgba(255,255,255,.95);
+}
+@media (min-height:801px){
+  body.zr-ram-on:not(.zr-ashr-on) .zr-cd{ margin-top:16px;margin-bottom:8px; }
+}
+
+/* ٢ · العشرُ الأواخر: ليلٌ كحليٌّ أدفأ لا أسود — وتوهّجٌ ذهبيٌّ خلف القرص */
+body.zr-ashr-on #screen-home{
+  background:
+    radial-gradient(120% 52% at 50% -8%, rgba(214,169,74,.32), rgba(214,169,74,0) 58%),
+    radial-gradient(85% 34% at 50% 32%, rgba(214,169,74,.14), rgba(214,169,74,0) 70%),
+    linear-gradient(180deg,#1B4A73 0%,#17406A 8%,#14304F 52%,#0F2440 100%) !important;
+}
+body.zr-ashr-on .zr-cd:not(.now):not(.pre){
+  background:
+    radial-gradient(90% 80% at 50% 0%, rgba(214,169,74,.28), rgba(214,169,74,0) 62%),
+    linear-gradient(160deg,#1B4A73 0%,#14304F 60%,#0F2440 100%) !important;
+}
+body.zr-ashr-on .zr-ashr{
+  background:
+    radial-gradient(100% 70% at 50% 0%, rgba(214,169,74,.20), rgba(214,169,74,0) 64%),
+    linear-gradient(165deg,rgba(27,74,115,.72),rgba(15,36,64,.55)) !important;
+  border-color:rgba(214,169,74,.46) !important;
+  box-shadow:0 10px 26px rgba(8,18,36,.34), inset 0 1px 0 rgba(255,243,218,.18) !important;
+}
+body.zr-ashr-on .ros-card{
+  background:
+    radial-gradient(90% 80% at 85% 10%, rgba(214,169,74,.16), rgba(214,169,74,0) 60%),
+    linear-gradient(160deg,rgba(27,74,115,.66),rgba(15,36,64,.50)) !important;
+  border-color:rgba(214,169,74,.38) !important;
+  box-shadow:0 10px 26px rgba(8,18,36,.30), inset 0 1px 0 rgba(255,243,218,.14) !important;
+}
+body.zr-ashr-on .home-dock{
+  background:linear-gradient(to top, rgba(15,36,64,.94) 42%, rgba(15,36,64,.62) 74%, rgba(15,36,64,0)) !important;
+}
+
+/* ═══ المصحف على الحاسوب ═══
+   الشاشاتُ كلُّها محدودةٌ بـ٤٨٠px، والمصحفُ يُقرأ بنسبة صفحته المطبوعة:
+   فإن بقي في ٤٨٠ على شاشةٍ قصيرة صغر خطُّه ومُدّت سطورُه رأسيًّا.
+   على الشاشات العريضة يتّسع المصحفُ وحدَه، وتبقى أدواتُه في عمودٍ مريح. */
+@media (min-width:700px){
+  #screen-mushaf{max-width:100%;}
+  #screen-mushaf .mus-top > *{max-width:560px;margin-inline:auto;width:100%;}
+  #screen-mushaf .mus-foot{left:50%;right:auto;width:100%;max-width:560px;transform:translateX(-50%);}
+}
 </style>
 
 <div id="zaBar" role="status" aria-live="polite">
