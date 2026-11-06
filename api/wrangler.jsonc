@@ -1,0 +1,14 @@
+{
+  // ══ زاحِم — الخدمة الخلفية (العدّ المجهول + إشعارات الصلاة) ══
+  // مستقلّةٌ عن عامل الموقع `zahim`: لا تُنشر معه ولا تمسّه.
+  // النشر: انظر README.md في هذا المجلد.
+  "name": "zahim-api",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-06",
+  "triggers": { "crons": ["* * * * *"] },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "zahim-db", "database_id": "REPLACE_WITH_D1_ID" }
+  ],
+  "vars": { "VAPID_SUBJECT": "mailto:ara1979fat@gmail.com" },
+  "observability": { "enabled": true }
+}

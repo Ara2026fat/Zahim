@@ -28,7 +28,7 @@ const RUNTIME = VERSION + '-runtime';
 const QURAN = 'zahim-quran-v1';
 
 /* ما يبقى بعد التفعيل — وما سواه يُمحى */
-const KEEP = [SHELL, RUNTIME, QURAN];
+const KEEP = [SHELL, RUNTIME, QURAN, 'zahim-cloud'];
 
 /* ما يُحفظ عند التثبيت. أبقِ القائمة قصيرة: كلُّ إخفاقٍ هنا
    يُفشل التثبيت كلَّه. */
@@ -138,4 +138,43 @@ self.addEventListener('message', event => {
       caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))))
     );
   }
+});
+
+
+/* ═══ إشعاراتُ الصلاة (اختياريّة — تعمل فقط لمن اشترك بموافقته) ═══
+   الدفعُ يُوقظ العاملَ بلا حمولة؛ فيسأل الخدمةَ أيَّ صلاةٍ حان وقتُها ويعرض إشعارًا هادئًا. */
+self.addEventListener('message', event => {
+  const d = event.data;
+  if (d && d.type === 'zahim-cloud-cfg' && d.api && d.id) {
+    event.waitUntil(caches.open('zahim-cloud').then(c =>
+      c.put('/__zahim_cloud_cfg', new Response(JSON.stringify({ api: d.api, id: d.id })))));
+  }
+});
+
+self.addEventListener('push', event => {
+  event.waitUntil((async () => {
+    let title = 'حان وقتُ الصلاة', body = 'قُم إلى صلاتِك — أرِحنا بها يا بلال';
+    try {
+      const hit = await (await caches.open('zahim-cloud')).match('/__zahim_cloud_cfg');
+      if (hit) {
+        const cfg = await hit.json();
+        const r = await fetch(cfg.api + '/api/next?id=' + encodeURIComponent(cfg.id));
+        const j = await r.json();
+        if (j && j.ok && j.name) title = 'حان وقتُ صلاةِ ' + j.name;
+      }
+    } catch (e) {}
+    await self.registration.showNotification(title, {
+      body, tag: 'zahim-prayer', renotify: true, lang: 'ar', dir: 'rtl',
+      icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', data: { url: './' }
+    });
+  })());
+});
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil((async () => {
+    const all = await clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const c of all) { if ('focus' in c) return c.focus(); }
+    return clients.openWindow('./');
+  })());
 });
