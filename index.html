@@ -7569,6 +7569,11 @@ body.theme-dark #screen-mushaf .mus-msg b{color:#141C17;}
     <span class="mus-surah" id="musSurah">—</span>
     <span class="mus-tools">
       <span id="musPageNo"></span>
+      <button class="mus-tool" id="musSearchBtn" type="button" onclick="musSearchToggle()"
+              aria-label="بحث" title="بحث">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </button>
       <button class="mus-tool" id="musTone" type="button" onclick="musNextTone()"
               title="نغمةُ الورق">◐</button>
       <button class="mus-tool" id="musAwake" type="button" onclick="musToggleAwake()"
@@ -15341,10 +15346,20 @@ function musFsSave(n, v){
   try{ localStorage.setItem(MUS_FS, JSON.stringify(m)); }catch(e){}
 }
 
+/* الجوّال على جنبه: العرضُ أوسعُ من الارتفاع بكثير، والارتفاعُ لا يتّسع لخمسة عشر سطرًا.
+   فتملأ الورقةُ العرضَ بخطٍّ كبير، وتُقرأ بالتمرير الرأسيّ كما في تطبيقات المصحف. */
+function musIsWide(){
+  var w = window.innerWidth, h = window.innerHeight;
+  return w > h * 1.25 && h <= 540;
+}
 function musFit(){
   _musW = window.innerWidth; window._musH = window.innerHeight;
   var page = document.getElementById('musPage');
   var sheet = document.getElementById('musSheet');
+  var wide = musIsWide();
+  var scr = document.getElementById('screen-mushaf');
+  if(scr) scr.classList.toggle('mus-wide', wide);
+  if(wide && sheet) sheet.scrollTop = 0;
 
   // قياسٌ محفوظ؟ يُطبَّق فورًا وتُكشف الورقة بلا انتظار
   var cached = musFsMap()[musFsKey(_musPage)];
@@ -15373,7 +15388,7 @@ function musFit(){
     }
     page.style.setProperty('--mfs', best.toFixed(2) + 'px');
     var h = sheet.clientHeight - 12, got = page.scrollHeight;
-    if(got > h && got > 0) page.style.setProperty('--mfs', (best * (h / got)).toFixed(2) + 'px');
+    if(!wide && got > h && got > 0) page.style.setProperty('--mfs', (best * (h / got)).toFixed(2) + 'px');
     /* الصفحتان الأوليان لا تُمدّان لتملأ الورقة — الفراغُ حولهما من المصحف */
     if(page.classList.contains('framed')){
       var cap = Math.min(best, 27);
@@ -15384,7 +15399,7 @@ function musFit(){
     /* شاشةٌ عريضةٌ قصيرة: الطولُ هو القيد فيصغر الخطّ، والورقةُ تبقى عريضةً
        فتتباعد الكلمات. تُضيَّق الورقةُ بنسبة الخطّ فتحتفظ بهيئة المصحف المطبوع. */
     var fw = 0;
-    if(fin > 0 && best > 0 && fin < best - 0.4 && !page.classList.contains('framed')){
+    if(!wide && fin > 0 && best > 0 && fin < best - 0.4 && !page.classList.contains('framed')){
       var l0 = page.getElementsByClassName('ln')[0];
       var content = l0 ? l0.clientWidth : 0, pw = page.getBoundingClientRect().width;
       if(content > 0){
@@ -15568,6 +15583,15 @@ function musBare(on){
   if(!s) return;
   s.classList.toggle('bare', on !== false ? !!on : false);
   setTimeout(musFit, 320);
+}
+/* البحثُ يُطوى حتى يُطلب: كان شريطُه الدائمُ يحجب سطرًا ونصفًا من الصفحة عند ظهور الأدوات */
+function musSearchToggle(force){
+  var sc = document.getElementById('screen-mushaf'); if(!sc) return;
+  var on = (typeof force === 'boolean') ? force : !sc.classList.contains('mus-search-open');
+  sc.classList.toggle('mus-search-open', on);
+  var inp = document.getElementById('musSearchInput');
+  if(on && inp){ setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 60); }
+  if(!on && inp){ try{ inp.blur(); }catch(e){} }
 }
 function musToggleBare(){
   var s = document.getElementById('screen-mushaf');
@@ -19602,7 +19626,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-10-20-0800').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-03-1230').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19726,7 +19750,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-10-20-0800';
+  window.ZAHIM_STAMP = 'zahim-2026-11-03-1230';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -21796,6 +21820,45 @@ body.zr-ashr-on .home-dock{
   #screen-mushaf .mus-top > *{max-width:560px;margin-inline:auto;width:100%;}
   #screen-mushaf .mus-foot{left:50%;right:auto;width:100%;max-width:560px;transform:translateX(-50%);}
 }
+
+/* ═══ أدواتُ المصحف أخفُّ على الورقة ═══
+   الأدواتُ تطفو فوق الصفحة، وكانت تحجب نحو ربعها (١٩٤px). تُضغط حشواتُها
+   وحدَها — لا تغييرَ في الأزرار ولا مواضعها — فتبقى الآياتُ ظاهرةً تحتها. */
+#screen-mushaf .topbar{padding-top:calc(6px + env(safe-area-inset-top,0px));padding-bottom:9px;}
+#screen-mushaf .topbar .back-btn{padding-top:5px;padding-bottom:5px;font-size:13px;}
+#screen-mushaf .mus-head{padding:2px 14px 0;}
+#screen-mushaf .mus-tool{padding:5px 9px;border-radius:10px;}
+#screen-mushaf .mus-search-bar{margin-top:4px;padding:5px 11px;border-radius:10px;}
+#screen-mushaf .mus-wird{margin:4px 10px 5px;padding:5px 12px;border-radius:12px;}
+
+/* ═══ المصحف في الوضع الأفقي (جوّال) ═══ */
+#screen-mushaf.mus-wide .mus-sheet{
+  overflow-y:auto;-webkit-overflow-scrolling:touch;align-items:flex-start;
+  padding-left:calc(2px + env(safe-area-inset-left,0px));
+  padding-right:calc(2px + env(safe-area-inset-right,0px));
+  padding-bottom:calc(64px + env(safe-area-inset-bottom,0px));}
+#screen-mushaf.mus-wide .mus-page{max-width:none;min-height:0;height:auto;justify-content:flex-start;}
+#screen-mushaf.mus-wide .mus-page .ln{margin-bottom:.22em;}
+#screen-mushaf.mus-wide .mus-page.framed{max-width:560px;margin-inline:auto;}
+/* الحافّتان تثبتان على جانبي الشاشة ولا تمضيان مع التمرير، وأضيق كي لا تحجبا النصّ */
+#screen-mushaf.mus-wide .mus-edge{position:fixed;width:9%;}
+#screen-mushaf.mus-wide.bare .mus-edge{width:9%;}
+#screen-mushaf.mus-wide .mus-top > *{max-width:none;}
+/* الأدواتُ في الوضع الأفقي: البحثُ في صفّ الرأس نفسِه فلا يأكل الشاشةَ القصيرة */
+#screen-mushaf.mus-wide .mus-head{flex-wrap:nowrap;align-items:center;gap:10px;}
+#screen-mushaf.mus-wide .mus-head .mus-search-bar{flex:1 1 auto;order:2;margin:0;padding:4px 10px;}
+#screen-mushaf.mus-wide .mus-head .mus-tools{order:3;}
+#screen-mushaf.mus-wide .mus-head .mus-surah{order:1;}
+#screen-mushaf.mus-wide .mus-wird{margin:2px 10px 4px;padding:4px 12px;}
+
+/* ═══ أدواتٌ خفيفةٌ تُظهرها اللمسة ═══
+   اللمسةُ تُظهر الأدوات فوق الصفحة. صارت شريطًا رفيعًا: البحثُ مطويّ خلف أيقونته،
+   وشريطُ الوِرد نحيف، فلا يحجب إلا سطرًا أو سطرين بدل ربع الصفحة. */
+#screen-mushaf:not(.mus-search-open) .mus-head .mus-search-bar{display:none;}
+#screen-mushaf .mus-wird{margin:2px 10px 4px;padding:3px 12px;min-height:0;}
+#screen-mushaf .mus-wird button{padding:4px 12px;}
+#screen-mushaf .topbar{padding-bottom:7px;}
+#screen-mushaf .topbar::after{height:4px;}
 </style>
 
 <div id="zaBar" role="status" aria-live="polite">
