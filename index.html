@@ -19626,7 +19626,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-03-1230').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-06-1330').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19750,7 +19750,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-11-03-1230';
+  window.ZAHIM_STAMP = 'zahim-2026-11-06-1330';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -21859,6 +21859,16 @@ body.zr-ashr-on .home-dock{
 #screen-mushaf .mus-wird button{padding:4px 12px;}
 #screen-mushaf .topbar{padding-bottom:7px;}
 #screen-mushaf .topbar::after{height:4px;}
+
+/* ═══ ملاحظاتٌ من الاستعمال الفعليّ ═══
+   ١) لمسةُ دوائر المحطّات كانت تُظهر مربّعًا رماديًّا خلف الدائرة (تظليلُ اللمس الافتراضيّ للمتصفّح):
+      يُلغى في التطبيق كلِّه؛ والتركيزُ بلوحة المفاتيح يبقى ظاهرًا لمن يحتاجه.
+   ٢) دائرتا السهمين على حافّتَي المصحف كانتا تقعان فوق الآيات وأرقامِها.
+      التقليبُ يبقى بالسحب وبأزرار «السابق/التالي» في الأسفل، فتُزال الدائرتان. */
+*{-webkit-tap-highlight-color:transparent;}
+button,[onclick],a,[role="button"]{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
+button:focus:not(:focus-visible),[role="button"]:focus:not(:focus-visible){outline:none;}
+#screen-mushaf .mus-edge{display:none !important;}
 </style>
 
 <div id="zaBar" role="status" aria-live="polite">
