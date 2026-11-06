@@ -18783,7 +18783,6 @@ function hex2rgb(h){
       r.setProperty('--ink-soft', s.soft);
       r.setProperty('--hair', s.hair);
       el.screen.classList.toggle('dark', !!s.dark);
-      document.body.classList.toggle('zx-night', !!s.dark);   /* لعناصر خارج الشاشة نفسها (بطاقة ميدان الطاعة) */
       // لون البطاقة يُشتقّ من لون الجدار نفسه: أفتحُ منه قليلاً فيُقرأ لوحاً مرفوعاً،
       // ويظلّ من عائلة الحال — لا أخضر على بنّي.
       var W = hex2rgb(s.wall);
@@ -19627,7 +19626,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-06-1800').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-06-1840').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19751,7 +19750,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-11-06-1800';
+  window.ZAHIM_STAMP = 'zahim-2026-11-06-1840';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -21871,18 +21870,19 @@ button,[onclick],a,[role="button"]{-webkit-tap-highlight-color:transparent;-webk
 button:focus:not(:focus-visible),[role="button"]:focus:not(:focus-visible){outline:none;}
 #screen-mushaf .mus-edge{display:none !important;}
 
-/* ═══ بطاقة «ميدان الطاعة» في الليل ═══
-   تبقى البيجُ ساطعةً تحت بوصلةٍ داكنة حين يدخل المغرب والعشاء والفجر.
-   في الحالات الليلية تأخذ الكحليَّ نفسَه فتنسجم مع المشهد. */
-body.zx-night .ros-card{
+/* ═══ بطاقة «ميدان الطاعة» في الوضع الليليّ ═══
+   تبقى البيجُ ساطعةً تحت بوصلةٍ داكنة حين يختار المستخدم الوضع الليليّ.
+   تأخذ الكحليَّ نفسَه فتنسجم مع المشهد، وفي الوضع الهادئ (الفاتح) لا تتغيّر. */
+body.mode-night .ros-card{
   background:linear-gradient(158deg,#1D3C60 0%,#14304F 55%,#0F2440 100%);
   border:1px solid rgba(214,169,74,.40);
   box-shadow:0 10px 26px rgba(0,0,0,.38),0 1px 0 rgba(255,255,255,.09) inset;}
-body.zx-night .ros-kick{color:#D9B25C;}
-body.zx-night .ros-state{color:#F3EBD6;}
-body.zx-night .ros{filter:drop-shadow(0 6px 14px rgba(0,0,0,.4));}
-body.zx-night .ros-bars i{background:rgba(255,255,255,.16);}
-body.zx-night .ros-bars i.on{background:linear-gradient(90deg,#2E709B,#8FC4DF);}
+body.mode-night .ros-kick{color:#D9B25C;}
+body.mode-night .ros-state{color:#F3EBD6;}
+body.mode-night .ros{filter:drop-shadow(0 6px 14px rgba(0,0,0,.4));}
+body.mode-night .ros-bars i{background:rgba(255,255,255,.16);}
+body.mode-night .ros-bars i.on{background:linear-gradient(90deg,#2E709B,#8FC4DF);}
+body.mode-night .home-tagline{color:#E9DDBB;}   /* الكحليُّ على الأسود كان يكاد يختفي */
 </style>
 
 <div id="zaBar" role="status" aria-live="polite">
