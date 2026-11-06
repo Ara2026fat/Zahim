@@ -7,7 +7,7 @@
   "compatibility_date": "2026-09-06",
   "triggers": { "crons": ["* * * * *"] },
   "d1_databases": [
-    { "binding": "DB", "database_name": "zahim-db", "database_id": "REPLACE_WITH_D1_ID" }
+    { "binding": "DB", "database_name": "zahim-db", "database_id": "c756a862-b974-4929-905e-5b0532e16db3" }
   ],
   "vars": { "VAPID_SUBJECT": "mailto:ara1979fat@gmail.com" },
   "observability": { "enabled": true }

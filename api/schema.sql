@@ -15,3 +15,6 @@ CREATE TABLE IF NOT EXISTS subs (
   times     TEXT NOT NULL,       -- JSON: [[epochMs,"fajr"],...] الأسبوعُ القادم
   sent_to   INTEGER NOT NULL DEFAULT 0   -- آخرُ موعدٍ أُرسل له
 );
+
+-- الأسرار (STATS_KEY ، VAPID_PUBLIC ، VAPID_PRIVATE_JWK) — يولّد العاملُ مفاتيحَ VAPID بنفسه عند أوّل طلب
+CREATE TABLE IF NOT EXISTS cfg (k TEXT PRIMARY KEY, v TEXT NOT NULL);

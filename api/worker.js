@@ -5,7 +5,7 @@
    ٤) POST /api/unsubscribe {id}
    ٥) GET  /api/next?id=   → اسمُ الصلاة التي حان وقتُها (يقرؤه عاملُ الخدمة عند وصول الإشعار)
    ٦) scheduled (كلَّ دقيقة) → يوقظ الأجهزةَ عند مواعيد الصلاة.
-   الأسرار (وحدك): STATS_KEY ، VAPID_PRIVATE_JWK ، VAPID_PUBLIC (base64url غير مضغوط). */
+   الأسرار: جدولُ cfg في D1 (STATS_KEY ، VAPID_*). يمكن تجاوزُها بمتغيّراتِ بيئةٍ بالاسم نفسه. */
 
 const ORIGINS = ['https://zahim.app', 'https://www.zahim.app'];
 const PRAYER_AR = { fajr:'الفجر', dhuhr:'الظهر', asr:'العصر', maghrib:'المغرب', isha:'العشاء' };
@@ -42,7 +42,8 @@ export default {
       }
 
       if (url.pathname === '/api/stats' && req.method === 'GET') {
-        if (!env.STATS_KEY || req.headers.get('x-stats-key') !== env.STATS_KEY) return json(req, { ok: false }, 401);
+        const sk = await cfgGet(env, 'STATS_KEY');
+        if (!sk || req.headers.get('x-stats-key') !== sk) return json(req, { ok: false }, 401);
         const d = day(), d7 = day(Date.now() - 6 * 864e5), d30 = day(Date.now() - 29 * 864e5);
         const q = (sql, ...a) => env.DB.prepare(sql).bind(...a).first();
         const [total, today, w, m, subs] = await Promise.all([
@@ -60,6 +61,11 @@ export default {
         ).bind(d30).all()).results;
         return json(req, { everInstalled: total.n, activeToday: today.n, active7d: w.n, active30d: m.n,
                            notificationDevices: subs.n, byCountry, byVersion: byVer });
+      }
+
+      if (url.pathname === '/api/vapid' && req.method === 'GET') {
+        const { pub } = await ensureVapid(env);          // المفتاحُ العامّ فقط
+        return json(req, { ok: true, key: pub });
       }
 
       if (url.pathname === '/api/subscribe' && req.method === 'POST') {
@@ -104,10 +110,30 @@ export default {
   async scheduled(_evt, env, ctx) { ctx.waitUntil(sendDue(env)); }
 };
 
+/* ── الأسرارُ في D1 (جدول cfg) فلا حاجةَ لأسرارِ لوحة التحكّم ──
+   الجدولُ لا يُقرأ إلا من حسابك أنت أو من هذا العامل؛ والمفتاحُ الخاصّ لا يخرج في أيِّ استجابة. */
+async function cfgGet(env, k) {
+  if (env[k]) return env[k];
+  const r = await env.DB.prepare('SELECT v FROM cfg WHERE k=?1').bind(k).first();
+  return r ? r.v : null;
+}
+async function ensureVapid(env) {
+  let pub = await cfgGet(env, 'VAPID_PUBLIC'), priv = await cfgGet(env, 'VAPID_PRIVATE_JWK');
+  if (pub && priv) return { pub, priv };
+  const k = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']);
+  priv = JSON.stringify(await crypto.subtle.exportKey('jwk', k.privateKey));
+  pub = b64u(await crypto.subtle.exportKey('raw', k.publicKey));
+  // INSERT OR IGNORE: إن سبقه طلبٌ آخر نقرأ ما كُتب أوّلًا فلا يختلف المفتاحان
+  await env.DB.prepare('INSERT OR IGNORE INTO cfg(k,v) VALUES(?1,?2),(?3,?4)')
+    .bind('VAPID_PUBLIC', pub, 'VAPID_PRIVATE_JWK', priv).run();
+  return { pub: await cfgGet(env, 'VAPID_PUBLIC'), priv: await cfgGet(env, 'VAPID_PRIVATE_JWK') };
+}
+
 /* ── الإرسال ── */
 async function sendDue(env) {
-  if (!env.VAPID_PRIVATE_JWK || !env.VAPID_PUBLIC) return;
   const now = Date.now();
+  const { pub, priv } = await ensureVapid(env);
+  env = { ...env, VAPID_PUBLIC: pub, VAPID_PRIVATE_JWK: priv };
   const rows = (await env.DB.prepare('SELECT id,endpoint,times,sent_to FROM subs').all()).results;
   const key = await crypto.subtle.importKey('jwk', JSON.parse(env.VAPID_PRIVATE_JWK),
     { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']);
@@ -133,8 +159,10 @@ async function sendDue(env) {
   }
 }
 
-const b64u = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)))
-  .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+function b64u(buf) {
+  return btoa(String.fromCharCode(...new Uint8Array(buf)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
 const enc = (o) => b64u(new TextEncoder().encode(JSON.stringify(o)));
 
 async function vapidJwt(key, aud, sub) {

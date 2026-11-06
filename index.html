@@ -19626,7 +19626,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-06-2300').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-06-2330').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19750,7 +19750,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-11-06-2300';
+  window.ZAHIM_STAMP = 'zahim-2026-11-06-2330';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -22536,13 +22536,18 @@ else zxBootTsbShape();
   }
 
   function enableNotifications(){
-    if(!ready() || !CFG.vapid) return Promise.resolve({ok:false,reason:'unavailable'});
+    if(!ready()) return Promise.resolve({ok:false,reason:'unavailable'});
     if(!('Notification' in window)||!('PushManager' in window)||!('serviceWorker' in navigator)) return Promise.resolve({ok:false,reason:'unsupported'});
-    return Notification.requestPermission().then(function(p){
+    var key = CFG.vapid ? Promise.resolve(CFG.vapid)
+      : fetch(CFG.api+'/api/vapid').then(function(r){return r.json();}).then(function(j){ return j&&j.key; });
+    return key.then(function(k){
+      if(!k) return {ok:false,reason:'unavailable'};
+      return Notification.requestPermission().then(function(p){
       if(p!=='granted') return {ok:false,reason:'denied'};
       return navigator.serviceWorker.ready.then(function(reg){
-        return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(CFG.vapid)});
+        return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(k)});
       }).then(function(){ ls(K_NOTIF,'1'); return sync().then(function(ok){return {ok:ok};}); });
+      });
     }).catch(function(){ return {ok:false,reason:'error'}; });
   }
   function disableNotifications(){

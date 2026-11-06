@@ -2,24 +2,17 @@
 
 **معطَّلة حتى تُنشر.** التطبيق لا يرسل ولا يطلب شيئًا ما دام `window.ZAHIM_CLOUD.api` فارغًا.
 
-## النشر (مرّةً واحدة)
-```bash
-cd api
-npx wrangler d1 create zahim-db            # انسخ database_id إلى wrangler.jsonc
-npx wrangler d1 execute zahim-db --remote --file=schema.sql
-node vapid-keys.mjs                        # يطبع المفتاحين
-npx wrangler secret put VAPID_PRIVATE_JWK  # الصق قيمة VAPID_PRIVATE_JWK
-npx wrangler secret put VAPID_PUBLIC       # الصق قيمة VAPID_PUBLIC
-npx wrangler secret put STATS_KEY          # كلمة سرٍّ طويلة تختارها أنت
-npx wrangler deploy
-```
-ثم في `index.html` اضبط قبل وسم `</body>`:
-`window.ZAHIM_CLOUD = { api: 'https://zahim-api.<حسابك>.workers.dev', vapid: '<VAPID_PUBLIC>' }`
-(والأفضل ربطها بنطاقٍ فرعيّ `api.zahim.app` ثم تعديل `ORIGINS` في worker.js إن لزم).
+## النشر
+قاعدة البيانات `zahim-db` (معرّفها في wrangler.jsonc) أُنشئت وجداولُها جاهزة، ومفتاح الأرقام STATS_KEY محفوظ في جدول cfg.
+يبقى نشر العامل نفسه على Cloudflare (مرّةً واحدة):
+**Workers & Pages ← Create application ← Import a repository ← Ara2026fat/Zahim**، واضبط **Root directory = `api`** ثم Deploy.
+ويُنشر بعدها تلقائيًّا مع كلّ رفعٍ إلى GitHub. مفاتيح VAPID يولّدها العامل بنفسه عند أوّل طلب ويحفظها في cfg.
+بعدها، في `index.html` اضبط قبل وسم `</body>`:
+`window.ZAHIM_CLOUD = { api: 'https://zahim-api.ara1979fat.workers.dev' }`
 
 ## الأرقام
 ```bash
-curl -H "x-stats-key: <STATS_KEY>" https://<عنوان-الخدمة>/api/stats
+curl -H "x-stats-key: <STATS_KEY>" https://zahim-api.ara1979fat.workers.dev/api/stats
 ```
 تعطي: الأجهزة التي استُعمل فيها التطبيق (اليوم / ٧ أيام / ٣٠ يومًا)، والدول، والإصدارات، وعدد من فعّل الإشعارات.
 
