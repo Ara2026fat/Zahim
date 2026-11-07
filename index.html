@@ -19653,7 +19653,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-07-1335').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-07-1345').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19777,7 +19777,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-11-07-1335';
+  window.ZAHIM_STAMP = 'zahim-2026-11-07-1345';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -22532,7 +22532,7 @@ else zxBootTsbShape();
 <script>
 (function(){
   'use strict';
-  var CFG = window.ZAHIM_CLOUD = window.ZAHIM_CLOUD || { api: 'https://zahim-api.ara1979fat.workers.dev', vapid: '' };
+  var CFG = window.ZAHIM_CLOUD = window.ZAHIM_CLOUD || { api: 'https://zahim-api.ara1979fat.workers.dev', vapid: 'BC983sKACMaI1Lz6GjpqAc6HijEComEMuiVT9JUaaFEgDyIcNWOYzIzNIGEIo9Hhu5KegLNjkcD9IfFGrQhrs3M' };
   var K_ID='zahim_install_id', K_OFF='zahim_stats_off', K_PING='zahim_ping_day', K_NOTIF='zahim_notif_on';
   function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); if(v===null) localStorage.removeItem(k); else localStorage.setItem(k,v); }catch(e){} return null; }
   function ready(){ return !!(CFG.api && /^https:\/\//.test(CFG.api)); }
