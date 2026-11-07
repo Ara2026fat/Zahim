@@ -19653,7 +19653,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-07-1630').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-07-1700').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19777,7 +19777,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-11-07-1630';
+  window.ZAHIM_STAMP = 'zahim-2026-11-07-1700';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -22544,6 +22544,10 @@ else zxBootTsbShape();
   function post(path,body,keep){
     return fetch(CFG.api+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),keepalive:keep!==false});
   }
+  /* بلا ترويسةٍ مخصّصة فلا يلزم فحصٌ مسبق ولا ردٌّ مقروء — تكفي أن تصل الرسالة */
+  function postBlind(path,body){
+    return fetch(CFG.api+path,{method:'POST',mode:'no-cors',body:JSON.stringify(body)});
+  }
   function diag(){   /* لمعرفة هل الإخفاقُ من الشبكة أم من سياسة CORS */
     return fetch(CFG.api+'/api/vapid').then(function(r){ return 'get '+r.status; })
       .catch(function(){ return fetch(CFG.api+'/api/vapid',{mode:'no-cors'}).then(function(){ return 'get cors-blocked'; }).catch(function(){ return 'get net-blocked'; }); });
@@ -22577,7 +22581,7 @@ else zxBootTsbShape();
         if(!sub) return false;
         if(reg.active) reg.active.postMessage({type:'zahim-cloud-cfg',api:CFG.api,id:id()});
         var times; try{ times=weekTimes(); }catch(e){ window.__znSync='times '+((e&&e.message)||'').slice(0,50); return false; }
-        return post('/api/subscribe',{id:id(),sub:sub.toJSON(),times:times},false).then(function(r){ window.__znSync='http '+r.status; return r.ok;});
+        return postBlind('/api/subscribe',{id:id(),sub:sub.toJSON(),times:times}).then(function(){ window.__znSync='sent'; return true;});
       });
     }).catch(function(e){ window.__znSync='net'; return diag().then(function(d){ window.__znSync='net · '+d; return false; }); });
   }
@@ -22601,7 +22605,7 @@ else zxBootTsbShape();
     ls(K_NOTIF,null);
     return navigator.serviceWorker.ready.then(function(reg){
       return reg.pushManager.getSubscription().then(function(s){ return s&&s.unsubscribe(); });
-    }).then(function(){ return ready()?post('/api/unsubscribe',{id:id()}):null; }).then(function(){return true;}).catch(function(){return false;});
+    }).then(function(){ return ready()?postBlind('/api/unsubscribe',{id:id()}):null; }).then(function(){return true;}).catch(function(){return false;});
   }
 
   window.ZahimCloud = {
