@@ -7,20 +7,16 @@
    ٦) scheduled (كلَّ دقيقة) → يوقظ الأجهزةَ عند مواعيد الصلاة.
    الأسرار: جدولُ cfg في D1 (STATS_KEY ، VAPID_*). يمكن تجاوزُها بمتغيّراتِ بيئةٍ بالاسم نفسه. */
 
-const ORIGINS = ['https://zahim.app', 'https://www.zahim.app'];
 const PRAYER_AR = { fajr:'الفجر', dhuhr:'الظهر', asr:'العصر', maghrib:'المغرب', isha:'العشاء' };
 const RIYADH = 3 * 3600 * 1000;
 
 const day = (ms = Date.now()) => new Date(ms + RIYADH).toISOString().slice(0, 10);
-const cors = (req) => {
-  const o = req.headers.get('Origin');
-  return {
-    'Access-Control-Allow-Origin': ORIGINS.includes(o) ? o : ORIGINS[0],
-    'Access-Control-Allow-Headers': 'content-type,x-stats-key',
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Vary': 'Origin'
-  };
-};
+const cors = (req) => ({
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'content-type,x-stats-key',
+  'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+  'Access-Control-Max-Age': '86400'
+});
 const json = (req, data, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json', ...cors(req) } });
 const okId = (s) => typeof s === 'string' && /^[A-Za-z0-9_-]{16,64}$/.test(s);
@@ -145,7 +141,7 @@ async function sendDue(env) {
     if (!due) continue;
     const aud = new URL(r.endpoint).origin;
     let jwt = jwtCache.get(aud);
-    if (!jwt) { jwt = await vapidJwt(key, aud, env.VAPID_SUBJECT); jwtCache.set(aud, jwt); }
+    if (!jwt) { jwt = await vapidJwt(key, aud, env.VAPID_SUBJECT || 'mailto:ara1979fat@gmail.com'); jwtCache.set(aud, jwt); }
     const res = await fetch(r.endpoint, {
       method: 'POST',
       headers: { TTL: '600', Urgency: 'high', Topic: 'zahim-prayer',
