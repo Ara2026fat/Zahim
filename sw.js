@@ -164,7 +164,7 @@ self.addEventListener('push', event => {
       }
     } catch (e) {}
     await self.registration.showNotification(title, {
-      body, tag: 'zahim-prayer', renotify: true, lang: 'ar', dir: 'rtl',
+      body, tag: 'zahim-prayer', renotify: true, requireInteraction: true, vibrate: [220, 120, 220, 120, 400], lang: 'ar', dir: 'rtl',
       icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', data: { url: './' }
     });
   })());
