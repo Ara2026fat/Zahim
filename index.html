@@ -19653,7 +19653,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-07-1345').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-07-1555').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19777,7 +19777,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-11-07-1345';
+  window.ZAHIM_STAMP = 'zahim-2026-11-07-1555';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -22572,9 +22572,10 @@ else zxBootTsbShape();
       return reg.pushManager.getSubscription().then(function(sub){
         if(!sub) return false;
         if(reg.active) reg.active.postMessage({type:'zahim-cloud-cfg',api:CFG.api,id:id()});
-        return post('/api/subscribe',{id:id(),sub:sub.toJSON(),times:weekTimes()}).then(function(r){ window.__znSync='http '+r.status; return r.ok;});
+        var times; try{ times=weekTimes(); }catch(e){ window.__znSync='times '+((e&&e.message)||'').slice(0,50); return false; }
+        return post('/api/subscribe',{id:id(),sub:sub.toJSON(),times:times}).then(function(r){ window.__znSync='http '+r.status; return r.ok;});
       });
-    }).catch(function(e){ window.__znSync='net '+((e&&e.name)||''); return false;});
+    }).catch(function(e){ window.__znSync='net '+((e&&e.name)||'')+' '+((e&&e.message)||'').slice(0,40); return false;});
   }
 
   function enableNotifications(){
