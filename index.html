@@ -17589,6 +17589,9 @@ function showToast(msg){
           <button type="button" class="za-pick" data-v="3" onclick="zaPick('3')"><b>القطامي</b></button>
         </div>
       </div>
+    <div class="zx-row" id="znRow" onclick="znToggle()" hidden>
+      <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16.6V11a6 6 0 0 1 12 0v5.6l1.4 1.6H4.6z"/><path d="M10.2 20.4a2 2 0 0 0 3.6 0"/></svg></span><span class="zx-row-label">تنبيه الصلاة<i>تنبيهٌ هادئٌ عند دخول الوقت والتطبيقُ مغلق</i></span><span class="zx-row-value" id="znState">—</span>
+    </div>
     <div class="zx-row" onclick="zaPreviewFajr()">
       <span class="zx-row-ic brass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15.4h16"/><path d="M7.2 15.4a4.8 4.8 0 0 1 9.6 0"/><path d="M12 5.6v1.8M5.4 8.4l1.3 1.3M18.6 8.4l-1.3 1.3"/><path d="M6 19.2h12"/></svg></span><span class="zx-row-label">اسمع أذان الفجر<i>ثابتٌ لا يتغيّر — مسجد الشيخ عبد العزيز بن باز</i></span><span class="zx-row-value">استمع</span>
     </div>
@@ -17776,8 +17779,32 @@ function zxPaintSettings(){
   }catch(e){}
   setTextLevel(getTextLevel());
 }
+
+/* تنبيه الصلاة: اختياريّ، يُفعَّل بلمسة المستخدم وحدها */
+function znPaint(){
+  var r=document.getElementById('znRow'), st=document.getElementById('znState');
+  if(!r||!st) return;
+  var Z=window.ZahimCloud, ok=!!(Z&&Z.ready()&&('Notification' in window)&&('PushManager' in window)&&('serviceWorker' in navigator));
+  r.hidden=!ok; if(!ok) return;
+  var denied=(Notification.permission==='denied');
+  st.textContent = denied ? 'مغلق من المتصفح' : (Z.notificationsOn() ? 'يعمل' : 'متوقّف');
+}
+function znToggle(){
+  var Z=window.ZahimCloud, st=document.getElementById('znState'); if(!Z||!st) return;
+  if(Z.notificationsOn()){
+    Z.disableNotifications().then(znPaint);
+  }else{
+    st.textContent='…';
+    Z.enableNotifications().then(function(r){
+      znPaint();
+      if(r&&!r.ok&&r.reason==='denied') st.textContent='مغلق من المتصفح';
+      else if(r&&!r.ok) st.textContent='تعذّر التفعيل';
+    });
+  }
+}
 function openSettings(){
   zxPaintSettings();
+  try{ znPaint(); }catch(e){}
   try{ zxPaintLangs(); }catch(e){}
   try{ zxPaintInstall(); }catch(e){}
   /* تُفتح على الدار دائمًا: ستُّ بلاطاتٍ تُرى بنظرة، لا تبويبٌ محفوظ */
@@ -19626,7 +19653,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-06-2315').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-07-1300').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19750,7 +19777,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-11-06-2315';
+  window.ZAHIM_STAMP = 'zahim-2026-11-07-1300';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -20690,6 +20717,11 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
     'عجلة الأذكار': 'Dhikr wheel',
     'الصلاةُ قائمة': 'Time to pray',
     'اسمع أذان الفجر': 'Hear the Fajr adhan',
+    'تنبيه الصلاة': 'Prayer alert',
+    'تنبيهٌ هادئٌ عند دخول الوقت والتطبيقُ مغلق': 'A quiet alert when the time comes, even if the app is closed',
+    'متوقّف': 'Off',
+    'مغلق من المتصفح': 'Blocked by the browser',
+    'تعذّر التفعيل': 'Could not enable',
     'لا يتبع اختيار الصوت — له أذانُه وحدَه': 'It has its own call, not the chosen voice',
     'استمع': 'Play',
     'كيف تستخدم زاحِم': 'How to use Zahim',
@@ -20826,6 +20858,11 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
     'عجلة الأذكار': 'Roda zikir',
     'الصلاةُ قائمة': 'Sekarang waktu salat',
     'اسمع أذان الفجر': 'Dengar azan Subuh',
+    'تنبيه الصلاة': 'Peringatan solat',
+    'تنبيهٌ هادئٌ عند دخول الوقت والتطبيقُ مغلق': 'Peringatan tenang apabila masuk waktu, walaupun aplikasi ditutup',
+    'متوقّف': 'Mati',
+    'مغلق من المتصفح': 'Disekat oleh pelayar',
+    'تعذّر التفعيل': 'Gagal diaktifkan',
     'لا يتبع اختيار الصوت — له أذانُه وحدَه': 'Punya azannya sendiri, bukan suara pilihan',
     'استمع': 'Putar',
     'كيف تستخدم زاحِم': 'Cara menggunakan Zahim',
@@ -20962,6 +20999,11 @@ html[lang="ms"] .home-tagline{font-family:'Tajawal',sans-serif;font-size:13.5px;
     'عجلة الأذكار': 'Roda zikir',
     'الصلاةُ قائمة': 'Kini waktu solat',
     'اسمع أذان الفجر': 'Dengar azan Subuh',
+    'تنبيه الصلاة': 'Pengingat salat',
+    'تنبيهٌ هادئٌ عند دخول الوقت والتطبيقُ مغلق': 'Pengingat tenang saat waktu tiba, meski aplikasi ditutup',
+    'متوقّف': 'Mati',
+    'مغلق من المتصفح': 'Diblokir oleh peramban',
+    'تعذّر التفعيل': 'Gagal diaktifkan',
     'لا يتبع اختيار الصوت — له أذانُه وحدَه': 'Ada azannya sendiri, bukan suara pilihan',
     'استمع': 'Main',
     'كيف تستخدم زاحِم': 'Cara menggunakan Zahim',
