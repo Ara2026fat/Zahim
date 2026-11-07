@@ -19653,7 +19653,7 @@ window.addEventListener('popstate', function(){
   // عاملُ الخدمة: يُسجَّل على https فقط — وعلى ملفٍ محفوظ يُتجاوَز بلا خطأ
   if('serviceWorker' in navigator && location.protocol === 'https:'){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-07-1555').then(function(reg){
+      navigator.serviceWorker.register('sw.js?v=zahim-2026-11-07-1610').then(function(reg){
         /* ═══ مراقبةُ التحديث ═══
            نسخةٌ جديدةٌ تنزل في صمتٍ ثمّ تنتظر إغلاقَ كلّ النوافذ —
            وقد تمضي أيّامٌ والمرءُ على القديم لا يدري. فنُخبره. */
@@ -19777,7 +19777,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-11-07-1555';
+  window.ZAHIM_STAMP = 'zahim-2026-11-07-1610';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -22541,8 +22541,12 @@ else zxBootTsbShape();
     return btoa(String.fromCharCode.apply(null,a)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
   }
   function id(){ var v=ls(K_ID); if(!v||v.length<16){ v=rid(); ls(K_ID,v); } return v; }
-  function post(path,body){
-    return fetch(CFG.api+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),keepalive:true});
+  function post(path,body,keep){
+    return fetch(CFG.api+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),keepalive:keep!==false});
+  }
+  function diag(){   /* لمعرفة هل الإخفاقُ من الشبكة أم من سياسة CORS */
+    return fetch(CFG.api+'/api/vapid').then(function(r){ return 'get '+r.status; })
+      .catch(function(){ return fetch(CFG.api+'/api/vapid',{mode:'no-cors'}).then(function(){ return 'get cors-blocked'; }).catch(function(){ return 'get net-blocked'; }); });
   }
 
   /* ١) عدٌّ مجهول: نبضةٌ واحدةٌ في اليوم، ويُوقَف من الإعدادات بـ ZahimCloud.setStats(false) */
@@ -22573,9 +22577,9 @@ else zxBootTsbShape();
         if(!sub) return false;
         if(reg.active) reg.active.postMessage({type:'zahim-cloud-cfg',api:CFG.api,id:id()});
         var times; try{ times=weekTimes(); }catch(e){ window.__znSync='times '+((e&&e.message)||'').slice(0,50); return false; }
-        return post('/api/subscribe',{id:id(),sub:sub.toJSON(),times:times}).then(function(r){ window.__znSync='http '+r.status; return r.ok;});
+        return post('/api/subscribe',{id:id(),sub:sub.toJSON(),times:times},false).then(function(r){ window.__znSync='http '+r.status; return r.ok;});
       });
-    }).catch(function(e){ window.__znSync='net '+((e&&e.name)||'')+' '+((e&&e.message)||'').slice(0,40); return false;});
+    }).catch(function(e){ window.__znSync='net'; return diag().then(function(d){ window.__znSync='net · '+d; return false; }); });
   }
 
   function enableNotifications(){
