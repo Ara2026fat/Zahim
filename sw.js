@@ -71,19 +71,25 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(req.url);
 
-  /* ١. صفحاتُ التصفّح: الشبكةُ أوّلًا.
-        وهذا هو الفرقُ الحاسم — لو كانت الذاكرةُ أوّلًا لبقيت على
-        القديم حتى بعد تغيير الإصدار. */
+  /* ١. صفحاتُ التصفّح: التطبيقُ يفتح فورًا من الذاكرة، ويتجدّد في الخلفية.
+        كان الفتحُ ينتظر الشبكة كلَّ مرّة فيبدو زاحِم صفحةً تُحمَّل لا تطبيقًا.
+        الآن: النسخةُ المحفوظةُ تُعرَض في الحال، وأحدثُ نسخةٍ تُجلَب وتُحفظ
+        للفتحة التالية (أوّل فتحٍ بلا ذاكرةٍ يأتي من الشبكة كالمعتاد). */
   if (req.mode === 'navigate') {
+    const isIntro = /\/intro(\.html)?$/.test(url.pathname);
     event.respondWith((async () => {
-      try {
-        const fresh = await fetch(req);
-        const cache = await caches.open(SHELL);
-        cache.put('./index.html', fresh.clone());
-        return fresh;
-      } catch (e) {
-        return (await caches.match('./index.html')) || Response.error();
+      const cache = await caches.open(SHELL);
+      if (isIntro) {
+        try { return await fetch(req); }
+        catch (e) { return (await caches.match(req)) || (await caches.match('./index.html')) || Response.error(); }
       }
+      const cached = await cache.match('./index.html');
+      const refresh = fetch(req).then(res => {
+        if (res && res.ok) cache.put('./index.html', res.clone());
+        return res;
+      }).catch(() => null);
+      if (cached) { event.waitUntil(refresh); return cached; }
+      return (await refresh) || Response.error();
     })());
     return;
   }
