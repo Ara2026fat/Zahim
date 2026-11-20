@@ -19792,7 +19792,7 @@ window.addEventListener('popstate', function(){
     try{ zahimRegister(); }catch(e){}
   };
   /* يُقرأ الختمُ من رابط تسجيل العامل، فلا يُكتب في موضعين */
-  window.ZAHIM_STAMP = 'zahim-2026-11-20-landscape';
+  window.ZAHIM_STAMP = 'zahim-2026-11-20-landscape2';
   /* دورةٌ ثلاثيّة: كما هو → يومٌ قبل → يومٌ بعد */
   window.zrCycle = function(){
     var v = (typeof zrShift === 'function') ? zrShift() : 0;
@@ -21907,6 +21907,13 @@ body.zr-ashr-on .home-dock{
 #screen-mushaf.mus-wide .mus-head .mus-tools{order:3;}
 #screen-mushaf.mus-wide .mus-head .mus-surah{order:1;}
 #screen-mushaf.mus-wide .mus-wird{margin:2px 10px 4px;padding:4px 12px;}
+/* الوضع الأفقي: الورقةُ وحدها — لا أسهمَ ولا تلميحَ ولا ظلَّ أسفلَ الشاشة.
+   التقليبُ بالسحب، والأدواتُ تظهر عند لمس الصفحة فقط. */
+#screen-mushaf.mus-wide .mus-chev{opacity:0 !important;}
+#screen-mushaf.mus-wide .mus-hint{display:none !important;}
+/* اللوحاتُ المغلقةُ تقبع تحت الشاشة وظلُّها كان يتسرّب إلى أسفلها في الوضع الأفقي */
+.zx-sheet:not(.open),.ps-sheet:not(.open){box-shadow:none;}
+#screen-mushaf.mus-wide.bare .mus-foot{visibility:hidden;box-shadow:none;background:none;border:0;}
 
 /* ═══ أدواتٌ خفيفةٌ تُظهرها اللمسة ═══
    اللمسةُ تُظهر الأدوات فوق الصفحة. صارت شريطًا رفيعًا: البحثُ مطويّ خلف أيقونته،
